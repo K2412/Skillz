@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learning Track Generator"
+  short_description: "Build coding courses from local mixed file corpora"
+  default_prompt: "Use $learning-track-generator to ingest this directory and produce a unified course payload."
