@@ -1,0 +1,88 @@
+---
+name: Domain-dagster
+description: >-
+  Expert guidance for working with Dagster and the dg CLI. ALWAYS use before doing any task that requires knowledge specific to Dagster, or that references assets, materialization, components, data tools or data pipelines. Common tasks may include creating a new project, adding new definitions, understanding the current project structure, answering general questions about the codebase (finding asset, schedule, sensor, component or job definitions), debugging issues, or providing deep information about a specific Dagster concept.
+---
+
+## dg CLI
+
+The `dg` CLI is the recommended way to programmatically interact with Dagster (adding definitions, launching runs, exploring project structure, etc.). It is installed as part of the `dagster-dg-cli` package. If a relevant CLI command for a given task exists, always attempt to use it.
+
+ONLY explore the existing project structure if it is strictly necessary to accomplish the user's goal. In many cases, existing CLI tools will have sufficient understanding of the project structure, meaning listing and reading existing files is wasteful and unnecessary.
+
+Almost all `dg` commands that return information have a `--json` flag that can be used to get the information in a machine-readable format. This should be preferred over the default table output unless you are directly showing the information to the user.
+
+## UV Compatibility
+
+Projects typically use `uv` for dependency management, and it is recommended to use it for `dg` commands if possible:
+
+```bash
+uv run dg list defs
+uv run dg launch --assets my_asset
+```
+
+## Core Dagster Concepts
+
+Brief definitions only (see reference files for detailed examples):
+
+- **Asset**: Persistent object (table, file, model) produced by your pipeline
+- **Component**: Reusable building block that generates definitions (assets, schedules, sensors, jobs, etc.) relevant to a particular domain.
+
+## CRITICAL: Always Read Reference Files Before Answering
+
+NEVER answer from memory or guess at CLI commands, APIs, or syntax. ALWAYS read the relevant reference file(s) from the Reference Index below before responding.
+
+For every question, identify which reference file(s) are relevant using the index descriptions, read them, then answer based on what you read.
+
+## Reference Index
+
+<!-- BEGIN GENERATED INDEX -->
+
+- [assets](./references/assets.md) — Asset patterns including dependencies, metadata, partitions, and multi-asset definitions. (asset definition or pattern; dependency, metadata, partition, multi-asset)
+- [env-vars](./references/env-vars.md) — Environment variable configuration for Dagster projects across different environments. (environment variables, env, config; different environments, staging, production)
+- [automation/choosing-automation](./references/automation/choosing-automation.md) — Decision tree for choosing between schedules, sensors, and declarative automation. (which automation approach, schedule vs sensor vs declarative; set up automation, choose automation type)
+- [automation/schedules](./references/automation/schedules.md) — Schedule-based automation using cron expressions and timezones. (schedule, cron, time-based automation; recurring execution, periodic run)
+- [automation/declarative-automation](./references/automation/declarative-automation/INDEX.md) — Declarative automation using AutomationCondition for asset-centric condition-based orchestration. (declarative automation, AutomationCondition, conditions; eager, on_cron, on_missing, complex triggers)
+- [automation/sensors/asset-sensors](./references/automation/sensors/asset-sensors.md) — Asset sensors that trigger on asset materialization events. (asset sensor, materialization trigger; react to asset update)
+- [automation/sensors/basic-sensors](./references/automation/sensors/basic-sensors.md) — Basic sensor patterns for file watching and custom polling with cursors. (file sensor, custom polling, cursor; basic sensor, event-driven trigger)
+- [automation/sensors/run-status-sensors](./references/automation/sensors/run-status-sensors.md) — Run status sensors that monitor run success, failure, and trigger actions. (run status sensor, success/failure monitoring; run completion trigger, alerting on run status)
+- [cli/asset-selection](./references/cli/asset-selection.md) — Asset selection syntax for filtering by tag, group, kind, upstream, and downstream. (select, filter, tag, group, kind; upstream, downstream, asset selection syntax)
+- [cli/check](./references/cli/check.md) — dg check command: validate project configuration and definitions. (validate yaml, validate definitions, check, verify; validate project config; dg check)
+- [cli/create-dagster](./references/cli/create-dagster.md) — Create a new Dagster project using the `uvx create-dagster` command. (create a new Dagster project; initial project setup)
+- [cli/launch](./references/cli/launch.md) — dg launch command: materialize assets and execute jobs locally. (dg launch; execute locally)
+- [cli/api/general](./references/cli/api/general.md) — dg api: general tips and patterns for interacting with `dg api` subcommands. (always read before using any `dg api` subcommand; dg api response schema, parsing dg api output, dg api workflow)
+- [cli/api/agent/get](./references/cli/api/agent/get.md) — dg api agent get: retrieve details for a specific agent from Dagster Plus. (agent details, get agent, agent info; agent status, agent configuration)
+- [cli/api/agent/list](./references/cli/api/agent/list.md) — dg api agent list: list agents from Dagster Plus. (list agents, show agents, all agents; agent inventory, browse agents)
+- [cli/api/asset/get-evaluations](./references/cli/api/asset/get-evaluations.md) — dg api asset get-evaluations: retrieve automation condition evaluation records for an asset from Dagster Plus. (declarative automation, automation condition history; declarative automation, automation condition debugging)
+- [cli/api/asset/get-events](./references/cli/api/asset/get-events.md) — dg api asset get-events: retrieve materialization and observation events for an asset from Dagster Plus. (asset events, materialization events, observation events; asset history, asset partitions, event log)
+- [cli/api/asset/get](./references/cli/api/asset/get.md) — dg api asset get: retrieve details for a specific asset from Dagster Plus. (asset details, get asset, asset info; asset status, asset metadata)
+- [cli/api/asset/list](./references/cli/api/asset/list.md) — dg api asset list: list assets with pagination from Dagster Plus. (list assets, show assets, all assets; asset inventory, browse assets)
+- [cli/api/deployment/get](./references/cli/api/deployment/get.md) — dg api deployment get: retrieve details for a specific deployment from Dagster Plus. (deployment details, get deployment, deployment info; deployment status, deployment configuration)
+- [cli/api/deployment/list](./references/cli/api/deployment/list.md) — dg api deployment list: list deployments from Dagster Plus. (list deployments, show deployments, all deployments; deployment inventory, browse deployments)
+- [cli/api/run/get-events](./references/cli/api/run/get-events.md) — dg api run get-events: retrieve and filter run logs/events from Dagster Plus. (run logs, get logs, debug run; filter logs by level, event type, step)
+- [cli/api/run/get](./references/cli/api/run/get.md) — dg api run get: retrieve details for a specific run from Dagster Plus. (run details, get run, run info; run status, run metadata)
+- [cli/api/run/list](./references/cli/api/run/list.md) — dg api run list: list runs with filtering and pagination from Dagster Plus. (list runs, show runs, all runs; run history, browse runs, recent runs)
+- [cli/api/schedule/get](./references/cli/api/schedule/get.md) — dg api schedule get: retrieve details for a specific schedule from Dagster Plus. (schedule details, get schedule, schedule info; schedule status, schedule configuration)
+- [cli/api/schedule/list](./references/cli/api/schedule/list.md) — dg api schedule list: list schedules from Dagster Plus. (list schedules, show schedules, all schedules; schedule inventory, browse schedules)
+- [cli/api/secret/get](./references/cli/api/secret/get.md) — dg api secret get: retrieve details for a specific secret from Dagster Plus. (secret details, get secret, secret info; secret value, secret configuration)
+- [cli/api/secret/list](./references/cli/api/secret/list.md) — dg api secret list: list secrets from Dagster Plus. (list secrets, show secrets, all secrets; secret inventory, browse secrets)
+- [cli/api/sensor/get](./references/cli/api/sensor/get.md) — dg api sensor get: retrieve details for a specific sensor from Dagster Plus. (sensor details, get sensor, sensor info; sensor status, sensor configuration)
+- [cli/api/sensor/list](./references/cli/api/sensor/list.md) — dg api sensor list: list sensors from Dagster Plus. (list sensors, show sensors, all sensors; sensor inventory, browse sensors)
+- [cli/list/component-tree](./references/cli/list/component-tree.md) — dg list component-tree: display component instance hierarchy. (component tree, component hierarchy)
+- [cli/list/components](./references/cli/list/components.md) — dg list components: list available component types for scaffolding. (list components, available components, component types; what components can I scaffold)
+- [cli/list/defs](./references/cli/list/defs.md) — dg list defs: list and filter registered Dagster definitions. (list defs, list assets, show definitions; filter assets by tag, group, kind)
+- [cli/list/envs](./references/cli/list/envs.md) — dg list envs: list environment variables required by the project. (list env vars, environment variables, .env; what env vars are needed)
+- [cli/list/projects](./references/cli/list/projects.md) — dg list projects: list projects in the current workspace. (list projects, workspace projects; find project path)
+- [cli/plus/login](./references/cli/plus/login.md) — dg plus login: authenticate with Dagster Plus. (login, authenticate, dagster plus auth)
+- [cli/plus/pull/env](./references/cli/plus/pull/env.md) — dg plus pull env: pull environment variables from Dagster Plus into a local .env file. (pull env, sync env vars, download env; local env vars; get env vars from dagster plus)
+- [cli/scaffold/component](./references/cli/scaffold/component.md) — dg scaffold component: scaffold a custom reusable component type. (custom component, create component type; create reusable component)
+- [cli/scaffold/defs](./references/cli/scaffold/defs.md) — dg scaffold defs: add new definitions to a project. (create asset, create schedule, create sensor; add component, scaffold component)
+- [components/creating-components](./references/components/creating-components.md) — Guide for creating custom Dagster components. (create component, new component, custom component)
+- [components/designing-component-integrations](./references/components/designing-component-integrations.md) — Designing component integrations for external services and tools. (component integration, external service, modeling concepts)
+- [components/resolved-framework](./references/components/resolved-framework.md) — Resolved framework for auto-generating YAML schemas from Python classes using Resolver, Model, and Resolvable. (Resolver, Resolvable, Model, Resolved framework; ResolvedAssetKey, ResolvedAssetSpec, type alias; Annotated pattern, schema generation, YAML schema; ResolutionContext, resolve_value, resolve_fields)
+- [components/state-backed/creating](./references/components/state-backed/creating.md) — Creating custom state-backed components that fetch and cache external state. (create state-backed component, StateBackedComponent subclass; write_state_to_path, build_defs_from_state; defs_state_config, DefsStateConfig)
+- [components/state-backed/using](./references/components/state-backed/using.md) — Managing state-backed components in production workflows — strategies, configuration, and CI/CD. (state-backed component, defs_state, defs state; refresh-defs-state, dg utils refresh-defs-state; state management, LOCAL_FILESYSTEM, VERSIONED_STATE_STORAGE)
+- [components/subclassing-components](./references/components/subclassing-components.md) — Subclassing existing Dagster components for customization. (subclass component, extend component, component inheritance)
+- [components/template-variables](./references/components/template-variables.md) — Template variables available in component YAML files, including built-in scopes and custom template vars. (template variable, Jinja2 template, YAML template; env scope, dg scope, context scope, asset scope; custom template var, template_var decorator, UDF)
+- [integrations](./references/integrations/INDEX.md) — Integration libraries index for 40+ tools and technologies (dbt, Fivetran, Snowflake, AWS, etc.). (integration, external tool, dagster-\*; dbt, fivetran, airbyte, snowflake, bigquery, sling, aws, gcp)
+<!-- END GENERATED INDEX -->
