@@ -1,6 +1,6 @@
 # Teacher instructions
 
-This file is read by Claude Code (with the `course-from-markdown` skill installed) when the learner asks for tutoring inside this course directory.
+This file is read by Claude Code (with the `Learn-course` skill installed) when the learner asks for tutoring inside this course directory.
 
 **Course language:** {{language}}
 **Test command:** `{{test_command}}`
