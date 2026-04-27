@@ -1,7 +1,6 @@
 ---
-name: Design-context
-description: One-time setup that gathers design context for your project and saves it to your AI config file. Run once to establish persistent design guidelines.
-user-invokable: true
+name: Design-setup
+description: One-time project initialization that gathers design context (users, brand, aesthetic direction, principles) and writes it to CLAUDE.md so every future session inherits the project's design ground truth. Run this once when starting design work in a new repo, before using Design-review or Design-improve.
 ---
 
 Gather design context for this project, then persist it for all future sessions.

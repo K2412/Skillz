@@ -22,7 +22,7 @@ The design system is two routers plus a one-time setup skill. The 17 specialist 
 |-------|-------------|
 | **Design-review** | Read-only evaluation of an existing UI. Loads `specialists/audit.md` (technical: a11y, perf, theming, responsive) or `specialists/critique.md` (UX: hierarchy, IA, slop detection) based on what the user asks for. |
 | **Design-improve** | Active design work — polish, restyle, animate, recolor, simplify, harden, adapt, optimize, build new UI. Loads one of 16 specialists in `specialists/` (polish, harden, normalize, bolder, quieter, colorize, animate, delight, clarify, distill, adapt, onboard, optimize, extract, frontend) plus shared design principles in `specialists/frontend-reference/`. |
-| Design-context | One-time setup that gathers design context and saves it to your AI config file. |
+| Design-setup | One-time setup that gathers design context and saves it to your AI config file. |
 
 **Architecture note**: previously each specialist was its own skill (18 total under `Design-*/`). Restructured so `git clone` + `bash install.sh` reliably yields only these three Design entry points — no version-dependent flags involved.
 
