@@ -1,12 +1,3 @@
----
-name: Design-critique
-description: Evaluate design effectiveness from a UX perspective. Assesses visual hierarchy, information architecture, emotional resonance, and overall design quality with actionable feedback.
-user-invokable: false
-args:
-  - name: area
-    description: The feature or area to critique (optional)
-    required: false
----
 
 Conduct a holistic design critique, evaluating whether the interface actually works—not just technically, but as a designed experience. Think like a design director giving feedback.
 

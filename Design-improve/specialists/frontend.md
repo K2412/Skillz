@@ -1,9 +1,3 @@
----
-name: Design-frontend
-description: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications. Generates creative, polished code that avoids generic AI aesthetics.
-user-invokable: false
-license: Apache 2.0. Based on Anthropic's frontend-design skill. See NOTICE.md for attribution.
----
 
 This skill guides creation of distinctive, production-grade frontend interfaces that avoid generic "AI slop" aesthetics. Implement real working code with exceptional attention to aesthetic details and creative choices.
 
@@ -107,7 +101,6 @@ Make interactions feel fast. Use optimistic UI—update immediately, sync later.
 **DO**: Make every word earn its place
 **DON'T**: Repeat information users can already see
 
----
 
 ## The AI Slop Test
 
@@ -117,7 +110,6 @@ A distinctive interface should make someone ask "how was this made?" not "which 
 
 Review the DON'T guidelines above—they are the fingerprints of AI-generated work from 2024-2025.
 
----
 
 ## Implementation Principles
 

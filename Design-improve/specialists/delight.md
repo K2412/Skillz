@@ -1,12 +1,3 @@
----
-name: Design-delight
-description: Add moments of joy, personality, and unexpected touches that make interfaces memorable and enjoyable to use. Elevates functional to delightful.
-user-invokable: false
-args:
-  - name: target
-    description: The feature or area to add delight to (optional)
-    required: false
----
 
 Identify opportunities to add moments of joy, personality, and unexpected polish that transform functional interfaces into delightful experiences.
 
@@ -27,7 +18,6 @@ Do NOT proceed until you have answers. Delight that's wrong for the context is w
 
 Use the frontend-design skill for design principles and anti-patterns. Do NOT proceed until it has executed and you know all DO's and DON'Ts.
 
----
 
 ## Assess Delight Opportunities
 

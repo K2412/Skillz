@@ -1,12 +1,3 @@
----
-name: Design-quieter
-description: Tone down overly bold or visually aggressive designs. Reduces intensity while maintaining design quality and impact.
-user-invokable: false
-args:
-  - name: target
-    description: The feature or component to make quieter (optional)
-    required: false
----
 
 Reduce visual intensity in designs that are too bold, aggressive, or overstimulating, creating a more refined and approachable aesthetic without losing effectiveness.
 
@@ -27,7 +18,6 @@ Do NOT proceed until you have answers. Guessing leads to generic design.
 
 Use the frontend-design skill for design principles and anti-patterns. Do NOT proceed until it has executed and you know all DO's and DON'Ts.
 
----
 
 ## Assess Current State
 

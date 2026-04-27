@@ -1,12 +1,3 @@
----
-name: Design-animate
-description: Review a feature and enhance it with purposeful animations, micro-interactions, and motion effects that improve usability and delight.
-user-invokable: false
-args:
-  - name: target
-    description: The feature or component to animate (optional)
-    required: false
----
 
 Analyze a feature and strategically add animations and micro-interactions that enhance understanding, provide feedback, and create delight.
 
@@ -27,7 +18,6 @@ Do NOT proceed until you have answers. Guessing leads to inappropriate or excess
 
 Use the frontend-design skill for design principles and anti-patterns. Do NOT proceed until it has executed and you know all DO's and DON'Ts.
 
----
 
 ## Assess Animation Opportunities
 

@@ -1,12 +1,3 @@
----
-name: Design-colorize
-description: Add strategic color to features that are too monochromatic or lack visual interest. Makes interfaces more engaging and expressive.
-user-invokable: false
-args:
-  - name: target
-    description: The feature or component to colorize (optional)
-    required: false
----
 
 Strategically introduce color to designs that are too monochromatic, gray, or lacking in visual warmth and personality.
 
@@ -27,7 +18,6 @@ Do NOT proceed until you have answers. Guessing leads to generic AI slop colors.
 
 Use the frontend-design skill for design principles and anti-patterns. Do NOT proceed until it has executed and you know all DO's and DON'Ts.
 
----
 
 ## Assess Color Opportunity
 

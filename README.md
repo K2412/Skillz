@@ -1,6 +1,6 @@
 # skillz
 
-A curated collection of 36 skills for Claude Code / Codex CLI — a mix of skills I've built and ones I've discovered and found useful. Organized by category prefix.
+A curated collection of 19 skills for Claude Code / Codex CLI — a mix of skills I've built and ones I've discovered and found useful. Organized by category prefix.
 
 ## Restore
 
@@ -14,37 +14,17 @@ Copies all skill dirs to `~/.agents/skills/` (or `$AGENTS_HOME/skills`). Restart
 
 ## Categories
 
-### Design- (20 skills)
+### Design- (3 skills)
 
-**Entry points** (these are the only design skills that appear in the slash menu — they route to the right specialist for you):
-
-| Router | Description |
-|-------|-------------|
-| **Design-review** | Read-only evaluation of an existing UI. Routes to Design-audit (technical: a11y, perf, theming, responsive) or Design-critique (UX: hierarchy, IA, slop detection). |
-| **Design-improve** | Active design work — polish, restyle, animate, recolor, simplify, harden, adapt, optimize, build new UI. Routes to the right specialist below based on intent. |
-| Design-context | One-time setup that gathers design context and saves it to your AI config file. |
-
-**Specialists** (hidden from the slash menu — invoked by routers, but still callable by name from inside an active session):
+The design system is two routers plus a one-time setup skill. The 17 specialist prompts (audit, critique, polish, animate, etc.) live as bundled markdown inside the routers — they're loaded on demand, not registered as standalone skills.
 
 | Skill | Description |
 |-------|-------------|
-| Design-adapt | Adapt designs to work across different screen sizes, devices, contexts, or platforms |
-| Design-animate | Enhance features with purposeful animations, micro-interactions, and motion effects |
-| Design-audit | Comprehensive audit of interface quality across accessibility, performance, theming, and responsive design |
-| Design-bolder | Amplify safe or boring designs to make them more visually interesting and stimulating |
-| Design-clarify | Improve unclear UX copy, error messages, microcopy, labels, and instructions |
-| Design-colorize | Add strategic color to features that are too monochromatic or lack visual interest |
-| Design-critique | Evaluate design effectiveness from a UX perspective with actionable feedback |
-| Design-delight | Add moments of joy, personality, and unexpected touches that make interfaces memorable |
-| Design-distill | Strip designs to their essence by removing unnecessary complexity |
-| Design-extract | Extract and consolidate reusable components, design tokens, and patterns into your design system |
-| Design-frontend | Create distinctive, production-grade frontend interfaces with high design quality |
-| Design-harden | Improve interface resilience through better error handling, i18n support, and edge case management |
-| Design-normalize | Normalize design to match your design system and ensure consistency |
-| Design-onboard | Design or improve onboarding flows, empty states, and first-time user experiences |
-| Design-optimize | Improve interface performance across loading speed, rendering, animations, and bundle size |
-| Design-polish | Final quality pass before shipping — fixes alignment, spacing, consistency, and detail issues |
-| Design-quieter | Tone down overly bold or visually aggressive designs while maintaining impact |
+| **Design-review** | Read-only evaluation of an existing UI. Loads `specialists/audit.md` (technical: a11y, perf, theming, responsive) or `specialists/critique.md` (UX: hierarchy, IA, slop detection) based on what the user asks for. |
+| **Design-improve** | Active design work — polish, restyle, animate, recolor, simplify, harden, adapt, optimize, build new UI. Loads one of 16 specialists in `specialists/` (polish, harden, normalize, bolder, quieter, colorize, animate, delight, clarify, distill, adapt, onboard, optimize, extract, frontend) plus shared design principles in `specialists/frontend-reference/`. |
+| Design-context | One-time setup that gathers design context and saves it to your AI config file. |
+
+**Architecture note**: previously each specialist was its own skill (18 total under `Design-*/`). Restructured so `git clone` + `bash install.sh` reliably yields only these three Design entry points — no version-dependent flags involved.
 
 ### Code- (4 skills)
 
