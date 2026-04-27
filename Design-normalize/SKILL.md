@@ -1,7 +1,7 @@
 ---
 name: Design-normalize
 description: Normalize design to match your design system and ensure consistency
-user-invokable: true
+user-invokable: false
 args:
   - name: feature
     description: The page, route, or feature to normalize (optional)

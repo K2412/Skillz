@@ -1,7 +1,7 @@
 ---
 name: Design-adapt
 description: Adapt designs to work across different screen sizes, devices, contexts, or platforms. Ensures consistent experience across varied environments.
-user-invokable: true
+user-invokable: false
 args:
   - name: target
     description: The feature or component to adapt (optional)

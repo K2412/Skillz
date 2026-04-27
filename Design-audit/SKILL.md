@@ -1,7 +1,7 @@
 ---
 name: Design-audit
 description: Perform comprehensive audit of interface quality across accessibility, performance, theming, and responsive design. Generates detailed report of issues with severity ratings and recommendations.
-user-invokable: true
+user-invokable: false
 args:
   - name: area
     description: The feature or area to audit (optional)

@@ -1,7 +1,7 @@
 ---
 name: Design-delight
 description: Add moments of joy, personality, and unexpected touches that make interfaces memorable and enjoyable to use. Elevates functional to delightful.
-user-invokable: true
+user-invokable: false
 args:
   - name: target
     description: The feature or area to add delight to (optional)

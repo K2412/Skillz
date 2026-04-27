@@ -1,6 +1,6 @@
 # skillz
 
-A curated collection of 34 skills for Claude Code / Codex CLI — a mix of skills I've built and ones I've discovered and found useful. Organized by category prefix.
+A curated collection of 36 skills for Claude Code / Codex CLI — a mix of skills I've built and ones I've discovered and found useful. Organized by category prefix.
 
 ## Restore
 
@@ -14,7 +14,17 @@ Copies all skill dirs to `~/.agents/skills/` (or `$AGENTS_HOME/skills`). Restart
 
 ## Categories
 
-### Design- (18 skills)
+### Design- (20 skills)
+
+**Entry points** (these are the only design skills that appear in the slash menu — they route to the right specialist for you):
+
+| Router | Description |
+|-------|-------------|
+| **Design-review** | Read-only evaluation of an existing UI. Routes to Design-audit (technical: a11y, perf, theming, responsive) or Design-critique (UX: hierarchy, IA, slop detection). |
+| **Design-improve** | Active design work — polish, restyle, animate, recolor, simplify, harden, adapt, optimize, build new UI. Routes to the right specialist below based on intent. |
+| Design-context | One-time setup that gathers design context and saves it to your AI config file. |
+
+**Specialists** (hidden from the slash menu — invoked by routers, but still callable by name from inside an active session):
 
 | Skill | Description |
 |-------|-------------|
@@ -24,7 +34,6 @@ Copies all skill dirs to `~/.agents/skills/` (or `$AGENTS_HOME/skills`). Restart
 | Design-bolder | Amplify safe or boring designs to make them more visually interesting and stimulating |
 | Design-clarify | Improve unclear UX copy, error messages, microcopy, labels, and instructions |
 | Design-colorize | Add strategic color to features that are too monochromatic or lack visual interest |
-| Design-context | One-time setup that gathers design context and saves it to your AI config file |
 | Design-critique | Evaluate design effectiveness from a UX perspective with actionable feedback |
 | Design-delight | Add moments of joy, personality, and unexpected touches that make interfaces memorable |
 | Design-distill | Strip designs to their essence by removing unnecessary complexity |

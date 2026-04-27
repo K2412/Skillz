@@ -1,7 +1,7 @@
 ---
 name: Design-animate
 description: Review a feature and enhance it with purposeful animations, micro-interactions, and motion effects that improve usability and delight.
-user-invokable: true
+user-invokable: false
 args:
   - name: target
     description: The feature or component to animate (optional)
