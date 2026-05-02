@@ -59,6 +59,16 @@ Generate **3–4 exercises per lesson**, ordered from easiest to hardest. Each e
 - Add error handling only where the lesson is teaching error handling.
 - Keep code blocks short — under 40 lines per exercise unless the chunk is genuinely about a longer construct.
 
+### Repo grounding (only if reference files were provided)
+
+If the user message includes a `REFERENCE FILES` section, the orchestrator has matched this chunk to one or more files from a companion repository. Use them like a senior engineer would use the existing codebase when designing a tutorial:
+
+- **Mirror real conventions.** Function/class names, import style, file layout, and idioms in `starter_code` and `solution_code` should look like they belong in the same repo. If the project uses snake_case helpers and small focused files, your exercises should too.
+- **Cite, don't copy.** When the README explains a concept, you may paraphrase it in the lesson `content`. When a source file demonstrates a pattern, summarize it in your own words and add a one-line "Reference: `path/to/file.ext`" pointer at the end of the relevant section. Do **not** paste large verbatim blocks from the repo — the learner will read the repo themselves if they want the full source, and copying creates licensing risk.
+- **Adapt to the lesson's level.** The repo may show a production-grade version with logging, retries, and edge-case handling that would overwhelm a learner. Strip back to the core pattern. The full version is reachable via the cite; the lesson teaches the spine.
+- **Watch for divergence.** If the chunk's source markdown describes one approach and the repo uses a different one (different API version, different style), trust the source markdown — the learner is reading *that* book/transcript. Note the divergence in `content` ("the project today uses X; this lesson teaches the conceptually simpler Y") rather than silently switching.
+- **No reference files for this chunk?** Then don't fabricate any. Return lessons grounded only in the source content, exactly as you would without a repo.
+
 ## SYSTEM PROMPT (end)
 
 ---
@@ -77,7 +87,23 @@ Chapter/Section: {chapter_title_or_omit}
 SOURCE CONTENT:
 {chunk_content}
 
+{reference_files_block_or_omit}
+
 Return JSON only — no prose, no code fences — matching the schema in the system prompt.
 ```
 
 If `chapter_title` is null, omit the `Chapter/Section:` line entirely.
+
+If the matchmaker (Step 2.5) returned files for this chunk, the orchestrator builds `reference_files_block` like this and substitutes it in:
+
+```
+REFERENCE FILES (from companion repo {repo_root}):
+
+--- {path/to/file_1.ext} ---
+{full file contents}
+
+--- {path/to/file_2.ext} ---
+{full file contents}
+```
+
+If the matchmaker returned an empty list for the chunk (or `--repo` wasn't passed at all), the orchestrator omits the entire `REFERENCE FILES` block — leaving no trailing whitespace where the placeholder was.

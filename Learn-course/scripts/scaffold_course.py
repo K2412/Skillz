@@ -40,6 +40,8 @@ LANGUAGE_PROFILES: dict[str, dict[str, str]] = {
     "javascript": {"ext": "js", "test_ext": "js", "test_command": "node"},
     "typescript": {"ext": "ts", "test_ext": "ts", "test_command": "npx tsx"},
     "go":         {"ext": "go", "test_ext": "go", "test_command": "go test"},
+    "terraform":  {"ext": "tf", "test_ext": "sh", "test_command": "bash"},
+    "hcl":        {"ext": "tf", "test_ext": "sh", "test_command": "bash"},
 }
 
 SLUG_RE = re.compile(r"[^a-z0-9]+")
