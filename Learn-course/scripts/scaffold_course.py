@@ -31,7 +31,9 @@ import argparse
 import json
 import re
 import sys
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 from pathlib import Path
 
 # Maps language → (file extension, test file extension, conventional test command)
@@ -42,6 +44,11 @@ LANGUAGE_PROFILES: dict[str, dict[str, str]] = {
     "go":         {"ext": "go", "test_ext": "go", "test_command": "go test"},
     "terraform":  {"ext": "tf", "test_ext": "sh", "test_command": "bash"},
     "hcl":        {"ext": "tf", "test_ext": "sh", "test_command": "bash"},
+    "php":        {"ext": "php", "test_ext": "php", "test_command": "./vendor/bin/pest"},
+    "pest":       {"ext": "php", "test_ext": "php", "test_command": "./vendor/bin/pest"},
+    "docker":     {"ext": "sh", "test_ext": "sh", "test_command": "bash"},
+    "shell":      {"ext": "sh", "test_ext": "sh", "test_command": "bash"},
+    "bash":       {"ext": "sh", "test_ext": "sh", "test_command": "bash"},
 }
 
 SLUG_RE = re.compile(r"[^a-z0-9]+")
