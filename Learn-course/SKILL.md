@@ -108,6 +108,8 @@ python3 scripts/scaffold_course.py /tmp/course.json <output-dir> --language <lan
 
 The script reads templates from `assets/`, writes the directory tree, expands starter/test/solution code into language-correct files, and emits `_meta.json` (with `test_command`) and `_TEACHER.md`. Solutions go into `.solutions/` (dot-prefixed — the leading dot keeps them out of casual `ls` and out of grep-by-default).
 
+**Source markdown is moved into the course root.** When `--source` points at a real file, the script `shutil.move`s it into `<output-dir>/` after scaffolding so the source lives with the course it produced. `_meta.json.source_file` and the README record the moved basename. Pass `--no-move-source` to keep the original in place (or omit `--source` / pass a non-path label to skip the move).
+
 ### Step 5 — Summarize
 
 Print:

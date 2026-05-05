@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 import sys
 from datetime import datetime, timezone
 
@@ -49,6 +50,7 @@ LANGUAGE_PROFILES: dict[str, dict[str, str]] = {
     "docker":     {"ext": "sh", "test_ext": "sh", "test_command": "bash"},
     "shell":      {"ext": "sh", "test_ext": "sh", "test_command": "bash"},
     "bash":       {"ext": "sh", "test_ext": "sh", "test_command": "bash"},
+    "swift":      {"ext": "swift", "test_ext": "swift", "test_command": "swift"},
 }
 
 SLUG_RE = re.compile(r"[^a-z0-9]+")
@@ -182,7 +184,8 @@ def main() -> int:
     parser.add_argument("course_json", type=Path, help="Combined lessons JSON")
     parser.add_argument("output_dir", type=Path, help="Course output directory")
     parser.add_argument("--language", required=True, help="Programming language (python, javascript, ...)")
-    parser.add_argument("--source", default="(unknown)", help="Source markdown filename for record-keeping")
+    parser.add_argument("--source", default="(unknown)", help="Source markdown path. If it's a real file, it gets moved into the course root after scaffolding.")
+    parser.add_argument("--no-move-source", action="store_true", help="Disable moving --source into the course root (default: move).")
     args = parser.parse_args()
 
     lang_key = args.language.strip().lower()
@@ -220,12 +223,26 @@ def main() -> int:
         for lesson in chapter["lessons"]:
             total_exercises += len(lesson.get("exercises", []))
 
+    # Move source markdown into course root, if given a real path.
+    moved_source: Path | None = None
+    source_path = Path(args.source)
+    if (
+        not args.no_move_source
+        and args.source != "(unknown)"
+        and source_path.is_file()
+    ):
+        dest = out / source_path.name
+        if source_path.resolve() != dest.resolve():
+            shutil.move(str(source_path), str(dest))
+            moved_source = dest
+    source_label = moved_source.name if moved_source else args.source
+
     course_title = out.name.replace("-", " ").title()
     course_readme = render(
         load_template(assets_dir, "course-README.template.md"),
         title=course_title,
         language=args.language,
-        source=args.source,
+        source=source_label,
         chapter_count=len(chapters),
         lesson_count=sum(len(c["lessons"]) for c in chapters),
         exercise_count=total_exercises,
@@ -242,7 +259,7 @@ def main() -> int:
 
     meta = {
         "language": args.language,
-        "source_file": args.source,
+        "source_file": source_label,
         "test_command": profile["test_command"],
         "file_extension": profile["ext"],
         "test_extension": profile["test_ext"],
@@ -265,6 +282,7 @@ def main() -> int:
         "chapters": len(chapters),
         "lessons": meta["lesson_count"],
         "exercises": total_exercises,
+        "moved_source": str(moved_source) if moved_source else None,
         "next_step": (
             f"cd {out} && claude   then say: \"start lesson 1\""
         ),
