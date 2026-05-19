@@ -7,19 +7,88 @@ description: Convert a markdown source (textbook, lecture transcript, open-sourc
 
 This skill has two modes:
 
-- **Generate mode** — turn a `.md` file into a course directory.
+- **Generate mode** — sweep a workspace (`YtUrls.py` + `input/`) and produce one course directory per source. Step 0 preprocesses YouTube URLs into transcripts and PDFs into Markdown; Steps 1–5 then loop the existing chunk → lesson → scaffold pipeline once per `.md` source.
 - **Teach mode** — once a course exists, walk the learner through it interactively.
 
-Pick the mode based on what the user is asking. If they hand you a `.md` and ask for a course / lessons / exercises, generate. If they're sitting inside a generated course directory (one with `_TEACHER.md` and `_meta.json` at the root) and ask to start, continue, or check work, teach.
+Pick the mode based on what the user is asking. If they invoke `/Learn-course` (with or without a path), and CWD is a workspace with `YtUrls.py` and/or `input/`, generate. If they're sitting inside a generated course directory (one with `_TEACHER.md` and `_meta.json` at the root) and ask to start, continue, or check work, teach.
 
 ## Generate mode
 
-### Step 1 — Validate input and gather settings
+Generate mode is now a **two-phase, batched** pipeline:
 
-1. Confirm the input `.md` path exists. If the user gave a relative path, resolve it.
-2. Use `AskUserQuestion` to pick the **target programming language**: Python, JavaScript, TypeScript, Go, or Other. The language drives file extensions, the test runner, and starter-code idioms — the rest of the pipeline depends on it, so don't skip this even if the user named a language in passing. Confirm before moving on.
-3. Default the output directory to `./<course-slug>/` in the user's CWD. The slug is the input filename minus extension, lowercased and dasherized. Mention the path in your reply so the user can override it.
-4. **Optional companion repo.** If the user has a GitHub repo (or a local clone) that accompanies the source markdown — the canonical case is "this textbook has an example repo on GitHub" — accept it as `--repo <url-or-path>`. When set, lessons are grounded in real project idiom: starter code mirrors the repo's conventions, solutions can cite real files, and the lesson author has actual examples to learn from rather than imagining them. See Step 2.5 for the wiring. Skip this if no repo was provided — the md-only path remains the default and stays unchanged.
+- **Step 0 — Preprocess the workspace** (NEW): pull any pending YouTube transcripts into `input/`, convert any PDFs in `input/` to `.md`, then enumerate every `.md` under `input/`. These become the source list.
+- **Steps 1–5 — Per-source course generation**: for each enumerated source, run the existing chunk → ground → lesson → scaffold pipeline. Settings (language, optional companion repo) are gathered ONCE at the top and reused for the whole batch.
+
+The workspace is the **current working directory** when `/Learn-course` is invoked. Conventional layout:
+
+```
+<workspace>/
+  YtUrls.py            # urlList = ["https://...", ...]  (optional)
+  input/               # source media: *.md, *.pdf, or pdf-md output subfolders
+  tools/
+    yt_transcript.py   # workspace-local transcript fetcher (see verify section)
+    pdf-md/            # workspace-local PDF→MD converter (Docling)
+  <course-slug>/       # one per source, created by Step 4
+```
+
+If neither `YtUrls.py` nor `input/` exists in CWD, abort with a clear message — there is nothing to process.
+
+### Step 0 — Preprocess workspace
+
+#### 0a — YouTube transcripts
+
+If `./YtUrls.py` exists, inspect `urlList`. If non-empty:
+
+```bash
+python3 tools/yt_transcript.py --from-list YtUrls.py \
+  --output input/ \
+  --delay-min 10 --delay-max 30
+```
+
+`yt_transcript.py` drains the list on success — each URL whose transcript is fetched is removed from `YtUrls.py`. Failed URLs (no captions, blocked, etc.) stay in the list so the next run retries them. The randomized 10–30 s delay between requests avoids YouTube rate-limit blocks; do not lower it casually. Surface the tool's final `done: N ok, M left` line in chat, but **do not abort** on partial failures — continue to 0b.
+
+Output naming: `input/<title-slug>.md` (title fetched via YouTube oEmbed; falls back to video id if oEmbed fails or `--use-id` is passed).
+
+If `YtUrls.py` is missing or empty, skip 0a silently.
+
+#### 0b — PDFs
+
+Scan `./input/` for `*.pdf` at the top level (subfolders are ignored — they are already-converted outputs). If any are present:
+
+```bash
+cd tools/pdf-md && uv run pdf-md convert \
+  --input-dir ../../input \
+  --output-dir ../../input \
+  --force
+```
+
+`pdf-md` (Docling) writes each PDF as `input/<stem>/<stem>.md` + `input/<stem>/images/`. The original `.pdf` stays in place (archiving happens later — see the design principles section). Surface per-file progress lines from the tool.
+
+If a PDF conversion fails, log it and continue with the rest. Do not abort.
+
+If no `.pdf` files exist, skip 0b silently.
+
+#### 0c — Enumerate sources
+
+After 0a + 0b complete, build the source list:
+
+```python
+from pathlib import Path
+sources = sorted(set(Path("input").glob("*.md")) | set(Path("input").glob("*/*.md")))
+```
+
+This captures both flat transcript outputs (`input/<slug>.md`) and one-level pdf-md outputs (`input/<stem>/<stem>.md`). If `sources` is empty, exit with a message — there is nothing to generate courses from.
+
+### Step 1 — Gather batch settings and loop per source
+
+1. Use `AskUserQuestion` ONCE to pick the **target programming language** for this batch: Python, JavaScript, TypeScript, Go, or Other. The language drives file extensions, the test runner, and starter-code idioms. Every source in this run uses the same language — if the user wants different languages per source, they should run `/Learn-course` separately for each.
+2. Use `AskUserQuestion` ONCE for an **optional companion repo** (`--repo <url-or-path>`). In the batched path this is usually skipped: a single repo rarely grounds N unrelated sources well. Default = no repo. Set only if every source in this run shares the same companion (e.g. all are chapters of one book with a paired repo).
+3. For each `source` in the enumerated list:
+   - Compute the course slug: `source.stem` lowercased and dasherized (use `slugify` logic compatible with the transcript-naming convention). For pdf-md outputs where `source.stem == source.parent.name`, use the stem unchanged.
+   - Default output dir = `<workspace>/<course-slug>/` (siblings of `input/`).
+   - **Skip this source if the output dir already exists** — re-runs are idempotent and won't clobber finished courses. Log "skip <slug> (already exists)" and continue.
+   - Run Steps 2 → 4 (and 2.5 if `--repo` was set) for this source.
+4. After the loop, run Step 5 once with a batch-level summary listing every course produced (or skipped).
 
 ### Step 2 — Chunk the markdown (smart, with deterministic fallback)
 
@@ -130,6 +199,13 @@ When a user is inside a directory with `_TEACHER.md` and `_meta.json`, or says t
 5. Update `.progress.json` on pass.
 
 ## Files in this skill
+
+Step 0 calls **workspace-local** tools, not skill-bundled scripts. They are expected at:
+
+- `<workspace>/tools/yt_transcript.py` — Typer CLI for fetching YouTube transcripts, with `--from-list` (drains the list on success) and `--delay-min`/`--delay-max` for randomized request spacing. If missing, Step 0a is a no-op (the skill warns but does not fail).
+- `<workspace>/tools/pdf-md/` — uv-managed Docling project for PDF→MD conversion. Defaults its input/output dirs to `<workspace>/input/`. Invoked via `uv run pdf-md convert`. If missing, Step 0b is a no-op.
+
+The skill itself bundles these (used by Steps 2 onward):
 
 - `references/lesson-prompt.md` — the LLM system prompt used in Step 3 of generate mode. Read every time you spawn a lesson subagent. Includes the optional repo-grounding section the model uses when reference files are provided.
 - `references/lesson-schema.md` — the JSON schema each lesson subagent must conform to. Pass to the subagent verbatim.
