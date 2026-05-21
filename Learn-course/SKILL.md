@@ -1,5 +1,5 @@
 ---
-name: Learn-course
+name: learn-course
 description: Convert a markdown source (textbook, lecture transcript, open-source library docs) into a directory-based learning course with chapters, lessons, and fill-in-the-blank coding exercises, then act as a terminal tutor that walks the learner through each lesson. Use this whenever the user wants to generate a course from a `.md` file, scaffold a hands-on curriculum from documentation, build practice problems out of a tutorial, or be coached lesson-by-lesson through a generated course directory. Trigger even when the user does not say "course" — phrases like "turn this into lessons", "make exercises from this book", "teach me from these docs", or "I want to learn this hands-on" all qualify.
 ---
 
