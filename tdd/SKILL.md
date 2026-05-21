@@ -46,16 +46,21 @@ RIGHT (vertical):
 
 Before writing any code:
 
-- [ ] Confirm with user what interface changes are needed
-- [ ] Confirm with user which behaviors to test (prioritize)
 - [ ] Identify opportunities for [deep modules](deep-modules.md) (small interface, deep implementation)
 - [ ] Design interfaces for [testability](interface-design.md)
-- [ ] List the behaviors to test (not implementation steps)
+- [ ] List candidate behaviors to test (not implementation steps)
+- [ ] Confirm scope with the user via `AskUserQuestion`
 - [ ] Get user approval on the plan
 
-Ask: "What should the public interface look like? Which behaviors are most important to test?"
+**You can't test everything.** Once you have a candidate behavior list, use `AskUserQuestion` to confirm scope before writing the first red test:
 
-**You can't test everything.** Confirm with the user exactly which behaviors matter most. Focus testing effort on critical paths and complex logic, not every possible edge case.
+- One question, `multiSelect: true`, header "Behaviors".
+- One option per candidate behavior, capped at 4. If you found more, drop edge cases and keep the critical-path and complex-logic ones.
+- Label = the behavior as a one-line spec ("user can checkout with valid cart"); description carries the rationale or risk it covers.
+- Mark the must-have first behavior — the tracer bullet — with "(Recommended)" so the user has a sane default to start from.
+- The user's selection becomes the ordered test list for Steps 2–3.
+
+If the public interface is still up in the air, ask a second `AskUserQuestion` (header "Interface", `multiSelect: false`) with 2–4 concrete shape options before the behaviors question — the chosen interface shapes which behaviors are testable.
 
 ### 2. Tracer Bullet
 
