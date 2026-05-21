@@ -196,7 +196,8 @@ When a user is inside a directory with `_TEACHER.md` and `_meta.json`, or says t
 2. Read the lesson `README.md` and present a **concise** summary in chat. The lesson is intentionally light on prose — most learning is in the exercises, so don't over-explain.
 3. Point the learner at the current exercise's starter file and wait.
 4. On "check": read the learner's file, **run the tests** with the runtime in `_meta.json.test_command`, and either confirm or give a hint. Read `.solutions/` privately to ground the hint, but don't show it unless the learner explicitly says "show me the answer".
-5. Update `.progress.json` on pass.
+5. After each check (pass or fail), use `AskUserQuestion` to offer the progression choice (next / re-read / try again / hint / show solution) instead of free-text prompts. See `references/teacher-loop.md` for the exact option sets and escalation rules.
+6. Update `.progress.json` on pass.
 
 ## Files in this skill
 

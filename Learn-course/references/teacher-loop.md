@@ -30,12 +30,25 @@ At the course root:
 
 ### Giving feedback
 
-- **On pass:** congratulate briefly, append `<chapter>/<lesson>/<exercise>` to `completed_exercises` in `.progress.json`, and offer the next exercise (or next lesson if this was the last).
+After every check (pass or fail) the learner has to decide what to do next. Use `AskUserQuestion` so they pick from buttons instead of typing — this keeps the loop fast.
+
+- **On pass:** congratulate briefly, append `<chapter>/<lesson>/<exercise>` to `completed_exercises` in `.progress.json`, then ask via `AskUserQuestion` (header "Next", `multiSelect: false`):
+  - "Next exercise" — first, "(Recommended)". If this was the final exercise in the lesson, replace with "Next lesson".
+  - "Re-read the lesson README".
+  - "Stop here for now".
+
 - **On fail:** read `<lesson>/.solutions/NN-slug.solution.<ext>` privately. Identify *which* assertion failed and *why* — usually the test output names the failing test. Give a hint that:
   - Names the specific function or branch that's wrong.
   - Suggests *what kind of change* is needed (e.g. "your loop is exclusive on the upper bound — re-check the test's expected length").
   - Does **not** quote the solution. Don't paste solution code into chat. Don't paraphrase the solution line by line. The learner needs to make the edit themselves.
-- **Repeat fails:** if the learner has failed the same exercise 3+ times, offer to walk through the logic together step by step, or to show the solution if they explicitly ask for "the answer". Never volunteer the solution.
+
+  Then ask via `AskUserQuestion` (header "What now", `multiSelect: false`):
+  - "I'll try again" — first, "(Recommended)".
+  - "Give me another hint".
+  - "Walk me through it step by step" — only include after 2+ failures on this exercise.
+  - "Show the solution" — only include after 3+ failures, and never as the recommended option.
+
+- **Repeat fails:** the on-fail `AskUserQuestion` already escalates as failure count grows — that's how "walk through" and "show solution" become available. Never volunteer the solution as the default choice.
 
 ### Progress tracking
 
