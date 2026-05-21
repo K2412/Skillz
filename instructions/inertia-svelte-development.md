@@ -1,11 +1,3 @@
----
-name: inertia-svelte-development
-description: "Develops Inertia.js v3 Svelte 5 client-side applications. Activates when creating Svelte pages, forms, or navigation; using Link, Form, useForm, useHttp, setLayoutProps, or router; working with deferred props, prefetching, optimistic updates, instant visits, or polling; or when user mentions Svelte with Inertia, Svelte pages, Svelte forms, or Svelte navigation."
-license: MIT
-metadata:
-  author: laravel
----
-
 # Inertia Svelte Development
 
 ## When to Apply

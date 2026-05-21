@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
-# Installs all skills to ~/.agents/skills/ (the source-of-truth) and
-# symlinks them into ~/.claude/skills/ and ~/.codex/skills/ so that
-# Claude Code and Codex CLI both pick them up. Tool dirs that don't
-# exist on this machine are skipped silently.
+# Installs all skills to ~/.agents/skills/ (the source-of-truth),
+# installs orchestrator-only instruction modules to ~/.pi/agent/instructions/,
+# installs Pi extensions to ~/.pi/agent/extensions/, and symlinks skills into
+# ~/.claude/skills/ and ~/.codex/skills/ so those CLIs pick them up. Tool dirs
+# that don't exist on this machine are skipped silently.
 #
 # Override the source-of-truth location with AGENTS_HOME if needed.
 set -euo pipefail
 
 AGENTS_DIR="${AGENTS_HOME:-$HOME/.agents}/skills"
-mkdir -p "$AGENTS_DIR"
+PI_INSTRUCTIONS_DIR="${PI_HOME:-$HOME/.pi/agent}/instructions"
+PI_EXTENSIONS_DIR="${PI_HOME:-$HOME/.pi/agent}/extensions"
+mkdir -p "$AGENTS_DIR" "$PI_INSTRUCTIONS_DIR" "$PI_EXTENSIONS_DIR"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Tool dirs to symlink into, if present. Add more as new CLIs adopt skills.
@@ -47,8 +50,30 @@ for skill_dir in "$SCRIPT_DIR"/*/; do
   done
 done
 
+instruction_count=0
+if [ -d "$SCRIPT_DIR/instructions" ]; then
+  for instruction_file in "$SCRIPT_DIR"/instructions/*.md; do
+    [ -f "$instruction_file" ] || continue
+    cp "$instruction_file" "$PI_INSTRUCTIONS_DIR/$(basename "$instruction_file")"
+    echo "Instruction: $(basename "$instruction_file") -> $PI_INSTRUCTIONS_DIR"
+    instruction_count=$((instruction_count + 1))
+  done
+fi
+
+extension_count=0
+if [ -d "$SCRIPT_DIR/pi-extensions" ]; then
+  for extension_file in "$SCRIPT_DIR"/pi-extensions/*.ts; do
+    [ -f "$extension_file" ] || continue
+    cp "$extension_file" "$PI_EXTENSIONS_DIR/$(basename "$extension_file")"
+    echo "Pi extension: $(basename "$extension_file") -> $PI_EXTENSIONS_DIR"
+    extension_count=$((extension_count + 1))
+  done
+fi
+
 echo ""
 echo "Done. $installed skill(s) installed to $AGENTS_DIR."
+echo "      $instruction_count instruction module(s) installed to $PI_INSTRUCTIONS_DIR."
+echo "      $extension_count Pi extension(s) installed to $PI_EXTENSIONS_DIR."
 if [ "$linked" -gt 0 ]; then
   echo "      $linked symlink(s) created across tool dirs."
 else

@@ -1,8 +1,3 @@
----
-name: laravel-docs-lookup
-description: Proactively look up official Laravel documentation before and during work on Laravel applications. Use whenever working on controllers, models, Eloquent, migrations, routes, middleware, queues, jobs, events, service providers, policies, form requests, validation, Blade, Artisan, config, tests, Fortify, Sanctum, Passport, Horizon, Telescope, Octane, Reverb, Cashier, Scout, Pulse, Pennant, Folio, Volt, Vite, or first-party laravel/* packages. Activate even if docs were not explicitly requested; prefer current stable docs over memory. Also trigger on phrases like "how do I do X in Laravel", "what's the Laravel way", "latest Laravel", "Laravel 11/12/13 syntax", or edits under app/, routes/, database/migrations/, config/, or tests/.
----
-
 # Laravel Docs Lookup
 
 ## Why this skill exists
