@@ -32,9 +32,17 @@ Present a numbered list of deepening opportunities. For each candidate, show:
 - **Dependency category**: See [REFERENCE.md](REFERENCE.md) for the four categories
 - **Test impact**: What existing tests would be replaced by boundary tests
 
-Do NOT propose interfaces yet. Ask the user: "Which of these would you like to explore?"
+Do NOT propose interfaces yet.
 
 ### 3. User picks a candidate
+
+Use the `AskUserQuestion` tool to present the candidates as selectable options. Rules:
+
+- One question, header "Candidate".
+- Each candidate becomes one option. Cap at 4 — if you found more, drop the weakest before asking.
+- Label = cluster name; description carries the one-line "why it's coupled" + dependency category so the user can compare at a glance.
+- Put your strongest candidate first and append "(Recommended)" to its label.
+- Do not add a generic "all of them" or "skip" option — "Other" is built in and handles those cases.
 
 ### 4. Frame the problem space
 
@@ -70,6 +78,13 @@ Present designs sequentially, then compare them in prose.
 After comparing, give your own recommendation: which design you think is strongest and why. If elements from different designs would combine well, propose a hybrid. Be opinionated — the user wants a strong read, not just a menu.
 
 ### 6. User picks an interface (or accepts recommendation)
+
+Use the `AskUserQuestion` tool. Rules:
+
+- One question, header "Interface".
+- One option per generated design (so up to 4). Label = the design's identifying constraint ("Minimal", "Flexible", "Common-case", "Ports & adapters"); description carries the one-line trade-off summary.
+- Your recommended design from Step 5 goes first with "(Recommended)" appended. If you proposed a hybrid, that hybrid is the recommended option — replace the weakest of the original designs to keep the count ≤ 4.
+- Do not include a separate "accept recommendation" option — selecting the recommended option already does that.
 
 ### 7. Create GitHub issue
 
