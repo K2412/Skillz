@@ -200,6 +200,24 @@ export default function askUserQuestion(pi: ExtensionAPI) {
 				};
 			}
 
+			const details = {
+				question: params.question,
+				options: simpleOptions,
+				answer: result.answer,
+				wasCustom: result.wasCustom,
+			} as QuestionDetails;
+
+			// Persist human decisions so orchestrators can turn the final agreed plan
+			// into durable task graphs (for example Beads parent/child work items).
+			try {
+				pi.appendEntry("ask-user-question-decision", {
+					...details,
+					answeredAt: new Date().toISOString(),
+				});
+			} catch {
+				// Persistence is best-effort; never fail the user interaction.
+			}
+
 			return {
 				content: [
 					{
@@ -207,12 +225,7 @@ export default function askUserQuestion(pi: ExtensionAPI) {
 						text: result.wasCustom ? `User wrote: ${result.answer}` : `User selected: ${result.index}. ${result.answer}`,
 					},
 				],
-				details: {
-					question: params.question,
-					options: simpleOptions,
-					answer: result.answer,
-					wasCustom: result.wasCustom,
-				} as QuestionDetails,
+				details,
 			};
 		},
 

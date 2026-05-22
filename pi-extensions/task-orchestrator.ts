@@ -1,4 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -7,6 +8,7 @@ type ActiveGrill = {
 	originalTask: string;
 	skills: string[];
 	startedAt: number;
+	beadsParentId?: string;
 };
 
 const SKILL_ROOT = join(homedir(), ".agents", "skills");
@@ -28,6 +30,7 @@ const LATCH_PATTERNS = [
 	/\b(stop|quit)\s+(asking|grilling)\b.*\b(execute|implement|build|code|do it|go)\b/i,
 	/\b(no more|enough)\s+questions\b/i,
 	/\b(execute|implement|build|code)\s+(now|it|the plan)\b/i,
+	/^\s*(ok\s+)?(execute|implement|build|code|do it)\s*$/i,
 	/\blet'?s\s+(execute|implement|build|code|do it)\b/i,
 ];
 
@@ -155,6 +158,68 @@ function detectDomainSkills(text: string): string[] {
 	return unique(skills.filter((skill) => DOMAIN_INSTRUCTIONS.includes(skill)));
 }
 
+function commandExists(command: string): boolean {
+	try {
+		execFileSync("/usr/bin/env", ["bash", "-lc", `command -v ${command}`], { stdio: "ignore", timeout: 1_000 });
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+function extractBeadId(output: string): string | undefined {
+	try {
+		const parsed = JSON.parse(output);
+		return parsed.id ?? parsed.issue?.id ?? parsed.bead?.id;
+	} catch {
+		return output.match(/[a-z][a-z0-9]*-[a-z0-9]+(?:\.\d+)?/i)?.[0];
+	}
+}
+
+function shellQuote(value: string): string {
+	return `'${value.replace(/'/g, `'"'"'`)}'`;
+}
+
+function ensureBeadsParent(cwd: string, task: string): { parentId?: string; warning?: string } {
+	if (!commandExists("bd")) {
+		return { warning: "Beads CLI `bd` is not installed or not on PATH. Install it, then rerun if you want automatic Beads task creation." };
+	}
+
+	try {
+		if (!existsSync(join(cwd, ".beads"))) {
+			execFileSync("bd", ["init", "--quiet"], { cwd, stdio: "ignore", timeout: 20_000 });
+		}
+
+		const description = `Parent task created by Pi task-orchestrator after grill/preflight acceptance.\n\nOriginal task:\n${task}`;
+		const output = execFileSync("bd", ["create", task.slice(0, 180), "-t", "epic", "-p", "1", "--description", description, "--labels", "pi-orchestrator,accepted-plan", "--json"], {
+			cwd,
+			encoding: "utf8",
+			timeout: 20_000,
+		});
+
+		return { parentId: extractBeadId(output) };
+	} catch (error) {
+		return { warning: `Beads setup failed: ${error instanceof Error ? error.message : String(error)}` };
+	}
+}
+
+function getRecentDecisions(ctx: any, since: number): Array<{ question: string; answer: string; answeredAt?: string }> {
+	try {
+		return ctx.sessionManager
+			.getEntries()
+			.filter((entry: any) => entry.type === "custom" && entry.customType === "ask-user-question-decision")
+			.map((entry: any) => entry.data ?? entry.details ?? entry)
+			.filter((data: any) => data?.question && data?.answer && (!data.answeredAt || Date.parse(data.answeredAt) >= since - 5_000));
+	} catch {
+		return [];
+	}
+}
+
+function renderDecisions(decisions: Array<{ question: string; answer: string; answeredAt?: string }>): string {
+	if (decisions.length === 0) return "No persisted AskUserQuestion decisions were found in this session. Use the visible conversation context as the source of truth.";
+	return decisions.map((decision, index) => `${index + 1}. ${decision.question}\n   Answer: ${decision.answer}`).join("\n");
+}
+
 function renderInstructionBundle(instructionNames: string[]): string {
 	const sections = instructionNames.map((name) => {
 		const content = readInstruction(name);
@@ -189,10 +254,11 @@ Operational rules:
 - If an answer can be discovered by reading the codebase, inspect the codebase instead of asking.
 - Continue grilling until the user explicitly uses an execution latch such as "enough questions, execute", "no more questions", or "let's implement".
 - Until that latch appears, do not modify files or execute the plan.
+- As the plan stabilizes, identify likely child tasks and any human approval gates that should exist in Beads after acceptance.
 - Always preserve TDD as a constraint for the eventual implementation.`;
 }
 
-function buildExecutionPrompt(active: ActiveGrill, latchMessage: string): string {
+function buildExecutionPrompt(active: ActiveGrill, latchMessage: string, decisions: Array<{ question: string; answer: string; answeredAt?: string }>, beads: { parentId?: string; warning?: string }): string {
 	const combined = `${active.originalTask}\n\n${latchMessage}`;
 	const skills = unique([...ALWAYS_INSTRUCTIONS, ...active.skills, ...detectDomainSkills(combined)]);
 	const bundle = renderInstructionBundle(skills);
@@ -205,6 +271,12 @@ ${active.originalTask}
 Latch / latest user instruction:
 ${latchMessage}
 
+Persisted human decisions from AskUserQuestion:
+${renderDecisions(decisions)}
+
+Beads status:
+${beads.parentId ? `Initialized/available. Parent epic: ${beads.parentId}` : `Unavailable. ${beads.warning ?? "No parent issue was created."}`}
+
 Mandatory development instructions for execution:
 ${bundle}
 
@@ -213,7 +285,20 @@ Execution rules:
 - Apply all relevant domain instructions above.
 - If Laravel is involved, look up the official docs as instructed before non-trivial Laravel changes.
 - Prefer codebase inspection over asking more questions.
-- Ask a new question only if execution is impossible or unsafe without the answer.`;
+- Ask a new question only if execution is impossible or unsafe without the answer.
+
+Beads planning rules:
+- Before modifying project code, convert the accepted plan into Beads tasks when `bd` is available.
+- If parent epic `${beads.parentId ?? "<none>"}` exists, create child tasks under it with:
+  `bd create "Child task title" -t task -p 1 --parent ${beads.parentId ?? "<parent-id>"} --description ${shellQuote("scope, acceptance criteria, and relevant decisions")} --labels "pi-orchestrator,agent-task" --json`
+- Use one child per vertical TDD slice. Do not create one huge child task.
+- Add dependency edges where order matters with `bd dep add <blocked-child> <blocking-child>`.
+- For human approvals or irreversible decisions, create a human gate that blocks the relevant child:
+  `bd gate create --type=human --blocks <child-id> --reason ${shellQuote("Human approval required before proceeding")}`
+- Mark human-gated children with label `human-gate` where possible.
+- Work through `bd ready --json` in dependency order.
+- Do not bypass a human gate; use AskUserQuestion to get approval, then resolve/close the gate according to Beads docs.
+- If Beads is unavailable, continue with an explicit task checklist in the response and tell the user what Beads setup failed.`;
 }
 
 export default function taskOrchestrator(pi: ExtensionAPI) {
@@ -240,19 +325,28 @@ export default function taskOrchestrator(pi: ExtensionAPI) {
 
 		const text = event.text.trim();
 		if (!text) return { action: "continue" };
-		if (shouldBypass(text)) return { action: "continue" };
 
 		if (activeGrill) {
 			if (hasLatch(text)) {
-				const prompt = buildExecutionPrompt(activeGrill, text);
+				const beads = ensureBeadsParent(ctx.cwd, activeGrill.originalTask);
+				if (beads.parentId) activeGrill.beadsParentId = beads.parentId;
+				if (beads.warning) ctx.ui.notify(beads.warning, "warning");
+				const decisions = getRecentDecisions(ctx, activeGrill.startedAt);
+				const prompt = buildExecutionPrompt(activeGrill, text, decisions, beads);
 				activeGrill = undefined;
-				ctx.ui.notify("Execution latch detected: switching from grill mode to implementation", "info");
+				ctx.ui.notify("Execution latch detected: switching from grill mode to Beads-backed implementation", "info");
 				return { action: "transform", text: prompt, images: event.images };
 			}
 
 			// Let answers to the active grill pass through normally. The transformed grill prompt
 			// already instructs the model not to execute until the latch appears.
 			return { action: "continue" };
+		}
+
+		if (shouldBypass(text)) return { action: "continue" };
+		if (hasLatch(text)) {
+			ctx.ui.notify("Execution latch ignored: no active grill/preflight task is being tracked. Send the task first, or use /task-orchestrator-reset if state looks stale.", "warning");
+			return { action: "handled" };
 		}
 
 		const skills = unique([...ALWAYS_INSTRUCTIONS, ...detectDomainSkills(text)]);
