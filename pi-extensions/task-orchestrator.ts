@@ -37,6 +37,19 @@ const BYPASS_PATTERNS = [
 	/^\s*(no\s*grill|skip\s*grill|bypass\s*grill)\s*[:,-]/i,
 ];
 
+const NON_TASK_PATTERNS = [
+	/^\s*(can|could|do|does|are|is|what|which|who|when|where|why|how)\b.*\?\s*$/i,
+	/\bwhat (skills|tools|mcp servers|models)\b/i,
+	/\b(can|could) you\b.*\b(visit|browse|open|access)\b.*\b(web|websites?|pages?|urls?)\b/i,
+	/\bhow do(es)?\b.*\bwork\b/i,
+];
+
+const TASK_INTENT_PATTERNS = [
+	/\b(add|build|change|create|debug|delete|edit|fix|implement|install|make|migrate|modify|refactor|remove|rename|test|update|write)\b/i,
+	/\b(set up|wire up|hook up|scaffold|generate|configure|integrate)\b/i,
+	/\bPR|pull request|branch|diff\b/i,
+];
+
 function stripFrontmatter(markdown: string): string {
 	return markdown.replace(/^---\n[\s\S]*?\n---\n?/, "").trim();
 }
@@ -64,7 +77,14 @@ function hasAny(text: string, patterns: RegExp[]): boolean {
 }
 
 function shouldBypass(text: string): boolean {
-	return BYPASS_PATTERNS.some((pattern) => pattern.test(text));
+	if (BYPASS_PATTERNS.some((pattern) => pattern.test(text))) return true;
+
+	// Capability/explanation questions are not implementation tasks. Let the agent answer normally.
+	if (NON_TASK_PATTERNS.some((pattern) => pattern.test(text)) && !TASK_INTENT_PATTERNS.some((pattern) => pattern.test(text))) {
+		return true;
+	}
+
+	return false;
 }
 
 function hasLatch(text: string): boolean {
