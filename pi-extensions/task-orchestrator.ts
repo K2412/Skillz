@@ -288,15 +288,15 @@ Execution rules:
 - Ask a new question only if execution is impossible or unsafe without the answer.
 
 Beads planning rules:
-- Before modifying project code, convert the accepted plan into Beads tasks when `bd` is available.
-- If parent epic `${beads.parentId ?? "<none>"}` exists, create child tasks under it with:
-  `bd create "Child task title" -t task -p 1 --parent ${beads.parentId ?? "<parent-id>"} --description ${shellQuote("scope, acceptance criteria, and relevant decisions")} --labels "pi-orchestrator,agent-task" --json`
+- Before modifying project code, convert the accepted plan into Beads tasks when bd is available.
+- If parent epic ${beads.parentId ?? "<none>"} exists, create child tasks under it with:
+  bd create "Child task title" -t task -p 1 --parent ${beads.parentId ?? "<parent-id>"} --description ${shellQuote("scope, acceptance criteria, and relevant decisions")} --labels "pi-orchestrator,agent-task" --json
 - Use one child per vertical TDD slice. Do not create one huge child task.
-- Add dependency edges where order matters with `bd dep add <blocked-child> <blocking-child>`.
+- Add dependency edges where order matters with: bd dep add <blocked-child> <blocking-child>.
 - For human approvals or irreversible decisions, create a human gate that blocks the relevant child:
-  `bd gate create --type=human --blocks <child-id> --reason ${shellQuote("Human approval required before proceeding")}`
-- Mark human-gated children with label `human-gate` where possible.
-- Work through `bd ready --json` in dependency order.
+  bd gate create --type=human --blocks <child-id> --reason ${shellQuote("Human approval required before proceeding")}
+- Mark human-gated children with label human-gate where possible.
+- Work through bd ready --json in dependency order.
 - Do not bypass a human gate; use AskUserQuestion to get approval, then resolve/close the gate according to Beads docs.
 - If Beads is unavailable, continue with an explicit task checklist in the response and tell the user what Beads setup failed.`;
 }
