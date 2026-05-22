@@ -39,6 +39,8 @@ const BYPASS_PATTERNS = [
 
 const NON_TASK_PATTERNS = [
 	/^\s*(can|could|do|does|are|is|what|which|who|when|where|why|how)\b.*\?\s*$/i,
+	/^\s*(ok\s+)?is it possible to\b/i,
+	/^\s*(can|could)\s+(you|we)\b.*\?\s*$/i,
 	/\bwhat (skills|tools|mcp servers|models)\b/i,
 	/\b(can|could) you\b.*\b(visit|browse|open|access)\b.*\b(web|websites?|pages?|urls?)\b/i,
 	/\bhow do(es)?\b.*\bwork\b/i,
@@ -80,8 +82,10 @@ function shouldBypass(text: string): boolean {
 	if (BYPASS_PATTERNS.some((pattern) => pattern.test(text))) return true;
 
 	// Capability/explanation questions are not implementation tasks. Let the agent answer normally.
-	if (NON_TASK_PATTERNS.some((pattern) => pattern.test(text)) && !TASK_INTENT_PATTERNS.some((pattern) => pattern.test(text))) {
-		return true;
+	// If the user asks "is it possible" / "can we", treat it as discussion even when it mentions build/make.
+	if (NON_TASK_PATTERNS.some((pattern) => pattern.test(text))) {
+		if (/^\s*(ok\s+)?(is it possible to|can|could)\b/i.test(text)) return true;
+		if (!TASK_INTENT_PATTERNS.some((pattern) => pattern.test(text))) return true;
 	}
 
 	return false;
