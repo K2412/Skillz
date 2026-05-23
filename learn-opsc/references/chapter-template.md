@@ -1,13 +1,27 @@
-# Chapter Template
+# Lesson Template
 
-Use this structure for each `learn-opsc` chapter.
+Use this structure for each `learn-opsc` lesson. The directory must mirror `learn-course` ergonomics:
+
+```text
+01-lessons/NN-slug/
+  README.md
+  source-map.md
+  exercises/
+    01-name.ext
+  tests/
+    01-name.test.ext
+  .solutions/
+    01-name.solution.ext
+```
+
+`README.md`:
 
 ```markdown
-# 00N — <Conceptual Commit Title>
+# NNN — <Conceptual Commit Title>
 
 ## Goal
 
-What this chapter adds to the reconstruction.
+What this lesson adds to the reconstruction.
 
 ## The pressure
 
@@ -15,15 +29,13 @@ What problem appears if this abstraction does not exist?
 
 ## Conceptual commit
 
-A short commit-style message:
-
 > Add <thing> so that <capability>.
 
-## Before this chapter
+## Before this lesson
 
-What the mini-project can already do.
+What the reconstruction can already do.
 
-## After this chapter
+## After this lesson
 
 What new behavior exists.
 
@@ -41,19 +53,16 @@ Small, readable implementation or pseudocode. Prefer clarity over completeness.
 | --- | --- |
 | `path/to/file` | Short explanation |
 
-## Reading path
+## Exercises
 
-1. `path/to/entrypoint`
-2. `path/to/core-abstraction`
-3. `path/to/test-or-example`
+1. **Exercise name** — `exercises/01-name.ext`
+   Short behavior-oriented task description.
 
-## Exercise
-
-A small reconstruction, tracing, or source-reading task.
+Each starter file must contain rich comments and `TODO` markers. Each exercise must have a matching executable test and hidden solution.
 
 ## Checkpoints
 
-After this chapter, the learner should be able to answer:
+After this lesson, the learner should be able to answer:
 
 - Question 1
 - Question 2
@@ -62,4 +71,14 @@ After this chapter, the learner should be able to answer:
 ## What we are intentionally ignoring
 
 Production details omitted from the simplified reconstruction.
+```
+
+`source-map.md`:
+
+```markdown
+# Lesson Source Map
+
+| Real file | Read for |
+| --- | --- |
+| `repo/path` | Why this file matters for the lesson |
 ```

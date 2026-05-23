@@ -11,26 +11,29 @@ This is **not** a literal Git history course. Real commit histories are noisy. T
 
 ## Core output
 
-Create a course directory like:
+Create a course directory that mirrors `learn-course` exercise ergonomics while preserving OPS source maps:
 
 ```text
 <project>-under-the-hood/
   README.md
-  _meta.json
-  source-map.md
+  _meta.json                  # language, test_command, repo refs, counts
+  ROADMAP.md                  # full semantic reconstruction path
+  source-map.md               # global source map
   repos/
     manifest.json
-  chapters/
-    001-orientation/
-      README.md
-      source-map.md
-      conceptual-commit.md
-      exercise.md
-    002-.../
-  mini-project/
-    README.md
-    ... implementation scaffold ...
+  01-lessons/
+    01-orientation/
+      README.md               # conceptual commit + teaching prose + exercise list
+      source-map.md           # real files to read for this lesson
+      exercises/              # learner starter files with TODO markers
+        01-....php|ts|py
+      tests/                  # executable tests for each exercise
+        01-....test.php|ts|py
+      .solutions/             # hidden reference implementations
+        01-....solution.php|ts|py
 ```
+
+Do **not** create chapters that merely point at a vague `mini-project/` with no associated exercise/test files. Every generated lesson must contain runnable exercises, tests, and hidden solutions, like `learn-course`.
 
 The course should help the learner answer:
 
@@ -82,10 +85,11 @@ Steps:
 3. Read project docs if provided.
 4. Identify major subsystems.
 5. Order subsystems semantically, from smallest bootstrap concept to working system.
-6. Generate chapter directories.
-7. Add source maps linking each chapter to real files.
-8. Add exercises or reconstruction tasks.
-9. Add a final reading path for the real codebase.
+6. Generate `01-lessons/<number>-<slug>/` directories, not bare chapter notes.
+7. For every lesson, add `README.md`, `source-map.md`, `exercises/`, `tests/`, and `.solutions/`.
+8. Create 2–4 exercises per lesson, preferably one source-reading/tracing exercise and multiple small reconstruction exercises. Tests should validate behavior through public exercise functions/classes.
+9. Add dependency files and `_meta.json.test_command` so teach mode can run the tests.
+10. Add a final reading path for the real codebase.
 
 ### 3. Teach mode
 
@@ -93,9 +97,9 @@ If the user is inside a generated `learn-opsc` course and asks to start/continue
 
 1. Read `_meta.json` and chapter progress if present.
 2. Present the current chapter’s goal concisely.
-3. Point to the source files and mini-project exercise.
-4. On check, review the learner’s work and run tests if a test command exists.
-5. Give hints before solutions.
+3. Point to the current lesson’s `exercises/` starter file and `source-map.md`.
+4. On check, review the learner’s work and run the tests named by `_meta.json.test_command` when available.
+5. Read `.solutions/` privately for hints; do not reveal solutions unless explicitly asked.
 
 ## Analysis workflow
 
@@ -154,9 +158,9 @@ Svelte spine:
 component syntax -> compiler pipeline -> AST/analysis -> reactivity model -> runes -> template lowering -> DOM operations -> runtime scheduling -> stores/context/transitions
 ```
 
-### Step 4 — Create conceptual commits
+### Step 4 — Create conceptual commit lessons
 
-Each chapter should behave like a clean pedagogical commit:
+Each lesson should behave like a clean pedagogical commit:
 
 ```text
 001 Add the front controller
@@ -166,15 +170,17 @@ Each chapter should behave like a clean pedagogical commit:
 ...
 ```
 
-For each chapter include:
+For each lesson include:
 
-- **Goal** — what this chapter adds
+- **Goal** — what this conceptual commit adds
 - **Why it exists** — what pressure forced this abstraction
-- **Conceptual diff** — what changed from the previous chapter
-- **Mini implementation** — simplified code or pseudocode
-- **Real source map** — files/classes/functions in the actual repo
+- **Conceptual diff** — what changed from the previous lesson
+- **Mini implementation** — simplified code or pseudocode in the README
+- **Real source map** — files/classes/functions in the actual repo, also written to `source-map.md`
 - **Reading assignment** — exact files to read next
-- **Exercise** — one small reconstruction or tracing task
+- **Exercises** — 2–4 starter files with rich comments and TODO markers
+- **Tests** — one executable test file per exercise
+- **Hidden solutions** — one `.solutions/*.solution.*` file per exercise
 - **Checkpoints** — questions the learner should be able to answer
 
 ### Step 5 — Use docs as grounding, source as truth
