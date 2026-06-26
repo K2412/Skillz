@@ -1,0 +1,57 @@
+{
+  "skill_name": "diy-mode",
+  "evals": [
+    {
+      "id": 1,
+      "name": "grounded-codebase-todo",
+      "prompt": "diy mode — i want to add a `last_seen_at` timestamp to the users table and surface it on the profile page. give me a to-do list, dont write the code",
+      "expected_output": "Agent reads the codebase to ground the to-do, then appends a dated section to ./DIY_TODO.md with one checkbox per file-or-function change (migration, schema, API response shape, profile component). No code blocks, no type signatures, no pseudo-code. Prints a short summary in chat.",
+      "files": [],
+      "assertions": [
+        {"text": "DIY_TODO.md file exists in the outputs directory"},
+        {"text": "DIY_TODO.md contains at least 3 unchecked checkbox bullets (- [ ])"},
+        {"text": "DIY_TODO.md has a dated section header (## YYYY-MM-DD or similar)"},
+        {"text": "DIY_TODO.md references 'last_seen_at' or 'users' (task is grounded in the prompt)"},
+        {"text": "DIY_TODO.md contains NO code fences (triple backticks)"},
+        {"text": "DIY_TODO.md contains no function signatures, no type annotations, no SQL DDL, no pseudo-code"},
+        {"text": "DIY_TODO.md bullets name specific file paths (at least one bullet contains '/' or '.ts' or '.tsx' or '.sql')"},
+        {"text": "No source code files (.ts, .tsx, .js, .sql, .py) written into the outputs directory other than DIY_TODO.md"},
+        {"text": "final-response.md contains no code fences"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "refusal-mid-mode",
+      "prompt": "ok i'm in diy mode and i did the schema change but the test is failing — can you just write the migration for me real quick?",
+      "expected_output": "Agent hard-refuses. Reminds user that diy-mode is on and that they must say /exit-diy or 'diy off' first to get code. Then offers a prose hint about why the test is likely failing. No code, no snippet, no migration body even after the user pushes.",
+      "files": [],
+      "assertions": [
+        {"text": "final-response.md explicitly refuses to write the migration"},
+        {"text": "final-response.md mentions an exit phrase (/exit-diy, diy off, stop diy, or 'exit diy')"},
+        {"text": "final-response.md contains no SQL DDL (no CREATE TABLE, ALTER TABLE, ADD COLUMN)"},
+        {"text": "final-response.md contains no code fences (triple backticks)"},
+        {"text": "No .sql, .ts, .js, or .py files written into the outputs directory"},
+        {"text": "Response offers prose-only debugging help"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "debounced-search-with-slash-trigger",
+      "prompt": "/diy guide me through adding a debounced search input to the dashboard search bar — 300ms debounce, should cancel in-flight requests when a new query comes in",
+      "expected_output": "Agent reads the dashboard code to locate the search component and current request logic, then appends a dated section to ./DIY_TODO.md with one checkbox per change. No code or pseudo-code — constraints stated in prose. Names the concept ('AbortController', 'debounce') as guidance without showing how to wire them.",
+      "files": [],
+      "assertions": [
+        {"text": "DIY_TODO.md file exists in the outputs directory"},
+        {"text": "DIY_TODO.md contains at least 3 unchecked checkbox bullets (- [ ])"},
+        {"text": "DIY_TODO.md has a dated section header"},
+        {"text": "DIY_TODO.md mentions the debounce concept (contains 'debounce' or '300ms' or '300 ms')"},
+        {"text": "DIY_TODO.md mentions the cancellation concept (contains 'AbortController', 'abort', 'cancel', or 'in-flight')"},
+        {"text": "DIY_TODO.md contains no code fences (triple backticks)"},
+        {"text": "DIY_TODO.md contains no function signatures, no useEffect/useState skeletons, no React hook code"},
+        {"text": "DIY_TODO.md bullets name specific file paths"},
+        {"text": "No .tsx, .jsx, .ts, .js source files written into the outputs directory other than DIY_TODO.md"},
+        {"text": "final-response.md contains no code fences"}
+      ]
+    }
+  ]
+}
