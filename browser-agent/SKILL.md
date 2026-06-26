@@ -1,9 +1,9 @@
 ---
-name: agent-browser
+name: browser-agent
 description: "Browser testing and automation using the agent-browser CLI. Use this skill whenever the user wants to test a URL, check a webpage, verify UI behavior, open something in a browser, do browser automation, test if a site works, verify a page loads correctly, test form submissions, check responsive layout, monitor network requests, or mentions agent-browser directly. Also trigger when the user says 'check the page', 'test the frontend', 'does the site work', 'open localhost', 'test in browser', 'verify the deploy', 'screenshot the page', or any browser-related testing task. Even if the user doesn't say 'browser' explicitly — if they want to verify something works at a URL, this is the skill to use."
 ---
 
-# agent-browser — Browser Testing & Automation
+# browser-agent — Browser Testing & Automation
 
 `agent-browser` is a fast CLI for browser automation, designed for AI agents. It manages a persistent browser daemon so commands chain naturally without reopening Chrome each time.
 

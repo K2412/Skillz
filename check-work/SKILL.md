@@ -48,7 +48,7 @@ The whole point is for the user to *watch*. Always pass `--headed` so the Chrome
 agent-browser --headed open http://localhost:3000/checkout && agent-browser snapshot -i
 ```
 
-Then follow the standard agent-browser pattern: **open → snapshot → interact → verify** (see the `agent-browser` skill for full details). Use `wait` after navigation if the page is slow. Take a `screenshot` at the end so there's a visual record.
+Then follow the standard agent-browser pattern: **open → snapshot → interact → verify** (see the `browser-agent` skill for full details). Use `wait` after navigation if the page is slow. Take a `screenshot` at the end so there's a visual record.
 
 If the change involves a flow (login → form → submit), walk the whole flow, not just the landing page. If it's a visual-only tweak (copy change, color, spacing), a snapshot + screenshot is enough.
 
