@@ -228,7 +228,7 @@ See `references/chapter-template.md` for the per-chapter structure.
 
 ## Pairing with other skills
 
-- Use `understand` / `understand-chat` if a knowledge graph exists or the repo is large.
+- Use `understand` / `understand-chat` if a Markdown knowledge map exists or the repo is large.
 - Use `learn-course` if the final output should become an exercise-heavy course from generated Markdown.
 - Use `tdd` if building the mini-project implementation with tests.
 - Use `agent-browser` only if verifying generated HTML/course UI, not for source analysis.

@@ -51,6 +51,8 @@ LANGUAGE_PROFILES: dict[str, dict[str, str]] = {
     "shell":      {"ext": "sh", "test_ext": "sh", "test_command": "bash"},
     "bash":       {"ext": "sh", "test_ext": "sh", "test_command": "bash"},
     "swift":      {"ext": "swift", "test_ext": "swift", "test_command": "swift"},
+    "sql":        {"ext": "sql", "test_ext": "sh", "test_command": "bash"},
+    "c":          {"ext": "c", "test_ext": "sh", "test_command": "bash"},
 }
 
 SLUG_RE = re.compile(r"[^a-z0-9]+")

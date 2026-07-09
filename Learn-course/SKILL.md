@@ -37,15 +37,16 @@ If neither `YtUrls.py` nor `input/` exists in CWD, abort with a clear message �
 
 #### 0a — YouTube transcripts
 
-If `./YtUrls.py` exists, inspect `urlList`. If non-empty:
+If `./YtUrls.py` exists, inspect `videoList`, `playlistList`, and `playlistListReverse`. If any are non-empty:
 
 ```bash
-python3 tools/yt_transcript.py --from-list YtUrls.py \
+uv run tools/yt_transcript.py --from-list YtUrls.py \
   --output input/ \
+  --ledger .youtube_transcripts.sqlite \
   --delay-min 10 --delay-max 30
 ```
 
-`yt_transcript.py` drains the list on success — each URL whose transcript is fetched is removed from `YtUrls.py`. Failed URLs (no captions, blocked, etc.) stay in the list so the next run retries them. The randomized 10–30 s delay between requests avoids YouTube rate-limit blocks; do not lower it casually. Surface the tool's final `done: N ok, M left` line in chat, but **do not abort** on partial failures — continue to 0b.
+`yt_transcript.py` treats `.youtube_transcripts.sqlite` as the source of truth. URLs already recorded as successful are skipped and removed from `YtUrls.py` without refetching; newly successful pulls are written to `input/`, recorded in SQLite, and removed from `YtUrls.py`. Failed URLs (no captions, blocked, etc.) stay in the list so the next run retries them. The randomized 10–30 s delay between requests avoids YouTube rate-limit blocks; do not lower it casually. Surface the tool's final per-list summary lines in chat, but **do not abort** on partial failures — continue to 0b.
 
 Output naming: `input/<title-slug>.md` (title fetched via YouTube oEmbed; falls back to video id if oEmbed fails or `--use-id` is passed).
 
