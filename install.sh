@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Installs all skills to ~/.agents/skills/ (the source-of-truth),
+# regenerates ~/.agents/AGENTS.md and ~/.claude/CLAUDE.md (symlink) so Claude
+# Code and OpenCode always reflect the current skill set,
 # installs orchestrator-only instruction modules to ~/.pi/agent/instructions/,
 # installs Pi extensions to ~/.pi/agent/extensions/, and symlinks skills into
 # ~/.claude/skills/ and ~/.codex/skills/ so those CLIs pick them up. Tool dirs
@@ -8,7 +10,8 @@
 # Override the source-of-truth location with AGENTS_HOME if needed.
 set -euo pipefail
 
-AGENTS_DIR="${AGENTS_HOME:-$HOME/.agents}/skills"
+AGENTS_HOME_DIR="${AGENTS_HOME:-$HOME/.agents}"
+AGENTS_DIR="$AGENTS_HOME_DIR/skills"
 PI_INSTRUCTIONS_DIR="${PI_HOME:-$HOME/.pi/agent}/instructions"
 PI_EXTENSIONS_DIR="${PI_HOME:-$HOME/.pi/agent}/extensions"
 mkdir -p "$AGENTS_DIR" "$PI_INSTRUCTIONS_DIR" "$PI_EXTENSIONS_DIR"
@@ -70,6 +73,34 @@ if [ -d "$SCRIPT_DIR/pi-extensions" ]; then
   done
 fi
 
+# Regenerate ~/.agents/AGENTS.md with current skill listing
+AGENTS_MD="$AGENTS_HOME_DIR/AGENTS.md"
+{
+  cat << 'HEADER'
+# Global Agent Instructions
+
+## Available Skills
+
+Skills load automatically from `~/.agents/skills/`. Use `/skill-name` or describe what you need.
+
+HEADER
+  for skill_dir in "$AGENTS_DIR"/*/; do
+    [ -f "$skill_dir/SKILL.md" ] || continue
+    sname=$(basename "$skill_dir")
+    desc=$(awk '/^description:/{sub(/^description:[[:space:]]*/,""); gsub(/^"|"$/,""); print; exit}' "$skill_dir/SKILL.md")
+    short="${desc:0:100}"
+    echo "- **\`/$sname\`** — $short"
+  done
+  echo ""
+  echo "> Source of truth: \`~/.agents/skills/\` — managed via [K2412/Skillz](https://github.com/K2412/Skillz). Run \`install.sh\` to sync."
+} > "$AGENTS_MD"
+echo "Generated: $AGENTS_MD"
+
+# Symlink ~/.claude/CLAUDE.md -> ~/.agents/AGENTS.md for Claude Code global context
+CLAUDE_MD="$HOME/.claude/CLAUDE.md"
+ln -sf "$AGENTS_MD" "$CLAUDE_MD"
+echo "Symlinked: $CLAUDE_MD -> $AGENTS_MD"
+
 echo ""
 echo "Done. $installed skill(s) installed to $AGENTS_DIR."
 echo "      $instruction_count instruction module(s) installed to $PI_INSTRUCTIONS_DIR."
@@ -79,4 +110,4 @@ if [ "$linked" -gt 0 ]; then
 else
   echo "      No tool dirs found (~/.claude/skills, ~/.codex/skills)."
 fi
-echo "Restart Claude Code or Codex to pick up new skills."
+echo "Restart Claude Code or OpenCode to pick up skill changes."
