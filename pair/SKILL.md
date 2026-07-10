@@ -27,37 +27,90 @@ Continue until the user signals completion ("ready", "ship it", "let's go", "do 
 
 ---
 
-## Stage 2 — Gate: Commit plan to Beads
+## Stage 2 — Spec + Beads
 
 Confirm with AskUserQuestion before writing anything:
 
 ```
-question: "Grill complete. Commit this plan to Beads and move to execution planning?"
+question: "Grill complete. Synthesise into a spec and commit to Beads?"
 options:
-  - "Yes, write to Beads (Recommended)" → proceed
+  - "Yes, write spec and Beads (Recommended)" → proceed
   - "Revise something first" → loop back to Stage 1 with current decisions as context
   - "Summarise in chat only, skip Beads" → produce markdown checklist and stop
 ```
 
-**If writing to Beads:**
+**Step 2a — Explore the repo**
+
+Before writing anything, read the codebase to understand current state. Use the project's domain vocabulary throughout the spec. Respect any ADRs in the area being touched. Do not interview the user — synthesise from the grill log and what you find.
+
+**Step 2b — Identify test seams**
+
+Identify the seams at which the feature will be tested:
+- Prefer existing seams over new ones.
+- Use the highest seam possible — the fewer seams the better; the ideal is one.
+- Propose new seams only when unavoidable, at the highest point you can.
+
+Confirm the seams with the user via AskUserQuestion before proceeding.
+
+**Step 2c — Write the spec**
+
+Synthesise the grill log and codebase understanding into a spec using this template:
+
+```
+## Problem Statement
+The problem the user is facing, from the user's perspective.
+
+## Solution
+The solution, from the user's perspective.
+
+## User Stories
+A numbered list covering all aspects of the feature. Format:
+1. As a <actor>, I want <feature>, so that <benefit>.
+(Be exhaustive — every edge case, every actor.)
+
+## Implementation Decisions
+- Modules that will be built or modified
+- Interface changes
+- Architectural decisions
+- Schema changes
+- API contracts
+- Specific interactions
+(No file paths or code snippets unless a prototype snippet encodes a decision
+more precisely than prose — if so, inline only the decision-rich parts.)
+
+## Testing Decisions
+- What makes a good test for this feature (external behaviour, not internals)
+- Which modules will be tested
+- Prior art in the codebase (similar existing tests)
+
+## Out of Scope
+What this spec explicitly does not cover.
+
+## Further Notes
+Anything else relevant.
+```
+
+Show the spec to the user. Ask if anything needs adjusting before committing to Beads.
+
+**Step 2d — Write to Beads**
 
 1. Check `which bd` — if missing, fall back to markdown and tell the user to install `bd`.
 2. If `.beads/` doesn't exist, run `bd init --quiet`.
-3. Create one epic. Title = original task (≤180 chars). Description = full Q/A decision log.
+3. Create one epic. Title = original task (≤180 chars). Description = the full spec from Step 2c.
    ```
    bd create "<task title>" -t epic -p 1 \
-     --description "<decision log>" \
+     --description "<spec>" \
      --labels "pair,accepted-plan" --json
    ```
    Capture the parent ID.
-4. Create one child task per atomic, independently-shippable TDD slice. Each child description includes: scope, acceptance criteria, and the decisions relevant to that slice.
+4. Create one child task per atomic, independently-shippable TDD slice derived from the spec's Implementation Decisions and User Stories. Each child description includes: scope, acceptance criteria (tied to user stories), and the confirmed test seam.
    ```
    bd create "<child title>" -t task -p 1 \
      --parent <parent-id> \
-     --description "<scope + acceptance criteria>" \
+     --description "<scope + acceptance criteria + seam>" \
      --labels "pair,agent-task" --json
    ```
-5. Add `bd dep add` edges for any ordering the interview surfaced.
+5. Add `bd dep add` edges for any ordering the spec surfaced.
 6. Add human gates for irreversible operations (migrations, schema changes, external API writes):
    ```
    bd gate create --type=human --blocks <child-id> \
@@ -65,7 +118,7 @@ options:
    ```
 7. Show the user the compact task tree (epic ID, child IDs + one-line titles, dep edges, gates).
 
-**Markdown fallback:** If `bd` is unavailable, produce the same structure as a markdown checklist (Epic → children → blockers → gates) and note that Beads was skipped so the user knows to install `bd` later.
+**Markdown fallback:** If `bd` is unavailable, produce the spec + task list as a markdown checklist and note that Beads was skipped so the user knows to install `bd` later.
 
 ---
 
