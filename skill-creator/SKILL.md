@@ -83,60 +83,60 @@ skill-name/
     └── assets/     - Files used in output (templates, icons, fonts)
 ```
 
-#### Progressive Disclosure
+#### Design Principles — the vocabulary
 
-Skills use a three-level loading system:
-1. **Metadata** (name + description) - Always in context (~100 words)
-2. **SKILL.md body** - In context whenever skill triggers (<500 lines ideal)
-3. **Bundled resources** - As needed (unlimited, scripts can execute without loading)
+A skill exists to wrangle **predictability** out of a stochastic system — same _process_ every run, not same output. Every principle below is a lever on predictability. Full definitions live in [`GLOSSARY.md`](GLOSSARY.md) (this glossary is disclosed reference — read it when a term is unfamiliar or when you need the failure-mode diagnosis).
 
-These word counts are approximate and you can feel free to go longer if needed.
+Vocabulary to write and diagnose skills with:
 
-**Key patterns:**
-- Keep SKILL.md under 500 lines; if you're approaching this limit, add an additional layer of hierarchy along with clear pointers about where the model using the skill should go next to follow up.
-- Reference files clearly from SKILL.md with guidance on when to read them
-- For large reference files (>300 lines), include a table of contents
+- **Invocation** — every skill is either **model-invoked** (keeps its **description**, paid for by **context load**, reachable by other skills) or **user-invoked** (`disable-model-invocation: true`, zero context load, paid for by **cognitive load** — the human has to remember it). Pick model-invocation only when the agent must reach the skill on its own. When user-invoked skills multiply, a **router skill** collects them.
+- **Information hierarchy** — content ranked by immediacy: **steps** (in-file, primary) → in-file **reference** → disclosed **reference** behind a **context pointer**. Skills can be all steps, all reference, or both. Push down whatever you can; keep the top legible.
+- **Progressive disclosure** — the move down the ladder into a linked file. Licensed by **branching** — inline what every branch needs, disclose what only some reach. A **context pointer**'s _wording_ (not target) decides how reliably the agent follows it.
+- **Co-location** — keep a concept's definition, rules, and caveats under one heading, not scattered. Hierarchy decides _how far down_; co-location decides _what sits beside it_.
+- **Leading words** — compact concepts already in the model's pretraining (_lesson_, _fog of war_, _tight_ loop, _red_ signal, _relentless_) that anchor a region of behaviour in the fewest tokens. Repeated as a token, never as a sentence. Serves predictability twice: in the body they anchor execution; in the description they anchor invocation. Prefer pretrained words; coining your own works but recruits no priors.
+- **Completion criteria** — the condition that tells the agent a unit of work is done. Two properties: **clarity** ("can the agent tell done from not-done?") resists **premature completion**; **demand** ("every rule applied", not "produce a list") sets **legwork**. Strongest criteria are both checkable and exhaustive.
+- **Prompt the positive** — state the target behaviour. **Negation** ("don't think of an elephant") drags the forbidden behaviour into context; a prohibition earns its place only as a hard guardrail you can't phrase positively, paired with what to do instead.
+- **Single source of truth** — each meaning lives in one place. Violation = **duplication**.
 
-**Domain organization**: When a skill supports multiple domains/frameworks, organize by variant:
-```
-cloud-deploy/
-├── SKILL.md (workflow + selection)
-└── references/
-    ├── aws.md
-    ├── gcp.md
-    └── azure.md
-```
-Claude reads only the relevant reference file.
+Diagnose skill problems with the failure modes:
+
+- **Premature completion** — step ended too early. Sharpen the criterion first; only if it's irreducibly fuzzy _and_ you observe the rush, hide **post-completion steps** by splitting the sequence.
+- **Duplication** — same meaning in two places. Fix: pick a home, delete the rest.
+- **Sediment** — stale layers that never got cleared. Cure: prune ruthlessly.
+- **Sprawl** — skill is simply too long even when every line is live. Cure: the **information hierarchy** — disclose reference, split by branch.
+- **No-op** — a line the model already obeys by default. Test: does it change behaviour vs the default? Weak **leading word** (_be thorough_) is a no-op; fix is a stronger word (_relentless_), not a different technique.
+- **Negation** — see above; steer positive.
+
+Two habits worth naming:
+
+- **Push down**, not up: when a piece can live behind a pointer without hurting the run, disclose it.
+- **Prune sentence-by-sentence**: run the no-op test on each sentence in isolation; when one fails, delete the whole sentence rather than trim words.
 
 #### Principle of Lack of Surprise
 
-This goes without saying, but skills must not contain malware, exploit code, or any content that could compromise system security. A skill's contents should not surprise the user in their intent if described. Don't go along with requests to create misleading skills or skills designed to facilitate unauthorized access, data exfiltration, or other malicious activities. Things like a "roleplay as an XYZ" are OK though.
+Skills must not contain malware, exploit code, or content that could compromise system security. A skill's contents should not surprise the user in their intent if described. Don't go along with requests to create misleading skills or skills designed to facilitate unauthorized access, data exfiltration, or other malicious activities. Roleplay skills are fine.
 
 #### Writing Patterns
 
-Prefer using the imperative form in instructions.
+Prefer the imperative form.
 
-**Defining output formats** - You can do it like this:
+**Output formats** — pin them explicitly:
 ```markdown
 ## Report structure
-ALWAYS use this exact template:
+Use this template:
 # [Title]
 ## Executive summary
 ## Key findings
 ## Recommendations
 ```
 
-**Examples pattern** - It's useful to include examples. You can format them like this (but if "Input" and "Output" are in the examples you might want to deviate a little):
+**Examples** — concrete before-and-after where the transformation isn't obvious from prose:
 ```markdown
 ## Commit message format
 **Example 1:**
 Input: Added user authentication with JWT tokens
 Output: feat(auth): implement JWT-based authentication
 ```
-
-### Writing Style
-
-Try to explain to the model why things are important in lieu of heavy-handed musty MUSTs. Use theory of mind and try to make the skill general and not super-narrow to specific examples. Start by writing a draft and then look at it with fresh eyes and improve it.
 
 ### Test Cases
 
