@@ -169,3 +169,18 @@ _Add a brief overview of your project architecture_
 ## Conventions & Patterns
 
 _Add your project-specific conventions here_
+
+
+<!-- skillz:available-skills -->
+## Available Skills
+
+Skills load automatically from `~/.agents/skills/` (shared across Claude Code, Codex, and OpenCode). Invoke with `/skill-name` or just describe what you need:
+
+- **`/diagnosing-bugs`** — Diagnosis loop for hard bugs and performance regressions.
+- **`/find-skills`** — Discover and install agent skills for tasks you want to extend.
+- **`/Learn-course`** — Turn a markdown source into a hands-on course and tutor you through it.
+- **`/pair`** — Full spec-to-ship pipeline: grill, plan, execute via subagents, code review.
+- **`/research`** — Investigate a question against primary sources + web + Mobbin, capture findings to Markdown.
+- **`/skill-creator`** — Create, edit, evaluate, and optimize skills.
+
+> Skill source of truth: `~/.agents/skills/` — managed via the Skillz repo. Run its `install.sh` to sync.
