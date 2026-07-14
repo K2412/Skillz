@@ -4,3 +4,6 @@
 *.db
 .beads-credential-key
 __pycache__/
+
+# explain-diff skill (kept local, not committed)
+explain-diff/
