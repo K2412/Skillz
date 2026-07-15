@@ -32,6 +32,7 @@ changes.
 | **pair** | Full spec-to-ship pipeline: grilling, plan review, subagent execution, and code review, pausing at every stage boundary for approval. Triggers on `/pair`, "pair with me", or describing a feature to build end-to-end. |
 | **research** | Investigate a question against high-trust primary sources, web search, and Mobbin UI examples, then capture findings as a Markdown file in the repo. |
 | **skill-creator** | Create, modify, and improve skills; run evals and benchmark skill performance; optimize a skill's description for better triggering. |
+| **to-pr** | Turn an explain-diff explainer HTML file into a Markdown PR description and open a draft PR for the current branch (default base `dev`). Triggers on `/to-pr` or pointing at an explainer file and wanting it made into a PR. |
 
 ## Instruction modules (`instructions/`)
 
