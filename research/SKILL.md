@@ -5,6 +5,11 @@ description: Investigate a question against high-trust primary sources, web sear
 
 Spin up a **background agent** to do the research, so you keep working while it reads.
 
+This is a utility other stages call, not just a standalone: [`lets-talk`](../lets-talk/SKILL.md)
+dispatches it when a *decision* hangs on facts it doesn't have; [`grill`](../grill/SKILL.md) and
+[`spec`](../spec/SKILL.md) call it when *pinning requirements* needs an outside fact. It answers "is
+it true / what exists / what do others do" — facts with citations, not a recommendation.
+
 Its job:
 
 1. Investigate the question against **primary sources** — official docs, source code, specs, first-party APIs — not a secondary write-up of them. Follow every claim back to the source that owns it.
