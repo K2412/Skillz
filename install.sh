@@ -40,6 +40,12 @@ for skill_dir in "$SCRIPT_DIR"/*/; do
   # Create a symlink in each tool dir that exists on this machine.
   for tool_dir in "${TOOL_DIRS[@]}"; do
     [ -d "$tool_dir" ] || continue
+    # Skip tool dirs that are really the source-of-truth dir itself (e.g.
+    # ~/.claude/skills symlinked to ~/.agents/skills). Symlinking into it
+    # would delete the real copy just made and leave a self-referential link.
+    if [ "$(cd "$tool_dir" && pwd -P)" = "$(cd "$AGENTS_DIR" && pwd -P)" ]; then
+      continue
+    fi
     link="$tool_dir/$name"
     # `ln -sfn` overwrites an existing symlink in place. If a real
     # directory is sitting there from an older install, take it down
