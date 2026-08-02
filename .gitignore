@@ -1,4 +1,5 @@
 __pycache__/
+.DS_Store
 
 # skill-creator eval scratch (prototype-workspace, scrub-workspace, …)
 *-workspace/
