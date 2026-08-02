@@ -177,10 +177,12 @@ _Add your project-specific conventions here_
 Skills load automatically from `~/.agents/skills/` (shared across Claude Code, Codex, and OpenCode). Invoke with `/skill-name` or just describe what you need:
 
 - **`/diagnosing-bugs`** — Diagnosis loop for hard bugs and performance regressions.
-- **`/find-skills`** — Discover and install agent skills for tasks you want to extend.
-- **`/Learn-course`** — Turn a markdown source into a hands-on course and tutor you through it.
-- **`/pair`** — Full spec-to-ship pipeline: grill, plan, execute via subagents, code review.
-- **`/research`** — Investigate a question against primary sources + web + Mobbin, capture findings to Markdown.
-- **`/skill-creator`** — Create, edit, evaluate, and optimize skills.
+- **`/find-skills`** — Helps users discover and install agent skills when they ask questions like "how do I do X", "find a skill for X", "is there a skill that can...", or…
+- **`/Learn-course`** — Convert a markdown source (textbook, lecture transcript, open-source library docs) into a directory-based learning course with chapters, lessons, and…
+- **`/pair`** — Full spec-to-ship pipeline with built-in grilling, plan review, subagent execution, and code review.
+- **`/research`** — Investigate a question against high-trust primary sources, web search, and Mobbin UI examples, then capture findings as a Markdown file in the repo.
+- **`/skill-creator`** — Create new skills, modify and improve existing skills, and measure skill performance.
+- **`/to-pr`** — Turn an explain-diff explainer HTML file into a Markdown PR description and open a draft pull request for the current branch.
 
 > Skill source of truth: `~/.agents/skills/` — managed via the Skillz repo. Run its `install.sh` to sync.
+<!-- /skillz:available-skills -->
