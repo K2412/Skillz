@@ -1,9 +1,7 @@
-
-# Beads / Dolt files (added by bd init)
-.dolt/
-*.db
-.beads-credential-key
 __pycache__/
+
+# skill-creator eval scratch (prototype-workspace, scrub-workspace, …)
+*-workspace/
 
 # explain-diff skill (kept local, not committed)
 explain-diff/
