@@ -80,7 +80,9 @@ Whichever tier you picked, two invariants hold: the logic module stays pure and 
   step. Never hand-fabricate the trace — write the tiny harness that produces it. Cap the step count.
 - **HTML micro-world.** One self-contained HTML file: inline CSS/JS, any data embedded as a literal,
   no build step, no server, opens from `file://`. Let the user manipulate inputs (drag a point,
-  toggle a flag) and watch the module's output update.
+  toggle a flag) and watch the module's output update. Put those inputs and the state readout in the
+  collapsible bottom drawer from [UI.md](UI.md) step 5 rather than inventing a second control panel —
+  the micro-world needs to be viewable with nothing overlaying it just as much as a UI variant does.
 
 ### 5. Make it runnable in one command
 
