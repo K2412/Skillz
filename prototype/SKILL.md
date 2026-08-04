@@ -43,12 +43,16 @@ state the assumption at the top of the prototype.
    `python <path>`, `bun <path>`, …). The user starts it without thinking about paths.
 3. **No persistence by default.** State lives in memory. Persistence is usually the thing the
    prototype is *checking*, not something it should lean on. If the question is specifically about
-   a database, hit a scratch store with an obvious "PROTOTYPE — wipe me" name.
+   a database, hit a scratch store with an obvious "PROTOTYPE — wipe me" name. The one carve-out is
+   the prototype's own chrome — whether the drawer is collapsed is a preference about the tool, not
+   state under test, and losing it on every reload is a papercut the user pays repeatedly.
 4. **Skip the polish.** No tests, no error handling beyond what makes it runnable, no abstractions,
    no "what if we need X later." The point is to learn one thing fast.
 5. **Surface the state.** After every action (logic) or on every variant switch (UI), show the full
    relevant state so the user can see exactly what changed. A prototype the user can't *read* the
-   state of teaches nothing.
+   state of teaches nothing. In a browser prototype this belongs in the collapsible bottom drawer
+   ([UI.md](UI.md) step 5) alongside the variant switcher and the knobs — one control surface that
+   gets out of the way when the user wants to see the design with nothing on top of it.
 6. **Capture it as a primary source when done** — see below.
 
 ## Capture — the prototype is a primary source, not scaffolding

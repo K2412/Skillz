@@ -54,63 +54,122 @@ each variant to the page's purpose, the data it has access to, and the project's
 system (Tailwind, shadcn, MUI, plain CSS — whatever's there). Give each a clear exported name
 (`VariantA`, `VariantB`, …).
 
-### 3. Wire them together
+### 3. Name the knobs
 
-One switcher on the route:
+Variants answer "which structure", but most design questions also have a **continuous** dimension the
+variants share — how wide, how dense, how much copy, how many rows. Those are **knobs**, and they
+belong to the prototype rather than to any one variant: card width, gap size, item count, a
+long-content toggle, a light/dark switch.
+
+Pick knobs that turn an argument into a measurement. "Is the card too narrow?" is unanswerable in
+prose and settled in four seconds by a width slider with a live readout. If a knob wouldn't change
+anyone's mind, it's a distraction — leave it out.
+
+Knob state lives in memory and does **not** need to be in the URL; only the variant does.
+
+### 4. Wire them together
+
+One drawer on the route:
 
 ```tsx
 // pseudo-code — adapt to the project's framework
 const variant = searchParams.get('variant') ?? 'A';
+const [knobs, setKnobs] = useState({ width: 380, count: 6, longCopy: false });
 return (
   <>
-    {variant === 'A' && <VariantA {...data} />}
-    {variant === 'B' && <VariantB {...data} />}
-    {variant === 'C' && <VariantC {...data} />}
-    <PrototypeSwitcher variants={['A', 'B', 'C']} current={variant} />
+    {variant === 'A' && <VariantA {...data} {...knobs} />}
+    {variant === 'B' && <VariantB {...data} {...knobs} />}
+    {variant === 'C' && <VariantC {...data} {...knobs} />}
+    <PrototypeDrawer
+      variants={['A', 'B', 'C']} current={variant}
+      knobs={knobs} onKnobChange={setKnobs}
+    />
   </>
 );
 ```
 
-Sub-shape A: keep all existing data fetching above the switcher; only the rendered subtree changes.
-Sub-shape B: the throwaway route mounts the same switcher.
+Sub-shape A: keep all existing data fetching above the drawer; only the rendered subtree changes.
+Sub-shape B: the throwaway route mounts the same drawer.
 
-### 4. Build the floating switcher
+### 5. Build the prototype drawer
 
-A small fixed bar at bottom-centre with three pieces: a **left arrow** (previous variant, wraps), a
-**variant label** (current key + exported name, e.g. `B — Sidebar layout`), and a **right arrow**
-(next, wraps).
+Model it on **Laravel Debugbar**: a persistent bar pinned to the bottom edge of the viewport that
+expands into a panel. It is the prototype's entire control surface — variants, knobs, and the state
+readout [SKILL.md](SKILL.md) rule 5 requires — in one place, so the user never hunts for controls in
+two corners of the screen.
 
-- Clicking an arrow updates the URL search param via the framework's router (`router.replace`,
+**Collapsed** (a slim bar, ~32px, full width): the current variant key and name, a hint of what's
+inside (e.g. `Variants · Knobs · State`), and an affordance showing it opens. This state exists so the
+user can see the design with *nothing* overlaying it — the whole point of being able to minimise.
+
+**Expanded** (a panel, ~30–40vh, full width, above the collapsed bar): tabbed or columned sections.
+
+- **Variants** — prev/next arrows that wrap, plus every variant key listed and clickable, current one
+  highlighted. Clicking updates the URL search param via the framework's router (`router.replace`,
   `navigate`, …) so the variant is shareable and survives reload.
-- `<-` / `->` arrow keys also cycle — but don't intercept them when an `<input>`, `<textarea>`, or
-  `[contenteditable]` is focused.
-- Visually distinct from the page (high-contrast pill, subtle shadow) so it's obviously not part of
+- **Knobs** — the controls from step 3, each with its live value beside it.
+- **State** — computed and derived values, measurements taken from the live DOM where that's the
+  honest way to answer the question, and any threshold warnings. This is what makes the prototype
+  *readable* rather than merely clickable.
+- **Copy** — a button that puts a paste-ready summary of the current setup on the clipboard: the
+  variant, every knob value, and the state readout. This is the handoff back to the agent. Without
+  it the user has to retype "C, but with the width at about 520 and six steps" from memory, and a
+  verdict described from memory is a verdict that loses exactly the numbers the prototype existed to
+  establish. Include the URL so the setup is reproducible, keep it to a dozen lines, and confirm the
+  copy with a transient "Copied" state on the button so the user knows it landed.
+
+**Behaviour:**
+
+- Toggle by clicking the collapsed bar or the panel's header, and with a keyboard shortcut
+  (`` ` `` or `Ctrl`/`Cmd`+`` ` ``). `Esc` collapses.
+- Keep **Copy** on the collapsed bar, not just inside the panel — the user is most likely to want it
+  right after collapsing the drawer to look at the design uncovered. Any control that lives on the
+  bar must `stopPropagation` so clicking it doesn't also toggle the drawer.
+- Use the async clipboard API with a hidden-`textarea` + `execCommand` fallback. A prototype opened
+  from `file://` is not guaranteed a permissive clipboard, and a Copy button that silently fails is
+  worse than none.
+- **Persist the collapsed/expanded choice** (localStorage or equivalent) so it survives reload and
+  variant switches. Start expanded on a first visit so the knobs are discoverable at all; respect the
+  user's choice forever after.
+- **Never cover the thing being judged.** When expanded, add bottom padding to the page equal to the
+  drawer's height, the way Debugbar does — a variant partly hidden behind the drawer can't be
+  evaluated. If the page has its own sticky footer, the drawer sits below it in the stack and the
+  collapsed bar must not hide it.
+- `<-` / `->` arrow keys cycle variants — but don't intercept them when an `<input>`, `<textarea>`,
+  `<select>`, or `[contenteditable]` is focused.
+- Visually distinct from the page (dark chrome, monospace for numbers) so it is obviously not part of
   the design being evaluated.
 - Hidden in production builds — gate on `process.env.NODE_ENV !== 'production'` or equivalent, so a
-  stray merge can't ship the bar.
+  stray merge can't ship the drawer.
 
-Put the switcher in one shared component both sub-shapes reuse, wherever shared UI lives.
+Put the drawer in one shared component both sub-shapes reuse, wherever shared UI lives. An
+HTML-micro-world logic prototype ([LOGIC.md](LOGIC.md)) should reuse it too rather than growing its
+own control panel.
 
-### 5. Hand it over
+### 6. Hand it over
 
-Surface the URL and the `?variant=` keys. The most valuable feedback is usually **"I want the header
-from B with the sidebar from C"** — that's the actual design they want.
+Surface the URL, the `?variant=` keys, and which knobs answer which open question. Tell the user the
+Copy button exists and that pasting its output back is the fastest way to hand you a verdict. The most
+valuable feedback is usually **"I want the header from B with the sidebar from C"** — that's the
+actual design they want, and it arrives with real numbers attached when it comes from Copy rather than
+from memory.
 
-### 6. Capture the answer and clean up
+### 7. Capture the answer and clean up
 
 Once a variant wins, capture the answer and the prototype the way [SKILL.md](SKILL.md) describes.
 The UI-specific mapping:
 
 - **Sub-shape A** — fold the winner into the existing page (rewritten properly — it was built under
-  prototype constraints); the losing variants and the switcher move to the `prototype/<slug>` branch,
+  prototype constraints); the losing variants and the drawer move to the `prototype/<slug>` branch,
   not into main.
-- **Sub-shape B** — promote the winning variant to a real route; the throwaway route and switcher
+- **Sub-shape B** — promote the winning variant to a real route; the throwaway route and drawer
   move to the branch.
 
 The full set of variants is the primary source, so it lands on the branch as runnable evidence —
-variants and a switcher left in main rot fast and confuse the next reader. Record the verdict (which
-variant, and why) and the one thing you now understand about the design that the mockups-in-your-head
-couldn't have told you.
+variants and a drawer left in main rot fast and confuse the next reader. Record the verdict (which
+variant, and why), **the knob settings the verdict depends on** (a card width or density that the
+decision assumes is part of the decision), and the one thing you now understand about the design that
+the mockups-in-your-head couldn't have told you.
 
 ## Anti-patterns
 
