@@ -55,30 +55,33 @@ state the assumption at the top of the prototype.
    gets out of the way when the user wants to see the design with nothing on top of it.
 6. **Capture it as a primary source when done** — see below.
 
-## Capture — the prototype is a primary source, not scaffolding
+## Capture — the verdict is the deliverable, the artifact is not
 
-A prototype that answered its question is *evidence*, not litter. Don't delete it. When the question
+The thing that carries forward is **what the prototype taught**, not the prototype. When the question
 is settled:
 
 1. **Fold the validated decision into the real code.** For logic, the pure module lifts into the
    real module on its own. For UI, the winning variant gets rewritten properly (it was built under
    prototype constraints — no tests, minimal error handling — so it's not production-ready as-is).
-2. **Capture the prototype itself on a throwaway branch, out of main.** Commit it to
-   `prototype/<slug>`. The main branch keeps only the validated decision; the exploration stays
-   findable as runnable evidence the implementer can reference and copy from.
-3. **Record the answer, durably** — the *verdict* and the *question it settled*, in one or two
-   lines. Plus a lightweight **understanding test**: state the one thing you now understand that you
+2. **Keep the artifact out of git entirely.** **Never create a `prototype/<slug>` branch and never
+   commit the prototype.** Copy the finished file to a gitignored directory in the repo — check
+   `.gitignore` and use whatever local-notes location the project already ignores, e.g.
+   `docs/prototypes/<slug>.html` — so it outlives the session and sits beside its research notes
+   without ever entering history. A branch of dead variants is clutter someone later has to reason
+   about and delete; the exploration has no value once its question is answered. Don't offer a branch
+   as an option.
+3. **Record the answer, durably** — the *verdict*, the *question it settled*, and **the knob settings
+   the verdict depends on** (a card width or density the decision assumes is part of the decision).
+   Plus a lightweight **understanding test**: state the one thing you now understand that you
    couldn't have gotten from prose ("delete-then-undo re-emits the event", "variant C's sidebar
    only works above 900px"). If you can't state it, the prototype hasn't finished its job — keep
    driving it. This mirrors the explain-diff quiz: don't leave the prototype until you can explain
    what it taught.
-4. **Leave a pointer from the work tracker to the branch.** If there's a GitHub epic issue for the
-   work (from [`spec`](../spec/SKILL.md)), attach the pointer and verdict as a comment on it:
-   ```bash
-   gh issue comment <epic-n> --body "prototype: branch prototype/<slug> — verdict: <one line>; learned: <one line>"
-   ```
-   Otherwise leave the pointer wherever the decision is recorded (the issue, an ADR, or the commit
-   message). Either way, the answer must outlive the branch.
+4. **Record it where the decision lives** — the spec, an ADR, or the commit message that implements
+   it. Since the artifact is never committed, the write-up is the only durable trace, so it has to
+   carry the numbers rather than point at something runnable. **Do not post to the work tracker**
+   (GitHub issue, Linear ticket, Jira) unless the user explicitly asks — the tracker is a shared team
+   surface and what appears there is theirs to write.
 
 Assets created while prototyping are *linked* from the tracker, never pasted into the spec — with
 one exception: if a prototype produced a snippet that encodes a decision more precisely than prose

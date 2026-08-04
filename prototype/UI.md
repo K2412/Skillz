@@ -159,17 +159,19 @@ from memory.
 Once a variant wins, capture the answer and the prototype the way [SKILL.md](SKILL.md) describes.
 The UI-specific mapping:
 
-- **Sub-shape A** — fold the winner into the existing page (rewritten properly — it was built under
-  prototype constraints); the losing variants and the drawer move to the `prototype/<slug>` branch,
-  not into main.
-- **Sub-shape B** — promote the winning variant to a real route; the throwaway route and drawer
-  move to the branch.
+- **Sub-shape A** — fold the winner into the existing page, rewritten properly (it was built under
+  prototype constraints). Delete the losing variants and the drawer from the route.
+- **Sub-shape B** — promote the winning variant to a real route, then delete the throwaway route.
 
-The full set of variants is the primary source, so it lands on the branch as runnable evidence —
-variants and a drawer left in main rot fast and confuse the next reader. Record the verdict (which
-variant, and why), **the knob settings the verdict depends on** (a card width or density that the
-decision assumes is part of the decision), and the one thing you now understand about the design that
-the mockups-in-your-head couldn't have told you.
+Never branch or commit the variants — the whole file goes to a gitignored directory instead (see
+[SKILL.md](SKILL.md) capture step 2). Record the verdict (which variant, and why), **the knob settings
+the verdict depends on** (a card width or density that the decision assumes is part of the decision),
+and the one thing you now understand about the design that the mockups-in-your-head couldn't have told
+you.
+
+Expect the verdict to be a **mix** — "variant A, but with C's count strip" is the most common and most
+useful outcome, not an inconvenience. When it happens, add the borrowed element to the winning variant
+as a knob rather than hand-waving it, so the combination gets looked at before it gets specced.
 
 ## Anti-patterns
 
