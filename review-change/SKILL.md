@@ -19,9 +19,9 @@ cat pyproject.toml 2>/dev/null | grep -A 30 "\[tool.ruff"
 cat ruff.toml 2>/dev/null
 
 # Fetch issue acceptance criteria for the Spec axis (see ../spec/GITHUB-ISSUES.md)
-gh issue view <epic-n> --json title,body
+gh issue view -R K2412/planning <epic-n> --json title,body
 gh api repos/<owner/repo>/issues/<epic-n>/sub_issues --jq '.[] | "#\(.number) \(.title)"'
-gh issue view <task-n> --json title,body   # for each task
+gh issue view -R K2412/planning <task-n> --json title,body   # for each task
 ```
 
 Confirm the diff is non-empty before spawning — an empty diff should fail here, not inside a sub-agent.
@@ -122,7 +122,7 @@ options:
 
 If all findings resolved or accepted and this ran against an epic, close it:
 ```bash
-gh issue close <epic-n>
+gh issue close -R K2412/planning <epic-n>
 ```
 
 Show a final summary: epic closed (if any), tasks completed, any open follow-up issues, deferred decisions.

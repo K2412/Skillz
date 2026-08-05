@@ -24,9 +24,9 @@ If spawning, build the subagent prompt from issue data only — not from convers
 [../spec/GITHUB-ISSUES.md](../spec/GITHUB-ISSUES.md)):
 
 ```bash
-gh issue view <epic-n> --json title,body                                   # the spec
+gh issue view -R K2412/planning <epic-n> --json title,body                                   # the spec
 gh api repos/<owner/repo>/issues/<epic-n>/sub_issues                        # the tasks + state + labels
-gh issue view <task-n> --json title,body,labels   # for each task (a `needs-human` label = stop and ask first)
+gh issue view -R K2412/planning <task-n> --json title,body,labels   # for each task (a `needs-human` label = stop and ask first)
 ```
 
 If the epic has a `prototype/<slug>` branch-pointer comment, include it in the subagent prompt and
@@ -87,7 +87,7 @@ Each task is done when:
 1. The seam was confirmed before any test was written.
 2. Every test was written red-first and passes green.
 3. Acceptance criteria from the task issue body pass.
-4. `gh issue close <task-n>` succeeds.
+4. `gh issue close -R K2412/planning <task-n>` succeeds.
 ```
 
 Spawn via the Agent tool with `subagent_type: "claude"`. Wait for the subagent to return before proceeding.

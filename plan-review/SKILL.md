@@ -6,11 +6,11 @@ description: Review a GitHub plan (an epic issue and its child task sub-issues) 
 # Plan Review — senior-engineer review of a GitHub plan
 
 Review the plan with a senior-engineer eye **before any code is written**. Fetch the task list
-(the user gives the epic number, or find the most recent open `spec:epic`). Per
+(the user gives the epic number, or find the most recent open `spec:epic` in `K2412/planning`). Per
 [../spec/GITHUB-ISSUES.md](../spec/GITHUB-ISSUES.md):
 
 ```bash
-gh api repos/<owner/repo>/issues/<epic-n>/sub_issues --jq '.[] | "#\(.number) [\(.state)] \(.title) | \((.labels|map(.name))|join(","))"'
+gh api repos/K2412/planning/issues/<epic-n>/sub_issues --jq '.[] | "#\(.number) [\(.state)] \(.title) | \((.labels|map(.name))|join(","))"'
 ```
 
 Evaluate for: DRY violations in the plan, over-stuffed tasks that aren't atomic, missing dependency edges, tasks too large for a single TDD slice, structural issues in the proposed approach.
