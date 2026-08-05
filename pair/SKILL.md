@@ -1,6 +1,6 @@
 ---
 name: pair
-description: Full spec-to-ship pipeline that orchestrates the individual engineering skills in sequence with a human gate between each — optional research, then grill, optional prototype, spec, plan review, TDD implementation, and two-axis review. Use when the user says /pair, "pair with me", "pair on this", "let's build this together", "walk me through building", or wants to go from idea to reviewed code in one guided session. Also trigger when the user describes a feature or fix they want to implement end-to-end with quality gates. Each stage is its own skill you can also run alone; pair chains them, pauses at every boundary for approval, and can loop back if reviews fail.
+description: Full spec-to-ship pipeline that orchestrates the individual engineering skills in sequence with a human gate between each — optional research, then grill, optional prototype, spec, plan review, TDD implementation, two-axis review, and a final scrub. Use when the user says /pair, "pair with me", "pair on this", "let's build this together", "walk me through building", or wants to go from idea to reviewed code in one guided session. Also trigger when the user describes a feature or fix they want to implement end-to-end with quality gates. Each stage is its own skill you can also run alone; pair chains them, pauses at every boundary for approval, and can loop back if reviews fail.
 ---
 
 # /pair — Spec-to-Ship Pipeline (orchestrator)
@@ -10,7 +10,7 @@ and loop-backs between them. Each stage is a standalone skill; `pair` invokes it
 and moves on. The detail lives in each skill, not here.
 
 ```
-[research] → grill → [prototype] → spec → plan-review → implement → review-change
+[research] → grill → [prototype] → spec → plan-review → implement → review-change → scrub
 ```
 
 Bracketed stages are optional and fire only when they earn their place. Run each stage by invoking
@@ -21,7 +21,7 @@ If whether to build (or what) is still open, that's [`lets-talk`](../lets-talk/S
 `pair`, not a stage inside it:
 
 ```
-lets-talk (should we? / what?)  →  /pair { [research] → grill → [prototype] → spec → plan-review → implement → review-change }
+lets-talk (should we? / what?)  →  /pair { [research] → grill → [prototype] → spec → plan-review → implement → review-change → scrub }
 ```
 
 When the *planning itself* is too big for one session — foggy, dependent decisions, work you'd want to
@@ -95,8 +95,17 @@ reason and wait for approval.
 Run [`review-change`](../review-change/SKILL.md) — two-axis Standards + Spec review of the diff
 against the epic. On acceptance it closes the epic and shows the final summary.
 
+## Stage 6 — Scrub
+
+Run [`scrub`](../scrub/SKILL.md) on the accepted diff as the final polish before it leaves the
+session for a team PR. `review-change` is an internal gate; scrub is what makes the change read as
+team-written rather than agent-driven — stripping bead ids and bead-speak, ticket references,
+local-artifact mentions (`PLAN.md`, `NOTES.md`), agent-to-user chatter, and comments the code already
+says, keeping only the load-bearing WHY. This is the last stage: after it the change is ready for a
+human to open the PR (e.g. via `to-pr`).
+
 ## Escape hatches
 
 - **"stop pair"** / **"exit pair"**: save current state (which stage, which issues exist) and hand back control.
 - **"skip to execution"**: jump to Stage 4 using whatever task issues currently exist. Warn that the plan hasn't been reviewed.
-- **"pair resume"**: find the most recent open epic via `gh issue list --label spec:epic --state open --json number,title,url` and pick up from the last completed stage.
+- **"pair resume"**: find the most recent open epic via `gh issue list -R K2412/planning --label spec:epic --state open --json number,title,url` and pick up from the last completed stage.
