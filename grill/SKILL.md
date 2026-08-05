@@ -12,9 +12,8 @@ invent edge-case scenarios, and capture terminology and irreversible decisions t
 crystallise.
 
 This skill presumes the direction is **already decided** — it extracts and pins down *what exactly*
-to build. If the decision itself is still open — *should we? which direction? is it worth it?* — that's
-[`lets-talk`](../lets-talk/SKILL.md), where the agent brings judgment and a legitimate outcome is
-"don't build." Grill funnels toward pinned requirements; it doesn't reopen whether to build at all.
+to build. If the decision itself is still open — *should we? which direction? is it worth it?* —
+settle that first; grill funnels toward pinned requirements and doesn't reopen whether to build at all.
 
 If the work is **too big for one session** — you hit questions you can't answer without research, a
 prototype, or more grilling, and find yourself lost in fog — a single grill won't clear it. That's
@@ -22,10 +21,20 @@ prototype, or more grilling, and find yourself lost in fog — a single grill wo
 many sessions (and dispatches this skill for its grilling tickets). Grill is the single-session
 primitive; wayfinder is the multi-session orchestrator around it.
 
-**Interview rules:**
-- Ask questions one at a time. For EVERY question use AskUserQuestion so the user picks from options instead of typing free-text.
-- Generate 2–4 concrete, mutually exclusive options per question. Put the recommended answer first and append "(Recommended)" to its label. Put nuance in the description field.
-- If a question can be answered by exploring the codebase, explore instead of asking.
+**Interview rules — ask round-by-round, not one-at-a-time:**
+- Map the idea as a **decision tree** and work it in **rounds**. Each round, ask *every* question whose
+  prerequisites are already settled — the whole current frontier — in one `AskUserQuestion` call
+  (it takes up to 4 questions at once). One answer often unlocks the next layer; ask that layer next
+  round. This lands ~13 questions in ~3–4 rounds instead of 13 sequential prompts.
+- Only hold a question back when it *genuinely* depends on an answer you don't have yet. Don't
+  serialise independent questions just because they're related.
+- For EVERY question use `AskUserQuestion` so the user picks from options instead of typing free-text.
+  Generate 2–4 concrete, mutually exclusive options each. Put the recommended answer first and append
+  "(Recommended)" to its label. Put nuance in the description field.
+- **Facts the environment can answer, don't ask — dispatch.** If a question is answerable from the
+  codebase, config, or git history, send a background `Explore`/`general-purpose` subagent to resolve
+  it while you keep grilling, and fold the finding in when it lands. Reserve the user's rounds for
+  decisions only they can make.
 - Users always have "Other" available — don't force a fit when the answer space is genuinely open.
 
 ## Load the domain model at the start

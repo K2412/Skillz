@@ -101,9 +101,9 @@ evolve.
 
 Once it's answered its question, capture the answer and the prototype the way
 [SKILL.md](SKILL.md) describes. The logic-specific mapping: the validated reducer / machine /
-function set lifts into the real module (the decision, absorbed); the surface shell rides along to
-the `prototype/<slug>` branch as a primary source. Record the verdict and the one thing you now
-understand that prose couldn't have given you.
+function set lifts into the real module (the decision, absorbed); the throwaway surface shell is
+copied to a gitignored notes location — never branched, never committed. Record the verdict and the
+one thing you now understand that prose couldn't have given you.
 
 ## Anti-patterns
 

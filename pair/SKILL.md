@@ -17,11 +17,11 @@ Bracketed stages are optional and fire only when they earn their place. Run each
 its skill and following it to completion, then apply the transition below before the next.
 
 `pair` presumes the decision to build is **already made** — it's the commitment end of a longer arc.
-If whether to build (or what) is still open, that's [`lets-talk`](../lets-talk/SKILL.md) *before*
-`pair`, not a stage inside it:
+If whether to build (or what) is still open, settle that *before* `pair`, not as a stage inside it —
+`pair` doesn't reopen the question of whether to build:
 
 ```
-lets-talk (should we? / what?)  →  /pair { [research] → grill → [prototype] → spec → plan-review → implement → review-change → scrub }
+(should we? / what?)  →  /pair { [research] → grill → [prototype] → spec → plan-review → implement → review-change → scrub }
 ```
 
 When the *planning itself* is too big for one session — foggy, dependent decisions, work you'd want to
@@ -61,14 +61,15 @@ question: "One decision here — <the design question> — is hard to settle in 
 options:
   - "Yes, prototype it (Recommended)" → run the prototype skill
   - "No, I can decide from discussion" → carry the decision into the spec as prose
-  - "Not sure — let's talk it through first" → keep grilling, re-offer if it stays fuzzy
+  - "Not sure — talk it through first" → keep grilling, re-offer if it stays fuzzy
 ```
 
 If it's cheap to describe in words, skip it — the discussion already resolved it (Litt's fidelity
 ladder: pay for a prototype only where a running artifact tells you something prose can't). If yes,
-run [`prototype`](../prototype/SKILL.md); it captures the verdict and a `prototype/<slug>` branch. The
-verdict joins the decision log; the branch pointer rides on the epic `spec` creates, so `implement`
-can copy from validated code.
+run [`prototype`](../prototype/SKILL.md); it captures the verdict durably (and lifts any validated
+logic module into place) without ever branching or committing the throwaway artifact. The verdict —
+plus the knob settings it depends on — joins the decision log and rides into the spec, so `implement`
+builds against a settled design.
 
 ## Stage 2 — Spec
 

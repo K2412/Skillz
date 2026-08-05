@@ -26,11 +26,9 @@ changes.
 
 | Skill | Description |
 |-------|-------------|
-| **diagnosing-bugs** | Diagnosis loop for hard bugs and performance regressions. Triggers on "diagnose"/"debug this" or reports of something broken/throwing/failing/slow. |
-| **grill** | Interview you relentlessly to shared understanding while maintaining the domain model (CONTEXT.md + ADRs). Stage 1 of pair; also standalone: "grill me on this", "help me nail down the design". |
+| **grill** | Interview you relentlessly to shared understanding while maintaining the domain model (CONTEXT.md + ADRs). Asks round-by-round — the whole settled-prerequisite frontier per round — not one question at a time. Stage 1 of pair; also standalone: "grill me on this", "help me nail down the design". |
 | **implement** | Execute a pre-approved GitHub plan (epic issue + task sub-issues) with strict TDD via a fresh subagent, red→green, one slice at a time. Stage 4 of pair; also standalone: "implement this plan", "build from these tickets". |
 | **Learn-course** | Turn a markdown source (textbook, transcript, docs) into a directory-based course with chapters, lessons, and fill-in-the-blank exercises, then tutor you through it lesson by lesson. |
-| **lets-talk** | Think a decision, tradeoff, or open question through in conversation — grounded in the real artifacts, opinionated, producing a decision rather than code. The anti-pair; the decision-bookend to explain-diff (a change) and research (a topic). Triggers on "let's talk about…", "what do you think about…", "should we X or Y?", "help me think through…". |
 | **pair** | Orchestrator that chains the engineering skills in sequence with a human gate between each: optional research → grill → optional prototype → spec → plan-review → implement → review-change. Triggers on `/pair`, "pair with me", or describing a feature to build end-to-end. |
 | **plan-review** | Senior-engineer review of a GitHub plan before any code — DRY, atomicity, missing dep edges, over-large tasks. Stage 3 of pair; also standalone: "review this plan", "poke holes in this breakdown". |
 | **prototype** | Build a throwaway, interactive artifact — a driveable logic module or several radically different UI variants — to answer a design question *before* implementing, so you can feel how it behaves and decide if it's what you want. The forward bookend of explain-diff. Triggers on "prototype/spike/mock this up", "let me see it working first", or "does this state model feel right?". |
@@ -38,7 +36,8 @@ changes.
 | **review-change** | Two-axis review of a diff — Standards (repo conventions + Fowler smells) and Spec (GitHub issue acceptance criteria) — each in its own subagent. Stage 5 of pair; also standalone: "review my changes against the spec". |
 | **skill-creator** | Create, modify, and improve skills; run evals and benchmark skill performance; optimize a skill's description for better triggering. |
 | **spec** | Synthesise a discussion, grill log, or resolved wayfinder map into a written spec, then open a GitHub epic issue with atomic task sub-issues in the code repo. Stage 2 of pair; also standalone: "spec this out", "turn this into tickets". |
-| **to-pr** | Turn an explain-diff explainer HTML file into a Markdown PR description and open a draft PR for the current branch (default base `dev`). Triggers on `/to-pr` or pointing at an explainer file and wanting it made into a PR. |
+| **to-pr** | Open a draft PR for the current branch (default base `dev`), body distilled from an explain-diff explainer — generating one for the whole branch first if none exists. Triggers on `/to-pr`, "make a PR for this branch", or pointing at an explainer file and wanting it made into a PR. |
+| **wait-what** | User-invoked corrective for when a message didn't land — the agent re-pitches its last message with the missing context, in plain English, using your `CONTEXT.md` vocabulary. Names your state ("wait, you lost me"), not the output ("be brief"). Triggers on `/wait-what`, "wait, what?", "you lost me", "back up". |
 | **wayfinder** | Plan work too big for one session as a map of decision tickets (research / prototype / grilling / task) — GitHub issues in the private `K2412/planning` repo, branch-independent, no noise in shared repos. Charts the fog, resolves tickets one per session, hands a dense map to `spec`. User-invoked: "chart a map for X", "help me wayfind this", "this is too big to plan in one go". |
 
 ## Instruction modules (`instructions/`)

@@ -1,20 +1,26 @@
 ---
 name: to-pr
 description: >
-  Turn an explain-diff explainer HTML file into a Markdown PR description and open a draft
-  pull request for the current branch. Use whenever the user wants to ship an explainer as a
-  PR — "/to-pr", "make a draft PR from this explainer", "turn <explainer>.html into a PR
-  description", "open a PR using this explainer", "convert my explainer to a PR body", or
-  references an explain-diff HTML file (usually under docs/ or explanations/) together with
-  wanting a PR. Trigger even if they don't say "to-pr" explicitly, as long as they point at an
+  Open a draft pull request for the current branch, with a Markdown body distilled from an
+  explain-diff explainer. If no explainer exists yet, first generate one for the whole branch
+  (via explain-diff), then distil it into the PR description. Use whenever the user wants to ship
+  the current branch as a PR — "/to-pr", "make a draft PR for this branch", "open a PR for my
+  current branch", "make a draft PR from this explainer", "turn <explainer>.html into a PR
+  description", "open a PR using this explainer", "convert my explainer to a PR body", or references
+  an explain-diff HTML file (usually under explanations/ or docs/) together with wanting a PR.
+  Trigger even if they don't say "to-pr" explicitly, as long as they point at a branch or an
   explainer file and want it become a PR. Default base branch is `dev` and PRs are always opened
   as drafts.
 ---
 
 # to-pr
 
-Translate an `explain-diff` explainer (a self-contained HTML learning artifact) into a clean,
-**concise** Markdown PR description, then open a **draft** PR for the current branch.
+Open a **draft** PR for the current branch, with a clean, **concise** Markdown body distilled from
+an `explain-diff` explainer (a self-contained HTML learning artifact). If no explainer exists yet,
+this skill **generates one for the whole branch first** — running `explain-diff` against
+`<base>...HEAD` — then distils that into the PR description. The explainer does double duty: it's the
+author-mode understanding pass (*don't send code for review until you can pass its own quiz*) and the
+source the PR body is distilled from.
 
 The explainer is written to *teach*: it carries CSS styling, background, a color-coded literate
 diff, illustrative figures, and an interactive quiz. A PR description has a different job — a
@@ -28,17 +34,28 @@ earns trust by being scannable, not exhaustive.
 
 ## Inputs
 
-Parse these from the user's invocation; ask only if the explainer path is missing.
+Parse these from the user's invocation. Nothing here is required — with a bare `/to-pr` on a branch,
+generate the explainer yourself (Step 1).
 
-- **Explainer path** (required) — the `.html` file to convert (e.g. `docs/explain-<slug>-<date>.html`).
-- **Base branch** (default `dev`) — the PR target. Honor an explicit "base X" / "into X" / "against X".
+- **Explainer path** (optional) — an existing `.html` file to convert (e.g.
+  `explanations/explain-<slug>-<date>.html`). If omitted, generate one for the branch in Step 1.
+- **Base branch** (default `dev`) — both the PR target and the explain-diff base. Honor an explicit
+  "base X" / "into X" / "against X".
 - **Draft** (default true) — always open as a draft unless the user clearly asks for a ready PR.
 - **Title** (optional) — if the user gives one, use it; otherwise derive from the explainer's `<h1>`.
 - **Quiz** (default off) — leave the self-check quiz out unless the user asks to keep it.
 
 ## Steps
 
-1. **Read the explainer HTML** at the given path. If it isn't there, stop and tell the user.
+1. **Obtain the explainer.**
+   - **If the user gave a path**, read that HTML file. If it isn't there, stop and tell the user.
+   - **If they didn't** (a bare `/to-pr`, "make a PR for this branch"), generate one for the *whole
+     branch* by running [`explain-diff`](../explain-diff/SKILL.md) against `<base>...HEAD` — the same
+     range this PR will contain. Follow that skill to completion; it writes
+     `explanations/explain-<slug>-<date>.html` and is the author-mode understanding pass before the
+     change goes up. Then read the file it produced and continue below. Author mode's rule stands:
+     if you can't pass the explainer's own quiz, the branch isn't ready for review — surface that
+     rather than opening the PR.
 
 2. **Extract the PR title.** Use the user-provided title if any; else the `<h1>` text. If the
    explainer's `.meta` line or title carries a ticket id (e.g. `SIG-520`), keep it in the title so
@@ -120,6 +137,9 @@ Parse these from the user's invocation; ask only if the explainer path is missin
 
 ## Notes
 
+- **No explainer? Make one.** A bare `/to-pr` on a branch isn't an error — generate the branch
+  explainer with `explain-diff` first (Step 1), which also forces the author-mode understanding pass
+  before the change ships. Only skip generation when the user points at an explainer that already exists.
 - **Shorter than the diff.** The reviewer reads the code on GitHub; the body just orients them. Lead
   with the summary and the "why", keep any figure, and cut the rest. If the body is longer than the
   change, you've over-written it.
