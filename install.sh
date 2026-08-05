@@ -141,6 +141,17 @@ AGENTS_MD="$AGENTS_HOME_DIR/AGENTS.md"
   cat << 'HEADER'
 # Global Agent Instructions
 
+## Standing Rules
+
+- **Planning always lives in [`K2412/planning`](https://github.com/K2412/planning)** (private).
+  Every spec epic, task sub-issue and wayfinder map goes there — never in a code repo, and never in
+  the tracker the work came from. Pass `-R K2412/planning` on every `gh issue` / `gh label` /
+  `gh api repos/...` call; `gh` otherwise targets the repo you're standing in.
+- **Never write to a shared team tracker** (Linear, Jira) — read tickets, but don't comment, edit or
+  change status. What appears there is the user's to write.
+- **Prototypes are throwaway**: never branch and never commit one. The artifact goes to a gitignored
+  directory in the repo; only the verdict, its numbers, and the settings it depends on carry forward.
+
 ## Available Skills
 
 Skills load automatically from `~/.agents/skills/`. Use `/skill-name` or describe what you need.
