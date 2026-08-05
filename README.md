@@ -27,7 +27,6 @@ changes.
 | Skill | Description |
 |-------|-------------|
 | **diagnosing-bugs** | Diagnosis loop for hard bugs and performance regressions. Triggers on "diagnose"/"debug this" or reports of something broken/throwing/failing/slow. |
-| **find-skills** | Discover and install agent skills when you ask "how do I do X", "find a skill for X", or want to extend capabilities. |
 | **grill** | Interview you relentlessly to shared understanding while maintaining the domain model (CONTEXT.md + ADRs). Stage 1 of pair; also standalone: "grill me on this", "help me nail down the design". |
 | **implement** | Execute a pre-approved GitHub plan (epic issue + task sub-issues) with strict TDD via a fresh subagent, red→green, one slice at a time. Stage 4 of pair; also standalone: "implement this plan", "build from these tickets". |
 | **Learn-course** | Turn a markdown source (textbook, transcript, docs) into a directory-based course with chapters, lessons, and fill-in-the-blank exercises, then tutor you through it lesson by lesson. |
