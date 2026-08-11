@@ -1,6 +1,6 @@
 ---
 name: pair
-description: Full spec-to-ship pipeline that orchestrates the individual engineering skills in sequence with a human gate between each — optional research, then grill, optional prototype, spec, plan review, TDD implementation, two-axis review, and a final scrub. Use when the user says /pair, "pair with me", "pair on this", "let's build this together", "walk me through building", or wants to go from idea to reviewed code in one guided session. Also trigger when the user describes a feature or fix they want to implement end-to-end with quality gates. Each stage is its own skill you can also run alone; pair chains them, pauses at every boundary for approval, and can loop back if reviews fail.
+description: Full spec-to-ship pipeline that orchestrates the individual engineering skills in sequence with a human gate between each — optional research, then grill, optional prototype, spec, plan review, TDD implementation, two-axis review, a taste pass, and a final polish. Use when the user says /pair, "pair with me", "pair on this", "let's build this together", "walk me through building", or wants to go from idea to reviewed code in one guided session. Also trigger when the user describes a feature or fix they want to implement end-to-end with quality gates. Each stage is its own skill you can also run alone; pair chains them, pauses at every boundary for approval, and can loop back if reviews fail.
 ---
 
 # /pair — Spec-to-Ship Pipeline (orchestrator)
@@ -10,7 +10,7 @@ and loop-backs between them. Each stage is a standalone skill; `pair` invokes it
 and moves on. The detail lives in each skill, not here.
 
 ```
-[research] → grill → [prototype] → spec → plan-review → implement → review-change → scrub
+[research] → grill → [prototype] → spec → plan-review → implement → review-change → taste-review → polish
 ```
 
 Bracketed stages are optional and fire only when they earn their place. Run each stage by invoking
@@ -21,7 +21,7 @@ If whether to build (or what) is still open, settle that *before* `pair`, not as
 `pair` doesn't reopen the question of whether to build:
 
 ```
-(should we? / what?)  →  /pair { [research] → grill → [prototype] → spec → plan-review → implement → review-change → scrub }
+(should we? / what?)  →  /pair { [research] → grill → [prototype] → spec → plan-review → implement → review-change → taste-review → polish }
 ```
 
 When the *planning itself* is too big for one session — foggy, dependent decisions, work you'd want to
@@ -75,7 +75,9 @@ builds against a settled design.
 
 Run [`spec`](../spec/SKILL.md) to synthesise the grill decision log (and any prototype verdict) into
 a spec and a GitHub epic issue with atomic child task sub-issues (in the code repo). It hands back the
-epic number.
+epic number. `spec` is also where the epic gets its `stack:*` labels (e.g. `stack:react`,
+`stack:dagster`) — those labels are what later route `best-practices` guidance into `implement` and
+`review-change`.
 
 ## Stage 3 — Plan Review
 
@@ -89,20 +91,37 @@ Run [`plan-review`](../plan-review/SKILL.md) on the epic. Transition on its gate
 
 Run [`implement`](../implement/SKILL.md) — it spawns a fresh TDD subagent from the issue data (and the
 prototype branch if present). Wait for it to return. If it hits a `needs-human` task, surface the
-reason and wait for approval.
+reason and wait for approval. When the epic is stack-labelled (`stack:react` / `stack:dagster`),
+`implement` reads those labels and applies the matching `best-practices` guidance as it builds — this
+isn't a separate stage; the wiring lives inside `implement`.
 
 ## Stage 5 — Review Change
 
 Run [`review-change`](../review-change/SKILL.md) — two-axis Standards + Spec review of the diff
-against the epic. On acceptance it closes the epic and shows the final summary.
+against the epic. When the epic is stack-labelled (`stack:react` / `stack:dagster`), `review-change`
+reads those labels and folds the matching `best-practices` guidance into the Standards axis — again not
+a separate stage, the wiring lives inside `review-change`. On acceptance it closes the epic and shows
+the final summary.
 
-## Stage 6 — Scrub
+## Stage 6 — Taste Review
 
-Run [`scrub`](../scrub/SKILL.md) on the accepted diff as the final polish before it leaves the
-session for a team PR. `review-change` is an internal gate; scrub is what makes the change read as
-team-written rather than agent-driven — stripping bead ids and bead-speak, ticket references,
-local-artifact mentions (`PLAN.md`, `NOTES.md`), agent-to-user chatter, and comments the code already
-says, keeping only the load-bearing WHY. This is the last stage: after it the change is ready for a
+Run [`taste-review`](../taste-review/SKILL.md) — a dedicated taste pass over the ambiguous
+decisions `review-change` doesn't adjudicate: UI, prose, and naming choices where more than one
+option is defensible and the question is which one *reads* right. It's grounded in the target repo's
+`design-patterns/patterns.md`, which is the codebase's own record of settled taste — if that file is
+missing, warn the user and pause rather than inventing taste from nowhere, since without it the pass
+has nothing to anchor against. Surface its calls and let the human accept or push back before moving
+on.
+
+## Stage 7 — Polish
+
+Run [`polish`](../polish/SKILL.md) on the accepted diff as the final pass before it leaves the
+session for a team PR. `review-change` and `taste-review` are internal gates; polish is what makes the
+change read as team-written rather than agent-driven — and it does two jobs at once. It **de-noises**:
+stripping bead ids and bead-speak, ticket references, local-artifact mentions (`PLAN.md`, `NOTES.md`),
+agent-to-user chatter, and comments the code already says, keeping only the load-bearing WHY. And it
+**simplifies**: tightening naming, structure, and derivability so the change reads the way a teammate
+would have written it in the first place. This is the last stage: after it the change is ready for a
 human to open the PR (e.g. via `to-pr`).
 
 ## Escape hatches
