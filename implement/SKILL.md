@@ -29,6 +29,19 @@ gh api repos/<owner/repo>/issues/<epic-n>/sub_issues                        # th
 gh issue view -R K2412/planning <task-n> --json title,body,labels   # for each task (a `needs-human` label = stop and ask first)
 ```
 
+Read the epic's `stack:*` labels — `spec` applies them, so they say which stack the code will run on:
+
+```bash
+gh issue view -R K2412/planning <epic-n> --json labels   # look for stack:react / stack:dagster
+```
+
+If `stack:react` and/or `stack:dagster` is present, invoke the [`best-practices`](../best-practices/SKILL.md)
+skill via the Skill tool with that stack — it takes the stack you hand it (`react`, `dagster`, or both)
+and returns the guidance to hold the code to (Vercel's React/Next.js rules, the `dagster-expert` skill,
+or both). Fold that guidance into the subagent prompt so the code is written to those best-practices
+from the first red→green loop, not retrofitted at review. If neither label is present, skip this — an
+explicit no-op; the subagent prompt is unchanged.
+
 If the epic has a `prototype/<slug>` branch-pointer comment, include it in the subagent prompt and
 tell the subagent to check out and reference that branch — it holds validated, runnable design code
 to copy from rather than re-derive. The prototype is throwaway scaffolding; the subagent lifts the
@@ -42,6 +55,9 @@ task below in dependency order using the red → green loop. Follow the rules
 below exactly — they are not suggestions.
 
 If you encounter a human gate, stop and report back immediately.
+
+<stack best-practices from the best-practices skill, if the epic was stack-labelled — omit this
+section entirely when neither label is present>
 
 ## TDD Rules
 
