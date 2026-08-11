@@ -102,13 +102,25 @@ Follow [GITHUB-ISSUES.md](GITHUB-ISSUES.md) for the exact `gh` commands. In orde
 2. **Create one epic issue** (`spec:epic`), title = original task (≤180 chars), body = the full spec
    from Step 3. If a prototype settled a design question upstream, attach its branch pointer + verdict
    as a comment on the epic so it travels with the plan.
-3. **Create one task sub-issue per atomic, independently-shippable TDD slice** derived from the spec's
+3. **Tag the epic's stack** (`stack:react`, `stack:dagster` — both exist in `K2412/planning`). Read the
+   signal from two places and add a label when *either* points that way:
+   - **The repo's stack** — React/Next.js if `package.json` carries `react`/`next` deps or the tree has
+     `*.tsx` files; Dagster if code `import`s `dagster`, the tree has a `dg`/Dagster project layout, or
+     `*.py` files define assets.
+   - **The task content** — what the spec's Implementation Decisions actually touch, since a repo can
+     hold both stacks and this work may exercise only one.
+
+   Apply `stack:react` and/or `stack:dagster` to the epic accordingly; detecting neither means no stack
+   label. These labels are what makes `implement` and `review-change` run their stack-specific
+   `best-practices` step conditionally — an unlabelled epic skips it, so a wrong label sends the wrong
+   guidance downstream. Add them with `gh issue edit -R $R $EPIC_N --add-label "stack:react"`.
+4. **Create one task sub-issue per atomic, independently-shippable TDD slice** derived from the spec's
    Implementation Decisions and User Stories. Each task body carries scope, acceptance criteria (tied
    to user stories, as a checklist), and the confirmed test seam. Link each as a sub-issue of the epic.
-4. **Wire ordering and gates in a second pass:** add `blocked` (+ a `Blocked by #N` body line) for any
+5. **Wire ordering and gates in a second pass:** add `blocked` (+ a `Blocked by #N` body line) for any
    task that depends on another; add `needs-human` to any task doing an irreversible operation
    (migration, schema change, external API write) so `implement` stops for approval there.
-5. **Show the user the compact tree** — epic #, task #s + one-line titles, which are blocked, which are gated.
+6. **Show the user the compact tree** — epic #, task #s + one-line titles, which are blocked, which are gated.
 
 **No `gh`?** Produce the spec + task list as a Markdown checklist and tell the user GitHub tracking was
 skipped. The issues *are* the plan — there's no local DB.
