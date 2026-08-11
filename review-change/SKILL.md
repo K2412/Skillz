@@ -64,6 +64,18 @@ For Reflex projects (files touching rx.State subclasses):
 <Include this section only when the epic has stack:react or stack:dagster; otherwise omit it entirely.>
 Invoke the `best-practices` skill via the Skill tool and pass it the stack from the label (`react` and/or `dagster`). Follow its guidance — it reads the Vercel React/Next.js rules and/or the `dagster-expert` skill — and hold the diff to those rules. Flag violations alongside the repo-standard findings below, and cite the rule the way that skill asks (e.g. the Vercel section number "1.5 Promise.all() for Independent Operations").
 
+## Experts standards (only if the diff touches a domain the experts corpus covers)
+<Include this section only when the change touches one of these domains; if it's clearly outside all of them, omit it entirely.>
+The `experts` MCP tools (route/find/review) expose a curated corpus of Standards keyed to expert domains: software_engineer, python, laravel, ai_engineer, data_engineer, data_analyst, sales_gtm, retention_gtm, customer_research_gtm, positioning_branding_gtm, zettelkasten. When the diff clearly touches one of these domains (software engineering, Python, Laravel, AI engineering, data engineering/analysis, GTM/sales/retention/positioning, zettelkasten), hold it to that expert's standards too. This lens is distinct from the stack best-practices lens above and keys off the diff's topic, not labels — run whichever apply.
+
+Pick the expert, then fetch its payload:
+- If the owning domain is obvious from the diff, call `review(artifact=<concise diff summary>, expert=<that expert>)` directly — this returns the expert's Standards, supporting passages, a review rubric, and a Finding schema to reason over.
+- If it's ambiguous or spans domains, first `route(artifact=<concise diff summary>)` to get the owning expert(s) plus cross-domain challengers, then `review(expert=<the winner>)` for the fuller payload. Consider the challengers' angles too.
+
+The corpus holds no LLM — the tools hand you standards and a rubric; you do the judging. Honor `low_confidence`: if the experts return it, say the corpus has nothing solid on this change rather than inventing findings. If the `experts` MCP server isn't connected or a call errors, note that in one line and continue the rest of the review normally — never fail the review over a missing experts server.
+
+Fold any expert findings into your output below, alongside the repo-standard and stack findings, and cite the **Standard id** the experts return (they carry ids) the way you'd cite a repo rule.
+
 ## Fowler smell baseline (always applies; repo standards override where they conflict)
 - Mysterious Name — rename; if no honest name exists, the design is murky.
 - Duplicated Code — extract the shared shape.
@@ -79,7 +91,7 @@ Invoke the `best-practices` skill via the Skill tool and pass it the stack from 
 - Refused Bequest — a subclass ignoring most of what it inherits; use composition.
 
 ## Brief
-Per file/hunk: (a) every documented-standard violation — cite the rule; (b) any stack best-practice violation, if the stack lens applies — cite the rule; (c) any smell — name it and quote the hunk. Documented standards override the baseline. Smells are judgement calls, not hard violations. Skip anything tooling already enforces. Under 400 words.
+Per file/hunk: (a) every documented-standard violation — cite the rule; (b) any stack best-practice violation, if the stack lens applies — cite the rule; (c) any experts-standard violation, if the experts lens applies — cite the Standard id; (d) any smell — name it and quote the hunk. Documented standards override the baseline. Smells are judgement calls, not hard violations. Skip anything tooling already enforces. Under 400 words.
 
 For each finding use:
 ### [blocker | should-fix | nit] File:Line — Principle
