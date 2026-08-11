@@ -19,7 +19,7 @@ cat pyproject.toml 2>/dev/null | grep -A 30 "\[tool.ruff"
 cat ruff.toml 2>/dev/null
 
 # Fetch issue acceptance criteria for the Spec axis (see ../spec/GITHUB-ISSUES.md)
-gh issue view -R K2412/planning <epic-n> --json title,body
+gh issue view -R K2412/planning <epic-n> --json title,body,labels
 gh api repos/<owner/repo>/issues/<epic-n>/sub_issues --jq '.[] | "#\(.number) \(.title)"'
 gh issue view -R K2412/planning <task-n> --json title,body   # for each task
 ```
@@ -27,6 +27,8 @@ gh issue view -R K2412/planning <task-n> --json title,body   # for each task
 Confirm the diff is non-empty before spawning — an empty diff should fail here, not inside a sub-agent.
 
 The **spec source** is the task issues (each has acceptance criteria in its body). If there's no epic (standalone review of a diff with no plan), run the Standards axis alone and say the Spec axis was skipped for lack of a spec.
+
+**Read the epic's `stack:*` labels** (from the `labels` above; `spec` applies them). A `stack:react` or `stack:dagster` label means the code should also be held to that stack's best-practices — fold that lens into the Standards sub-agent (see below). No `stack:*` label means there's no stack guidance to apply; leave the two-axis review unchanged.
 
 ## Spawn both sub-agents in parallel
 
@@ -58,6 +60,10 @@ For Reflex projects (files touching rx.State subclasses):
 - Computed vars: simple derivations only.
 - Check docs/Arch/reflex-patterns.md if present.
 
+## Stack best-practices (only if the epic carries a stack:* label)
+<Include this section only when the epic has stack:react or stack:dagster; otherwise omit it entirely.>
+Invoke the `best-practices` skill via the Skill tool and pass it the stack from the label (`react` and/or `dagster`). Follow its guidance — it reads the Vercel React/Next.js rules and/or the `dagster-expert` skill — and hold the diff to those rules. Flag violations alongside the repo-standard findings below, and cite the rule the way that skill asks (e.g. the Vercel section number "1.5 Promise.all() for Independent Operations").
+
 ## Fowler smell baseline (always applies; repo standards override where they conflict)
 - Mysterious Name — rename; if no honest name exists, the design is murky.
 - Duplicated Code — extract the shared shape.
@@ -73,7 +79,7 @@ For Reflex projects (files touching rx.State subclasses):
 - Refused Bequest — a subclass ignoring most of what it inherits; use composition.
 
 ## Brief
-Per file/hunk: (a) every documented-standard violation — cite the rule; (b) any smell — name it and quote the hunk. Documented standards override the baseline. Smells are judgement calls, not hard violations. Skip anything tooling already enforces. Under 400 words.
+Per file/hunk: (a) every documented-standard violation — cite the rule; (b) any stack best-practice violation, if the stack lens applies — cite the rule; (c) any smell — name it and quote the hunk. Documented standards override the baseline. Smells are judgement calls, not hard violations. Skip anything tooling already enforces. Under 400 words.
 
 For each finding use:
 ### [blocker | should-fix | nit] File:Line — Principle
