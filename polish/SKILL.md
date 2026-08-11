@@ -61,6 +61,10 @@ polishing — or pass the repo path as a second argument:
 python3 <skill-dir>/scripts/scan_changeset.py <staged|working|HASH|A..B> [repo-path]
 ```
 
+`<skill-dir>` is this SKILL.md's own directory — resolve it from the skill's path (when installed,
+that's `~/.agents/skills/polish`). This is the one step that must actually run, so confirm the path
+resolves before relying on the flags.
+
 It prints JSON: per file, the **new-file line numbers** the change added or modified, plus any lines
 matching the reference patterns (bead ids, ticket ids, local doc refs, agent chatter). Treat the flags
 as *candidates*, not verdicts — the scanner is deterministic and dumb; you make the call. **The line
@@ -112,7 +116,9 @@ Within the changed lines, remove personal scaffolding. These almost never belong
 
 - **Bead ids and bead-speak** — `sl-6ad`, `beads-xxx`, "per the bead", "see bead", "tracked in bd".
 - **Local artifact references** — comments pointing at files a teammate won't have or shouldn't need:
-  `PLAN.md`, `NOTES.md`, `see docs/foo.md`, "as described in the spec doc".
+  `PLAN.md`, `NOTES.md`, `see docs/foo.md`, "as described in the spec doc". On a docs or markdown change
+  set, the scanner's `local_doc` flags are usually *real* links (a `SKILL.md` or `README` legitimately
+  linking another doc) — judge these by hand rather than stripping them.
 - **Ticket ids in code** — `SIG-468`, `JIRA-123` sitting in a comment or docstring. (They belong in the
   commit message or PR, not scattered through the source.)
 - **Agent-to-user chatter** — `as requested`, `as you asked`, `per your instructions`, `I've added…`,
