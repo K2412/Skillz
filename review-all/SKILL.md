@@ -1,11 +1,11 @@
 ---
-name: review-pr
-description: One command to both evaluate and explain a pull request. Given a PR (URL, number, "this PR", a branch, or the working diff), it fans out four independent subagents in parallel — Standards (repo conventions + Fowler smells + stack best-practices), Experts (the experts MCP domain corpus), Spec (does it match the PR description + linked issues?), and Explain (an explain-diff HTML explainer + quiz) — then aggregates them into one report. Use whenever the user wants a PR reviewed AND made legible in a single pass: "review PR #214", "review this PR", "evaluate and explain this pull request", "run the full review on this PR", "review-pr", or hands you a GitHub PR link and wants both a quality verdict and an understanding artifact. For the working diff against a planning epic use /review-change; to only explain (no evaluation) use /explain-diff — review-pr is the combined evaluate-and-explain pass over a PR.
+name: review-all
+description: One command to both evaluate and explain a pull request. Given a PR (URL, number, "this PR", a branch, or the working diff), it fans out four independent subagents in parallel — Standards (repo conventions + Fowler smells + stack best-practices), Experts (the experts MCP domain corpus), Spec (does it match the PR description + linked issues?), and Explain (an explain-diff HTML explainer + quiz) — then aggregates them into one report. Use whenever the user wants a PR reviewed AND made legible in a single pass: "review PR #214", "review this PR", "evaluate and explain this pull request", "run the full review on this PR", "review-all", or hands you a GitHub PR link and wants both a quality verdict and an understanding artifact. For the working diff against a planning epic use /review-change; to only explain (no evaluation) use /explain-diff — review-all is the combined evaluate-and-explain pass over a PR.
 ---
 
-# review-pr — evaluate **and** explain a pull request, in one parallel pass
+# review-all — evaluate **and** explain a pull request, in one parallel pass
 
-`review-pr` is an orchestrator. It resolves a PR once, then fans out **four independent subagents in
+`review-all` is an orchestrator. It resolves a PR once, then fans out **four independent subagents in
 a single message** so their contexts never pollute each other, and aggregates the results. Nothing
 here is done in the main thread except gathering shared inputs and stitching the reports together.
 
@@ -21,7 +21,7 @@ resolve PR ──┬─▶ Standards  (repo conventions + Fowler smells + stack 
 
 The **Standards** and **Spec** lanes *are* the two axes of [`review-change`](../review-change/SKILL.md)
 — reuse those prompts rather than reinventing them, so the Fowler baseline, thresholds, and finding
-format stay single-sourced. `review-pr` adapts their inputs to a PR and adds two lanes review-change
+format stay single-sourced. `review-all` adapts their inputs to a PR and adds two lanes review-change
 doesn't have: **Experts** (pulled out here as its own lane, so drop the experts section from the
 Standards prompt to avoid double-reporting) and **Explain**.
 
@@ -112,6 +112,11 @@ Hold to explain-diff's default audience — **a bright intern on their first day
 knowledge, every acronym and term glossed on first use, Simplified Technical English, a generous
 Background block). Don't tighten it: this reader is new to the codebase.
 
+If an intent sketch exists in `docs/sketches/` (from `sketch-change`, produced before the build), read it
+as the design *origin* and narrate intent → outcome: what we set out to build, and where the shipped
+change went somewhere else. Deliberate course-corrections are expected — call them out as the story,
+not as faults. If no sketch is present, skip this; it's optional context, not a requirement.
+
 When done, return ONLY the path to the HTML file it saved (under explanations/) and a one-line note
 of what the change does. Do not summarise the diff back to me.
 ```
@@ -122,7 +127,7 @@ Stitch the four returns into one report. **Do not merge or rerank findings acros
 pass one lane and fail another, and that distinction is the point.
 
 ```
-# review-pr — <PR title>
+# review-all — <PR title>
 <source → base · N files> · explainer: explanations/explain-<slug>-<date>.html
 
 ## Standards
@@ -154,6 +159,47 @@ not incidental:
   blocker was inferred rather than observed (the Spec lane reasoning from two call sites, say), flag
   that it should be confirmed against real data before it's treated as certain.
 
+## Step 4 — Ready-to-post comments
+
+The report above is for the reviewer's own understanding: it explains, cites, and shows before/after.
+That is the wrong register to paste at a colleague. So **always** close the report with a final
+section the user can copy straight onto the PR, one comment at a time.
+
+**What makes the cut.** Blockers and should-fixes only. Drop every nit. Drop any finding whose whole
+substance is comment, docstring or UI-copy *wording* — a teammate reads that as nitpicking, and it
+costs more goodwill than the fix is worth. A stale docstring that documents removed behaviour is
+still just wording; a stale docstring that hides a real bug goes in as the bug. Where two lanes
+caught the same thing, post **one** comment, not two.
+
+**Voice.** Write these in the reviewing engineer's own voice, not the report's. The house default,
+drawn from how this user actually comments:
+
+- One line. No headers, no bold, no severity labels, no before/after snippets, no praise padding.
+- Lowercase start, symbols in backticks, a space before the closing ` ?`.
+- Phrased as a **question that invites the author to check**, not a directive — "is it possible to
+  reuse `X` ?", "can you double check the per tenant isolation in the event of an error ?", "do you
+  think this can pose an issue on Daylight savings time ?". The author usually knows something you
+  don't; the question leaves them room to say so.
+- State the observation, then ask. Never assert the fix is required.
+
+If you are reviewing in a repo whose owner comments differently, read their last few first and match
+them instead: `gh api repos/<owner>/<repo>/pulls/<n>/comments --jq '.[] | select(.user.login=="<them>")'`.
+
+**Shape.** A fenced block per comment, with the anchor on the line above so it can be pasted into the
+right place:
+
+````
+## Comments to post
+
+**`path/to/file.py:123`**
+```
+one-line comment in the user's voice ?
+```
+````
+
+Order them by how much they matter, most first. Close with a one-line note of what you deliberately
+left out (the nits, the wording findings) so the user knows the omission was a choice.
+
 Then gate:
 
 ```
@@ -165,7 +211,8 @@ options:
 ```
 
 Only post to the PR (`gh pr review <n> --comment` / `--request-changes`) if the user picks that
-option — writing to a PR is outward-facing and stays the user's call.
+option — writing to a PR is outward-facing and stays the user's call. The paste block exists so the
+user can post in their own hands without you writing to the PR at all; that is the default path.
 
 ## Done when
 
@@ -173,4 +220,5 @@ All four lanes have returned, the explainer HTML is open in front of the user, t
 sections are presented side by side without cross-lane merging, and each lane carries its one-line
 count. A lane that had nothing to say (empty diff domain, `low_confidence` experts, missing spec, a
 downed MCP) says so explicitly rather than being silently dropped — a missing lane should never read
-as a clean bill of health.
+as a clean bill of health. The report ends with the copy-paste comment block, nits and wording
+findings excluded.

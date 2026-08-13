@@ -10,7 +10,7 @@ and loop-backs between them. Each stage is a standalone skill; `pair` invokes it
 and moves on. The detail lives in each skill, not here.
 
 ```
-[research] → grill → [prototype] → spec → plan-review → implement → review-change → taste-review → polish
+[research] → [sketch] → grill → [prototype] → spec → plan-review → implement → review-change → taste-review → polish
 ```
 
 Bracketed stages are optional and fire only when they earn their place. Run each stage by invoking
@@ -21,7 +21,7 @@ If whether to build (or what) is still open, settle that *before* `pair`, not as
 `pair` doesn't reopen the question of whether to build:
 
 ```
-(should we? / what?)  →  /pair { [research] → grill → [prototype] → spec → plan-review → implement → review-change → taste-review → polish }
+(should we? / what?)  →  /pair { [research] → [sketch] → grill → [prototype] → spec → plan-review → implement → review-change → taste-review → polish }
 ```
 
 When the *planning itself* is too big for one session — foggy, dependent decisions, work you'd want to
@@ -43,7 +43,32 @@ options:
 
 If yes, run [`research`](../research/SKILL.md) (it works AFK in a background agent and writes cited
 findings to a file); carry those findings into the grill. If the idea is well-understood already,
-skip straight to Stage 1.
+skip straight to Stage 0.5 (or Stage 1).
+
+## Stage 0.5 — Design Sketch (optional)
+
+Before grilling from zero, the agent can lay its cards on the table: a coarse, forward-looking sketch
+of *how it would build this* — data flow, load-bearing pseudo-code, the design decisions it's making
+and why, and where it's still guessing. You react to a concrete strawman instead of abstract
+questions, and get the seat back — this is where you impart counter-thinking the agent didn't reach
+for. Offer it:
+
+```
+question: "Want me to sketch how I'd build this first — approach and design decisions laid out to argue with — before we grill?"
+options:
+  - "Yes, sketch it first (Recommended)" → run the sketch-change skill
+  - "No, straight to grilling" → skip to Stage 1
+```
+
+If yes, run [`sketch-change`](../sketch-change/SKILL.md) — it writes a plain-English, bright-intern
+HTML sketch (analogies over abstraction, like `explain-diff`) and opens it. You mark it up; the
+transition into the grill depends on what's left open:
+
+- **Sketch settled it** → approach agreed, guesses answered. Offer to **shorten or skip the grill**.
+- **A core decision got blown up** → the grill earns its keep. Carry the contested decision and the
+  open **Where I'm guessing** items in as its **opening agenda**, so it starts from the real gaps.
+
+Keep it coarse — a strawman to steer, not a spec. Exact fields and signatures stay `spec`/`plan-review`'s job.
 
 ## Stage 1 — Grill
 
@@ -102,6 +127,14 @@ against the epic. When the epic is stack-labelled (`stack:react` / `stack:dagste
 reads those labels and folds the matching `best-practices` guidance into the Standards axis — again not
 a separate stage, the wiring lives inside `review-change`. On acceptance it closes the epic and shows
 the final summary.
+
+**Intent trace (if a Stage 0.5 sketch exists).** Hand the sketch from `docs/sketches/` to `review-change`
+as *intent-origin context* — where we started and why. The reviewer contrasts the intended end-state
+against what shipped and tells that story: which contested design decisions landed, and where the
+direction changed. Divergence from the sketch is **not** a defect — the sketch is coarse and pre-grill,
+and the design legitimately evolves through the grill and the pipeline; a deliberate course-correction
+is exactly the point. What the reviewer flags is *unexplained* drift — a change with no trace to a
+grill decision or a spec choice. The **spec/epic stays the acceptance bar**, not the sketch.
 
 ## Stage 6 — Taste Review
 

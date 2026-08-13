@@ -1,0 +1,35 @@
+{
+  "skill_name": "sketch-change",
+  "evals": [
+    {
+      "id": 0,
+      "name": "checkout-optimistic-retry",
+      "prompt": "Before you write any code, sketch how you'd add optimistic UI plus a retry path to the checkout submit flow in the sample app (src/checkout/submitOrder.js, checkoutSlice.js, CheckoutButton.jsx). I want to see your approach and design decisions laid out so I can argue with them first.",
+      "expected_output": "A single self-contained HTML sketch: background on the current blocking submit, the intended approach (optimistic update + retry) in plain language with an analogy, coarse pseudo-code for the load-bearing part, a 'Design decisions' section with contestable choices (decision + why + rejected alternative), and a 'Where I'm guessing' section. Stays coarse — no exhaustive field lists or real signatures.",
+      "files": ["sample-app/"]
+    },
+    {
+      "id": 1,
+      "name": "rate-limiter-public-api",
+      "prompt": "The /public routes in the sample app's Express API (src/api/server.js) have no throttling today. Sketch how you'd add a token-bucket rate limiter there — show me your plan of attack and the design decisions before you touch any code.",
+      "expected_output": "A single self-contained HTML sketch grounded in the current unthrottled Express server: intended token-bucket approach explained plainly with an analogy, coarse pseudo-code for the middleware/bucket logic, contestable design decisions (where buckets live, keying, what happens on limit) with rejected alternatives, and honest open questions. Coarse, not a spec.",
+      "files": ["sample-app/"]
+    },
+    {
+      "id": 2,
+      "name": "auth-sessions-to-jwt",
+      "prompt": "Show me your plan of attack for migrating auth in the sample app from server-side sessions (src/auth/session.js) to JWTs, before you write any code. I want to see the approach and where you're unsure.",
+      "expected_output": "A single self-contained HTML sketch grounded in the current session/Redis auth: intended JWT approach in plain language with an analogy, coarse pseudo-code for issue/verify/guard, contestable decisions (access vs refresh tokens, storage, revocation, migration path) with rejected alternatives, and a 'Where I'm guessing' section. Stays coarse.",
+      "files": ["sample-app/"]
+    }
+  ],
+  "assertions": [
+    "Produces a single self-contained HTML file in the outputs directory",
+    "Has a 'Design decisions' section presenting contestable choices as decision + why + rejected alternative",
+    "Has a 'Where I'm guessing' (open questions) section surfacing assumptions only the engineer can settle",
+    "Stays coarse on enumeration: does NOT list exhaustive function signatures or every state field (no spec-level detail)",
+    "Uses coarse pseudo-code (not real, compilable signatures) for the load-bearing part",
+    "Bright-intern voice: glosses jargon and uses at least one plain analogy or concrete example",
+    "Includes a Background section framed as skippable for readers who know the area"
+  ]
+}
