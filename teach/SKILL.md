@@ -11,17 +11,50 @@ The user wants to learn something, and you are going to teach them — not answe
 
 This skill is **self-propelled**: the learner gives you a *goal*, and you go find the material yourself. (If they instead hand you a book, transcript, or docs to turn into a course, that's a different job — `/Learn-course`.)
 
-## Set up the workspace first
+## Find the workspace before you scaffold it
 
-Treat the current directory as the teaching workspace. Before anything else, scaffold it:
+Teaching is stateful, so **where** the workspace lives decides whether the learning survives
+next week. Resolve the home *first* — never scaffold into whatever directory you happen to be
+standing in, which is usually an unrelated code repo.
+
+The home is the learner's **`teach-memory` git repo**, with **one subdirectory per mission**.
+This is the default, not a suggestion. Clone it if it is not already on the machine:
 
 ```bash
-python3 <skill>/scripts/init_workspace.py --topic "<what they want to learn>"
+# Default home. Substitute the learner's own remote if they have a different one.
+[ -d ~/Documents/teach-memory ] || git clone https://github.com/K2412/teach-memory.git ~/Documents/teach-memory
 ```
 
-This is idempotent — safe to run in a fresh directory or an existing workspace (it only fills in what's missing). It creates the skeleton, stub state files, and copies the shared stylesheet, quiz widget, and lesson template into `assets/` so your first lesson already looks like part of a coherent course.
+Then pick the mission directory — reuse it if it exists (you are resuming), create it if not —
+and scaffold into that path:
 
-If the workspace already has files, you are resuming. **Read the state before teaching** (see [Every session starts here](#every-session-starts-here)).
+```bash
+python3 <skill>/scripts/init_workspace.py ~/Documents/teach-memory/<mission-slug> \
+  --topic "<what they want to learn>"
+```
+
+`init_workspace.py` is idempotent — safe on a fresh directory or a live workspace, filling in
+only what is missing. It creates the skeleton, stub state files, and copies the shared
+stylesheet, quiz widget, and lesson template into `assets/` so the first lesson already looks
+like part of a coherent course.
+
+Two rules that follow from this, and are easy to violate without noticing:
+
+- **A code repo is never the workspace.** If the learner asked you to teach them a subject
+  *using their codebase as the material* — which is common and good — the lessons still live in
+  `teach-memory`, and they cite paths into the code repo. Do not drop lessons into that repo's
+  `docs/`, scratch, or gitignored directories: the mission then dies with the branch, the
+  checkout, or the machine.
+- **Say where it went.** Tell the learner the workspace path in your first reply, so they can
+  find their own learning without asking.
+
+Only skip the repo when the learner has explicitly said they want a throwaway directory. Note
+that choice in `NOTES.md` and warn them once that nothing will persist. Never make them set up
+git as a precondition for the first lesson — if the clone fails, scaffold somewhere sensible
+outside any code repo, teach the lesson, and offer to relocate it afterwards.
+
+If the mission directory already has files, you are resuming. **Read the state before teaching**
+(see [Every session starts here](#every-session-starts-here)).
 
 ## The teaching workspace
 
@@ -120,7 +153,15 @@ Knowledge and skills you can build here; wisdom the learner earns only by testin
 
 ## Persisting across sessions
 
-The workspace *is* the memory, so it's worth keeping somewhere durable. The recommended home is the learner's `teach-memory` git repo (e.g. `K2412/teach-memory`): clone it, make one subdirectory per mission, and **commit as you go** — after a lesson, a learning record, or a review pass. That way learning survives across machines and never lives only in an ephemeral directory. When you finish a meaningful unit of work, offer to commit it with a short message ("lesson 3: F2L intuitive pairs"). Don't force git on a learner who's working in a throwaway directory — just make it easy.
+The workspace *is* the memory, and it already lives in the learner's `teach-memory` repo
+(see [Find the workspace before you scaffold it](#find-the-workspace-before-you-scaffold-it)).
+What remains is keeping it current: **commit as you go** — after a lesson, a learning record,
+a glossary term, or a review pass — with a short message naming the unit of work
+("lesson 3: F2L intuitive pairs"). Commit yourself rather than asking each time; leave pushing
+to the learner unless they ask you to push.
+
+An uncommitted workspace is a workspace that has not persisted. Do not end a session with
+lessons sitting in the working tree.
 
 ## `NOTES.md`
 
@@ -128,7 +169,7 @@ When the learner tells you how they like to be taught, or something to watch out
 
 ## Files in this skill
 
-- `scripts/init_workspace.py` — scaffolds a workspace (dirs, stub state files, starter assets). Idempotent. Run at the start of a mission.
+- `scripts/init_workspace.py` — scaffolds a workspace (dirs, stub state files, starter assets) at a target path. Idempotent. Run at the start of a mission, pointed at the mission's directory inside `teach-memory`.
 - `assets/starter/teach.css` — the shared lesson stylesheet, copied into each workspace's `assets/`.
 - `assets/starter/quiz.js` — the reusable retrieval-check widget (markup contract documented in the file).
 - `assets/starter/lesson-template.html` — the scaffold to copy for each new lesson.
