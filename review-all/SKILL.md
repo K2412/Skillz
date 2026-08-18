@@ -1,6 +1,6 @@
 ---
 name: review-all
-description: One command to both evaluate and explain a pull request. Given a PR (URL, number, "this PR", a branch, or the working diff), it fans out four independent subagents in parallel — Standards (repo conventions + Fowler smells + stack best-practices), Experts (the experts MCP domain corpus), Spec (does it match the PR description + linked issues?), and Explain (an explain-diff HTML explainer + quiz) — then aggregates them into one report. Use whenever the user wants a PR reviewed AND made legible in a single pass: "review PR #214", "review this PR", "evaluate and explain this pull request", "run the full review on this PR", "review-all", or hands you a GitHub PR link and wants both a quality verdict and an understanding artifact. For the working diff against a planning epic use /review-change; to only explain (no evaluation) use /explain-diff — review-all is the combined evaluate-and-explain pass over a PR.
+description: One command to both evaluate and explain a pull request. Given a PR (URL, number, "this PR", a branch, or the working diff), it fans out four independent subagents in parallel — Standards (repo conventions + Fowler smells + stack best-practices), Experts (the experts MCP domain corpus), Spec (does it match the PR description + linked issues?), and Explain (an explain-diff HTML explainer + quiz, and a step-through walk when the change is runtime behaviour) — then aggregates them into one report. Use whenever the user wants a PR reviewed AND made legible in a single pass: "review PR #214", "review this PR", "evaluate and explain this pull request", "run the full review on this PR", "review-all", or hands you a GitHub PR link and wants both a quality verdict and an understanding artifact. For the working diff against a planning epic use /review-change; to only explain (no evaluation) use /explain-diff — review-all is the combined evaluate-and-explain pass over a PR.
 ---
 
 # review-all — evaluate **and** explain a pull request, in one parallel pass
@@ -13,7 +13,7 @@ here is done in the main thread except gathering shared inputs and stitching the
 resolve PR ──┬─▶ Standards  (repo conventions + Fowler smells + stack best-practices)
              ├─▶ Experts    (experts MCP domain corpus — routed to the owning expert)
              ├─▶ Spec       (PR description + linked issues → missing/partial criteria, scope creep)
-             └─▶ Explain    (explain-diff HTML explainer + quiz)
+             └─▶ Explain    (explain-diff HTML explainer + quiz, plus a step-through walk when the change is runtime behaviour)
                         │
                         ▼
                    aggregate → one report
@@ -101,12 +101,18 @@ the diff against the PR description's *stated intent* only and flag that no form
 
 **Lane 4 — Explain.** Spawn a subagent that invokes the [`explain-diff`](../explain-diff/SKILL.md)
 skill on this PR (it handles `gh pr diff <n>` natively) in **reviewer mode**, and returns the path to
-the HTML explainer it produced. Prompt:
+the HTML explainer (and the walk file when one was warranted). Prompt:
 
 ```
 Invoke the `explain-diff` skill (via the Skill tool) on <the PR — number/URL/branch> in reviewer
 mode. Follow it to completion: build the mental model, write the explainer in teaching order, and
 author the five-question quiz.
+
+If the change is about *how the machine takes turns* — control flow, an event loop, a state
+machine, concurrency, blocking vs yielding, or a multi-step migration — also emit the
+**step-through walk** explain-diff describes (code pane + live runtime cards, one keypress per
+beat). Follow `explain-diff/references/step-through.md`. Return both HTML paths. If the gate does
+not fire, say "no walk — <one-line why>" so a missing walk reads as a choice.
 
 Hold to explain-diff's default audience — **a bright intern on their first day** (zero assumed prior
 knowledge, every acronym and term glossed on first use, Simplified Technical English, a generous
@@ -117,8 +123,8 @@ as the design *origin* and narrate intent → outcome: what we set out to build,
 change went somewhere else. Deliberate course-corrections are expected — call them out as the story,
 not as faults. If no sketch is present, skip this; it's optional context, not a requirement.
 
-When done, return ONLY the path to the HTML file it saved (under explanations/) and a one-line note
-of what the change does. Do not summarise the diff back to me.
+When done, return the explainer path, the walk path (or "no walk — <why>"), and a one-line note of
+what the change does. Do not summarise the diff back to me.
 ```
 
 ## Step 3 — Aggregate
@@ -141,6 +147,8 @@ pass one lane and fail another, and that distinction is the point.
 
 ## Explanation
 Opened explanations/explain-<slug>-<date>.html — walk it and take the quiz before you sign off.
+If a step-through exists, it is explanations/explain-<slug>-<date>-walk.html — step it before the
+quiz; one question depends on it.
 (Author mode rule from explain-diff still holds: don't approve a PR whose quiz you can't pass.)
 ```
 
@@ -216,7 +224,8 @@ user can post in their own hands without you writing to the PR at all; that is t
 
 ## Done when
 
-All four lanes have returned, the explainer HTML is open in front of the user, the three finding
+All four lanes have returned, the explainer HTML is open in front of the user (and the step-through
+walk too, when the gate fired), the three finding
 sections are presented side by side without cross-lane merging, and each lane carries its one-line
 count. A lane that had nothing to say (empty diff domain, `low_confidence` experts, missing spec, a
 downed MCP) says so explicitly rather than being silently dropped — a missing lane should never read

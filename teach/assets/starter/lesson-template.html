@@ -1,0 +1,88 @@
+<!doctype html>
+<!--
+  Lesson template — copy this to lessons/NNNN-slug.html and fill it in.
+  DELETE the parts you don't need. A lesson is SHORT: one tangible win, completable
+  in a few minutes, sized to the learner's zone of proximal development. Working memory
+  is tiny — do not exceed it. The structure below is a menu, not a form to fill fully.
+
+  Every lesson should carry, at minimum:
+    - a single scoped win, tied to the mission
+    - the knowledge needed for that win, and no more, with citations
+    - at least one feedback loop (a retrieval check, or a real-world task to do)
+    - a primary source to go deeper
+    - the "ask your teacher" reminder
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>__LESSON_TITLE__</title>
+  <link rel="stylesheet" href="../assets/teach.css">
+</head>
+<body>
+<main class="lesson">
+
+  <p class="lesson-kicker">Lesson __N__ · __TOPIC__</p>
+  <h1>__LESSON_TITLE__</h1>
+
+  <div class="callout win">
+    <span class="label">The win</span>
+    By the end of this lesson you will be able to __THE ONE OBSERVABLE THING__.
+  </div>
+
+  <!-- KNOWLEDGE: only what the win requires. Cite non-trivial claims. -->
+  <h2>__Section heading__</h2>
+  <p>
+    Explain the idea plainly. Prefer a concrete example over an abstract definition,
+    and give more than one example of any abstract concept so the learner can strip it
+    from the surface details.<a class="cite" href="#s1">1</a>
+  </p>
+
+  <div class="callout note">
+    <span class="label">Mental model</span>
+    A short analogy that maps the new idea onto something the learner already owns.
+  </div>
+
+  <div class="callout trap">
+    <span class="label">Common trap</span>
+    The wrong mental model most learners bring here, and why it breaks.
+  </div>
+
+  <!-- FEEDBACK LOOP: a retrieval check. See ../assets/quiz.js for the markup contract.
+       Options must be the same length/register — no formatting tells. -->
+  <div class="quiz" data-answer="1"
+       data-explain="One sentence explaining WHY — shown whether they got it right or wrong.">
+    <p class="q">A question that forces recall of the idea just taught.</p>
+    <ul class="options">
+      <li>A plausible-but-wrong option of similar length</li>
+      <li>The correct option, matched in length and tone</li>
+      <li>Another plausible-but-wrong option</li>
+    </ul>
+    <p class="feedback"></p>
+  </div>
+
+  <!-- SKILL: the thing to actually DO. A real-world step, a drill, a task to attempt now.
+       Difficulty is the tool here (unlike knowledge, where difficulty is the enemy). -->
+  <h2>Your turn</h2>
+  <p>One concrete thing to do right now, then report back to your teacher.</p>
+
+  <!-- Go-deeper -->
+  <div class="sources" id="sources">
+    <h3>Primary source</h3>
+    <p>Read/watch this to go deeper: <a href="__URL__">__the single best source on this__</a>.</p>
+    <ol>
+      <li id="s1"><a href="__URL__">__Citation 1 — author, title__</a></li>
+    </ol>
+  </div>
+
+  <div class="lesson-footer">
+    <p><span class="ask">Stuck, curious, or disagree?</span> Ask me — I'm your teacher, not a
+       wall of text. I can re-explain, give another example, or go deeper on any of this.</p>
+    <p>Next review of this material: __DATE__ (I'll bring it back then so it sticks).</p>
+    <!-- If the mission has reached the wisdom stage, point to a real community here. -->
+  </div>
+
+</main>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

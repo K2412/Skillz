@@ -1,0 +1,29 @@
+{
+  "skill_name": "teach",
+  "evals": [
+    {
+      "id": 0,
+      "name": "procedural-skill-rubiks",
+      "prompt": "teach me how to solve a rubik's cube — I've got a cheap 3x3 here and I've genuinely never done it, always wanted to",
+      "expected_output": "Scaffolds a teaching workspace, establishes the mission (interviews on the why if needed), finds real high-trust resources, and produces a short beautiful interactive HTML first lesson pitched at a true beginner (anatomy/notation/first tangible win), with a retrieval check and citations. Does NOT just dump a full text solution.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 1,
+      "name": "coding-with-prior-knowledge-rust",
+      "prompt": "I keep bouncing off Rust. I'm a working JS/TS dev, comfortable with async and types, but the borrow checker breaks my brain every time. help me actually learn it this time",
+      "expected_output": "Establishes mission grounded in the real goal, records the disclosed prior knowledge (JS/TS, async, types) so it doesn't re-teach it, and pitches the first lesson at the borrow checker (the stated edge) rather than 'hello world'. Interactive HTML lesson with a feedback loop, citations to real Rust resources, sized to the zone of proximal development.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 2,
+      "name": "conceptual-theory-transformers",
+      "prompt": "make me actually understand how attention works in transformers — I want to really get it, not just nod along to another hand-wavy analogy. quiz me as we go",
+      "expected_output": "Knowledge-heavy topic: keeps cognitive load low, teaches with multiple examples and analogies aimed at common misconceptions, and builds in retrieval checks (the learner explicitly asked to be quizzed) that gate progression. Cites high-trust sources. Produces an interactive HTML lesson, not a wall of prose.",
+      "files": [],
+      "assertions": []
+    }
+  ]
+}

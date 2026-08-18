@@ -2,6 +2,8 @@
 
 {{content}}
 
+{{animation_block}}
+
 ## Exercises
 
 {{exercise_list}}

@@ -1,14 +1,14 @@
 ---
 name: learn-course
-description: Convert a markdown source (textbook, lecture transcript, open-source library docs) into a directory-based learning course with chapters, lessons, and fill-in-the-blank coding exercises, then act as a terminal tutor that walks the learner through each lesson. Use this whenever the user wants to generate a course from a `.md` file, scaffold a hands-on curriculum from documentation, build practice problems out of a tutorial, or be coached lesson-by-lesson through a generated course directory. Trigger even when the user does not say "course" — phrases like "turn this into lessons", "make exercises from this book", "teach me from these docs", or "I want to learn this hands-on" all qualify.
+description: Convert a markdown source (textbook, lecture transcript, open-source library docs) into a directory-based learning course with chapters, lessons, and fill-in-the-blank coding exercises, then act as a terminal tutor that walks the learner through each lesson. Lessons about runtime behaviour (event loops, state machines, concurrency) also get a step-through walk — code on one side, live machine state on the other, one keypress per beat — opened before the first exercise. Use this whenever the user wants to generate a course from a `.md` file, scaffold a hands-on curriculum from documentation, build practice problems out of a tutorial, or be coached lesson-by-lesson through a generated course directory. Trigger even when the user does not say "course" — phrases like "turn this into lessons", "make exercises from this book", "teach me from these docs", or "I want to learn this hands-on" all qualify.
 ---
 
 # Learn-course
 
 This skill has two modes:
 
-- **Generate mode** — sweep a workspace (`YtUrls.py` + `input/`) and produce one course directory per source. Step 0 preprocesses YouTube URLs into transcripts and PDFs into Markdown; Steps 1–5 then loop the existing chunk → lesson → scaffold pipeline once per `.md` source.
-- **Teach mode** — once a course exists, walk the learner through it interactively.
+- **Generate mode** — sweep a workspace (`YtUrls.py` + `input/`) and produce one course directory per source. Step 0 preprocesses YouTube URLs into transcripts and PDFs into Markdown; Steps 1–5 then loop the existing chunk → lesson → scaffold pipeline once per `.md` source. Lessons that teach runtime behaviour emit a step-through walk (`animation.html`) from the shared player.
+- **Teach mode** — once a course exists, walk the learner through it interactively. If the current lesson has `animation.html`, open it before the first exercise.
 
 Pick the mode based on what the user is asking. If they invoke `/Learn-course` (with or without a path), and CWD is a workspace with `YtUrls.py` and/or `input/`, generate. If they're sitting inside a generated course directory (one with `_TEACHER.md` and `_meta.json` at the root) and ask to start, continue, or check work, teach.
 
@@ -176,7 +176,7 @@ Combine all returned `lessons` arrays in chunk order, renumbering `order` fields
 python3 scripts/scaffold_course.py /tmp/course.json <output-dir> --language <lang> --source <input.md>
 ```
 
-The script reads templates from `assets/`, writes the directory tree, expands starter/test/solution code into language-correct files, and emits `_meta.json` (with `test_command`) and `_TEACHER.md`. Solutions go into `.solutions/` (dot-prefixed — the leading dot keeps them out of casual `ls` and out of grep-by-default).
+The script reads templates from `assets/`, writes the directory tree, expands starter/test/solution code into language-correct files, and emits `_meta.json` (with `test_command`) and `_TEACHER.md`. Solutions go into `.solutions/` (dot-prefixed — the leading dot keeps them out of casual `ls` and out of grep-by-default). When a lesson JSON includes `animation`, the script fills `assets/stepper.html` into `<lesson>/animation.html`.
 
 **Source markdown is moved into the course root.** When `--source` points at a real file, the script `shutil.move`s it into `<output-dir>/` after scaffolding so the source lives with the course it produced. `_meta.json.source_file` and the README record the moved basename. Pass `--no-move-source` to keep the original in place (or omit `--source` / pass a non-path label to skip the move).
 
@@ -193,12 +193,14 @@ Don't dump the generated content into chat — point at the directory.
 
 When a user is inside a directory with `_TEACHER.md` and `_meta.json`, or says things like "start lesson 1", "check my exercise", "next exercise", "give me a hint" — read `references/teacher-loop.md` and follow it. The short version:
 
-1. Read `_meta.json` and `.progress.json` (create the latter if missing).
-2. Read the lesson `README.md` and present a **concise** summary in chat. The lesson is intentionally light on prose — most learning is in the exercises, so don't over-explain.
-3. Point the learner at the current exercise's starter file and wait.
-4. On "check": read the learner's file, **run the tests** with the runtime in `_meta.json.test_command`, and either confirm or give a hint. Read `.solutions/` privately to ground the hint, but don't show it unless the learner explicitly says "show me the answer".
-5. After each check (pass or fail), use `AskUserQuestion` to offer the progression choice (next / re-read / try again / hint / show solution) instead of free-text prompts. See `references/teacher-loop.md` for the exact option sets and escalation rules.
-6. Update `.progress.json` on pass.
+1. Read `_meta.json`, `.progress.json` (create the latter if missing), and `review-queue.md` (may be absent).
+2. **Run any due spaced reviews first.** If `review-queue.md` has items due today or earlier, open with a quick from-memory recall on them *before* new material — a 60-second check, not a re-teach. This is where retention is actually won; passing an exercise once only builds fluency. Skip silently when nothing is due.
+3. Read the lesson `README.md` and present a **concise** summary in chat. The lesson is intentionally light on prose — most learning is in the exercises, so don't over-explain.
+4. If `<lesson>/animation.html` exists, `open` it and have the learner step through it before the first exercise. Skip when the file is absent.
+5. Point the learner at the current exercise's starter file and wait.
+6. On "check": read the learner's file, **run the tests** with the runtime in `_meta.json.test_command`, and either confirm or give a hint. Read `.solutions/` privately to ground the hint, but don't show it unless the learner explicitly says "show me the answer".
+7. After each check (pass or fail), use `AskUserQuestion` to offer the progression choice (next / review-if-due / re-read / try again / hint / show solution) instead of free-text prompts. See `references/teacher-loop.md` for the exact option sets and escalation rules.
+8. On pass, update `.progress.json` **and** schedule the exercise's core idea into `review-queue.md` (expanding-interval spaced repetition). See `references/pedagogy/review-queue-format.md`.
 
 ## Files in this skill
 
@@ -214,11 +216,13 @@ The skill itself bundles these (used by Steps 2 onward):
 - `references/chunking-prompt.md` — the LLM system prompt used in Step 2a (smart chunker). Read every time you spawn the boundary subagent.
 - `references/chapter-detection.md` — explains both chunking paths (smart and deterministic), the regex patterns used by the fallback, and how to debug surprising chunk counts.
 - `references/repo-match-prompt.md` — the LLM system prompt used in Step 2.5 (companion-repo matchmaker). Read it when wiring the matchmaker subagent.
-- `references/teacher-loop.md` — the full teach-mode loop, including grading, hints, and progress tracking.
+- `references/teacher-loop.md` — the full teach-mode loop, including grading, hints, spaced review, and progress tracking.
+- `references/pedagogy/` — the shared cross-skill pedagogy module (also used by the `teach` skill), injected from repo-root `shared/pedagogy/` at install time: `learning-science.md`, `teaching-modes.md`, and `review-queue-format.md` (the spaced-review schedule the teach loop now writes). Opted into via `references/.shared`.
 - `scripts/chunk_markdown.py` — deterministic regex chunker. Used as the fallback in Step 2b and as a pre-splitter for very large inputs.
 - `scripts/apply_chunks.py` — validates LLM-returned line ranges and slices the source file at those lines. Used in Step 2a.
 - `scripts/index_repo.py` — clones (or accepts a local path to) a companion repo and emits a filtered, head-previewed index for the matchmaker. Used in Step 2.5.
-- `scripts/scaffold_course.py` — turns a combined JSON of lessons into the on-disk course tree.
+- `scripts/scaffold_course.py` — turns a combined JSON of lessons into the on-disk course tree. When a lesson includes `animation`, it fills `assets/stepper.html` into `<lesson>/animation.html`.
+- `assets/stepper.html` — shared step-through player (same file as `explain-diff/assets/stepper.html`). Agent fills JSON; the scaffolder substitutes `__TITLE__`, `__LEDE__`, `__ANIMATION_JSON__`.
 - `assets/*.template.md` — markdown templates the scaffolder fills in.
 
 ## Design principles to preserve when editing
@@ -226,4 +230,6 @@ The skill itself bundles these (used by Steps 2 onward):
 - **Heavy stubs, light prose.** Lessons are concise — 4–8 short paragraphs in the README. The cognitive load lives in 3–4 exercises per lesson, with rich header comments and multiple `# TODO:` markers in `starter_code`. If the LLM starts producing wall-of-text lessons with one trivial exercise, the prompt has drifted — fix `references/lesson-prompt.md`.
 - **Hidden solutions.** `.solutions/` is private. Teach mode reads it to ground hints; it does not show it.
 - **Real test execution.** Teach mode actually runs the tests with the local runtime, so feedback is grounded in real failures rather than Claude's read-only opinion. If the runtime is missing, say so and fall back to a code review.
+- **Spaced review, not pass-and-forget.** Passing an exercise builds fluency; only scheduled re-recall builds durable retention. Teach mode maintains `review-queue.md` and runs due reviews at session open, before new lessons. This is the shared learning-science principle (`references/pedagogy/`) — don't quietly drop it back to a one-shot pass tracker.
 - **One language per course.** Mixed-language courses muddy file extensions and test commands. If the user wants two languages, generate two courses.
+- **Walks only when seeing beats telling.** A step-through is for runtime behaviour a static sample cannot carry. Fill the shared player with JSON; do not invent a new HTML/JS animation per lesson. The canonical schema lives in `explain-diff/references/step-through.md`.

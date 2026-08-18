@@ -1,0 +1,108 @@
+/*
+ * teach.css — the shared stylesheet every lesson in a teaching workspace links.
+ * Copied into <workspace>/assets/ on first run; lessons link it via ../assets/teach.css.
+ * The point of a SHARED sheet: the lessons read as one coherent course, not a pile
+ * of one-offs. Edit this once and every lesson updates. Think Tufte: quiet, readable,
+ * generous margins, restrained colour. It must also print well — learners revisit these.
+ */
+
+:root {
+  --ink:      #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --paper:    #fdfdfb;
+  --rule:     #e4e0d8;
+  --accent:   #7a4a1e;   /* warm, low-chroma — used sparingly for emphasis */
+  --ok:       #2f6b3a;
+  --warn:     #8a5a00;
+  --trap:     #9a2f2f;
+  --measure:  38rem;     /* the reading column — never let prose run wider */
+  --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --font-sans:  system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono:  "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-serif);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.55;
+  margin: 0;
+  padding: 3rem 1.5rem 6rem;
+  font-size: 1.12rem;
+}
+
+main, .lesson { max-width: var(--measure); margin: 0 auto; }
+
+/* Header block */
+.lesson-kicker {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  margin: 0 0 0.4rem;
+}
+h1 { font-size: 2rem; line-height: 1.15; margin: 0 0 0.6rem; font-weight: 600; }
+h2 { font-family: var(--font-sans); font-size: 1.25rem; margin: 2.4rem 0 0.6rem; font-weight: 600; }
+h3 { font-family: var(--font-sans); font-size: 1rem; margin: 1.6rem 0 0.4rem; letter-spacing: 0.01em; }
+
+p { margin: 0 0 1rem; }
+a { color: var(--accent); text-underline-offset: 2px; }
+
+code { font-family: var(--font-mono); font-size: 0.9em; background: #f2efe8; padding: 0.1em 0.35em; border-radius: 3px; }
+pre  { font-family: var(--font-mono); font-size: 0.9rem; background: #f7f5ef; border: 1px solid var(--rule);
+       border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; line-height: 1.45; }
+pre code { background: none; padding: 0; }
+
+/* Callouts — the visual vocabulary of a lesson.
+   .note = context, .trap = a common mistake, .win = the tangible win this lesson delivers. */
+.callout {
+  border-left: 3px solid var(--rule);
+  padding: 0.6rem 0 0.6rem 1rem;
+  margin: 1.4rem 0;
+  font-size: 1rem;
+}
+.callout .label {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.callout.note { border-left-color: var(--accent); }
+.callout.note  .label { color: var(--accent); }
+.callout.trap { border-left-color: var(--trap); background: #fbf4f4; }
+.callout.trap  .label { color: var(--trap); }
+.callout.win  { border-left-color: var(--ok);  background: #f4f9f4; }
+.callout.win   .label { color: var(--ok); }
+
+/* Citations — every non-trivial claim earns one. Rendered as a superscript link. */
+.cite { font-family: var(--font-sans); font-size: 0.7em; vertical-align: super; text-decoration: none; }
+.sources { font-family: var(--font-sans); font-size: 0.85rem; color: var(--ink-soft); border-top: 1px solid var(--rule);
+           margin-top: 3rem; padding-top: 1rem; }
+.sources ol { padding-left: 1.2rem; }
+
+/* Retrieval-check widget (see quiz.js). Answers are hidden until the learner commits. */
+.quiz { border: 1px solid var(--rule); border-radius: 8px; padding: 1.2rem 1.4rem; margin: 1.8rem 0; background: #fff; }
+.quiz .q { font-family: var(--font-sans); font-weight: 600; margin-bottom: 0.8rem; }
+.quiz .options { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+.quiz .options li { border: 1px solid var(--rule); border-radius: 6px; padding: 0.6rem 0.8rem; cursor: pointer;
+                    font-family: var(--font-sans); font-size: 0.95rem; transition: background 0.12s, border-color 0.12s; }
+.quiz .options li:hover { background: #f7f5ef; }
+.quiz .options li.correct { border-color: var(--ok);  background: #eef7ee; }
+.quiz .options li.wrong   { border-color: var(--trap); background: #fbeeee; }
+.quiz .feedback { font-family: var(--font-sans); font-size: 0.9rem; margin-top: 0.8rem; min-height: 1.2rem; }
+
+/* Footer — teacher reminder + community pointer + spaced-review note. */
+.lesson-footer { font-family: var(--font-sans); font-size: 0.9rem; color: var(--ink-soft);
+                 border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1.2rem; }
+.lesson-footer .ask { color: var(--accent); font-weight: 600; }
+
+@media print {
+  body { padding: 0; font-size: 11pt; background: #fff; }
+  .quiz .options li { cursor: default; }
+  a { color: var(--ink); }
+}

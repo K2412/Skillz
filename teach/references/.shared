@@ -1,0 +1,4 @@
+# Shared reference modules injected from repo-root shared/<module>/ at install time
+# (see install.sh). One module name per line. These directories do NOT exist in the
+# repo skill dir — they are populated into references/<module>/ when install.sh runs.
+pedagogy

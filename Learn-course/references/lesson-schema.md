@@ -20,7 +20,8 @@ Every per-chunk subagent must return JSON matching this shape **exactly**. Pass 
           "test_code": "string — runnable test file using the language's conventional test runner",
           "order": "integer — 1-based within the lesson"
         }
-      ]
+      ],
+      "animation": "object | omit — optional step-through walk (see Animation below). Omit the key entirely when the gate does not fire."
     }
   ]
 }
@@ -41,6 +42,55 @@ Every per-chunk subagent must return JSON matching this shape **exactly**. Pass 
 | `lessons[].exercises[].solution_code` | string | yes | Source code; tests must pass against it. |
 | `lessons[].exercises[].test_code` | string | yes | Source code; runnable. |
 | `lessons[].exercises[].order` | int | yes | 1-based per lesson. |
+| `lessons[].animation` | object | no | Step-through walk. Omit the key when a static figure / the README already makes the idea obvious. |
+
+## Animation (optional)
+
+A walk is a stepped animation of the lesson's runtime: source on one side, the machine's state on the other, one beat per keypress. Emit one only when a paragraph is not enough **and** at least one holds:
+
+- **Stateful over time** — event loop, reducer, state machine, scheduler, interpreter.
+- **A sequence of mechanical steps** — a request through middleware, a lock changing hands.
+- **Hard to believe without seeing** — concurrency, blocking vs yielding.
+
+Skip syntax, types, and "write a function that returns X". Fill JSON only — the scaffolder injects it into a shared player. Do not invent HTML or JavaScript.
+
+```json
+{
+  "title": "create_task schedules work before the first await",
+  "lede": "Two fetches overlap only if both tasks exist before anyone waits.",
+  "panes": [
+    {
+      "id": "code",
+      "title": "Python thread",
+      "kind": "code",
+      "lines": ["async def main():", "    t = asyncio.create_task(work())"]
+    },
+    { "id": "loop", "title": "Event loop", "kind": "world" }
+  ],
+  "steps": [
+    {
+      "caption": "asyncio.run starts the loop and enters main.",
+      "highlight": { "code": [1] },
+      "world": {
+        "loop": [
+          {
+            "id": "main",
+            "title": "main()",
+            "status": "running",
+            "lines": ["async def main():", "    t = asyncio.create_task(work())"],
+            "highlight": [1]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+- `panes[].kind` is `"code"` (full short listing in `lines`) or `"world"` (a column of cards). One code pane plus one or two world panes.
+- Card `status`: `ready` · `running` · `suspended` · `complete` · `io`. Keep `id` stable across steps.
+- 8–24 steps. Each caption is one teaching sentence. Every beat must change a highlight, a status, or which cards are present.
+- `highlight` maps pane id → 1-based line indexes. `world` maps world-pane id → the card list at that beat.
 
 ## Hard rules
 

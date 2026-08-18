@@ -16,6 +16,11 @@ PI_INSTRUCTIONS_DIR="${PI_HOME:-$HOME/.pi/agent}/instructions"
 PI_EXTENSIONS_DIR="${PI_HOME:-$HOME/.pi/agent}/extensions"
 mkdir -p "$AGENTS_DIR" "$PI_INSTRUCTIONS_DIR" "$PI_EXTENSIONS_DIR"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Repo-root home of shared, cross-skill reference modules (pedagogy, etc.). A skill
+# opts into a module by listing its name in the skill's own references/.shared file;
+# install then copies shared/<module>/ into that skill's references/<module>/, so the
+# canonical copy lives in one place here but every installed skill stays self-contained.
+SHARED_DIR="$SCRIPT_DIR/shared"
 
 # Pull the `description:` out of a SKILL.md frontmatter block. Handles plain
 # scalars, quoted scalars, and folded/literal blocks (`description: >`), which
@@ -92,6 +97,26 @@ for skill_dir in "$SCRIPT_DIR"/*/; do
   cp -r "$skill_dir" "$AGENTS_DIR/$name"
   echo "Installed: $name"
   installed=$((installed + 1))
+
+  # Inject any shared reference modules this skill opted into. The manifest was
+  # just copied in as part of the skill dir; each named module is copied from
+  # shared/<module>/ into the installed skill's references/<module>/.
+  shared_manifest="$AGENTS_DIR/$name/references/.shared"
+  if [ -f "$shared_manifest" ]; then
+    while IFS= read -r module || [ -n "$module" ]; do
+      module="${module%%#*}"                       # strip trailing comments
+      module="$(printf '%s' "$module" | xargs)"    # trim surrounding whitespace
+      [ -z "$module" ] && continue
+      if [ -d "$SHARED_DIR/$module" ]; then
+        dest="$AGENTS_DIR/$name/references/$module"
+        rm -rf "$dest"
+        cp -r "$SHARED_DIR/$module" "$dest"
+        echo "          shared: $module -> $name/references/$module"
+      else
+        echo "          WARN: shared module '$module' requested by $name not found in $SHARED_DIR"
+      fi
+    done < "$shared_manifest"
+  fi
 
   # Create a symlink in each tool dir that exists on this machine.
   for tool_dir in "${TOOL_DIRS[@]}"; do

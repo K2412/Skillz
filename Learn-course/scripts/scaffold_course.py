@@ -28,6 +28,7 @@ quality) was already decided by the subagents.
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import re
 import shutil
@@ -136,11 +137,24 @@ def write_lesson(
             f"   {ex.get('instructions', '').splitlines()[0] if ex.get('instructions') else ''}"
         )
 
+    animation = lesson.get("animation")
+    if animation:
+        write_animation(lesson_dir, animation, assets_dir)
+        animation_block = (
+            "## Walk through it\n\n"
+            "Open [`animation.html`](animation.html) and step with ← → before the first "
+            "exercise. Code is on the left; the machine's state is on the right. One "
+            "keypress per beat.\n"
+        )
+    else:
+        animation_block = ""
+
     template = load_template(assets_dir, "lesson-README.template.md")
     readme = render(
         template,
         title=lesson["title"],
         content=lesson["content"],
+        animation_block=animation_block,
         exercise_list="\n".join(exercise_lines) if exercise_lines else "_(no exercises)_",
     )
     (lesson_dir / "README.md").write_text(readme, encoding="utf-8")
@@ -148,6 +162,19 @@ def write_lesson(
     write_exercise_files(lesson_dir, lesson.get("exercises", []), profile)
 
     return lesson_dir_name
+
+
+def write_animation(lesson_dir: Path, animation: dict, assets_dir: Path) -> None:
+    """Fill the shared stepper player with this lesson's JSON. Agent supplies data only."""
+    title = animation.get("title") or "Walkthrough"
+    lede = animation.get("lede") or ""
+    filled = (
+        load_template(assets_dir, "stepper.html")
+        .replace("__TITLE__", html.escape(title))
+        .replace("__LEDE__", html.escape(lede))
+        .replace("__ANIMATION_JSON__", json.dumps(animation, ensure_ascii=False))
+    )
+    (lesson_dir / "animation.html").write_text(filled, encoding="utf-8")
 
 
 def write_chapter(
