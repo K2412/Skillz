@@ -1,10 +1,10 @@
 ---
 name: best-practices
-description: Apply stack-specific engineering best-practices for a stack the caller names — Vercel's React/Next.js performance guidance for `react`, the `dagster-expert` skill for `dagster`, both when both apply, and an explicit no-op when neither does. Use when another skill (e.g. `implement` or `review-change`) has read an epic's `stack:*` labels and hands you the stack to apply; also use when the user says "apply the React best-practices", "check this against the Dagster guidance", or names a stack to hold code to. This skill does NOT discover which stack applies — the caller passes it in.
+description: Apply stack-specific engineering best-practices for a stack the caller names — Vercel's React/Next.js performance guidance for `react`, the `dagster-expert` skill for `dagster`, both when both apply, and an explicit no-op when neither does. Use when another skill (e.g. `implement` or `code-review`) has read an epic's `stack:*` labels and hands you the stack to apply; also use when the user says "apply the React best-practices", "check this against the Dagster guidance", or names a stack to hold code to. This skill does NOT discover which stack applies — the caller passes it in.
 ---
 
 Apply the best-practices for the stack(s) the **caller names**. The caller — usually
-[`implement`](../implement/SKILL.md) or [`review-change`](../review-change/SKILL.md), which read the
+[`implement`](../implement/SKILL.md) or [`code-review`](../code-review/SKILL.md), which read the
 epic's `stack:*` labels — tells you which stack applies. Do not go looking for "the current epic"
 yourself; if the stack is genuinely unclear, ask the caller which it is rather than guess.
 

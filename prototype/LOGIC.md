@@ -59,9 +59,9 @@ justify the escalation, drop back to text.
 | **A trace where the transitions over time are the point** (a saga, a workflow, an event loop) | **Scrubbable timeline** | Replaying and inspecting each step is the whole insight. |
 | **Geometric, graph-shaped, or about magnitudes** (coordinates, layout, a dependency graph, a schedule grid, a numeric curve) | **HTML micro-world** | Text flattens structure text can't show — this is the only tier a browser earns. |
 
-This is the same escalation gate the explain-diff roadmap uses for micro-worlds — see
-[`../explain-diff/references/future-ephemeral-interfaces.md`](../explain-diff/references/future-ephemeral-interfaces.md).
-The one deliberate difference: explain-diff *replays a captured trace* of code that already exists;
+This is the same escalation gate the code-review roadmap uses for micro-worlds — see
+[`../code-review/references/future-ephemeral-interfaces.md`](../code-review/references/future-ephemeral-interfaces.md).
+The one deliberate difference: code-review *replays a captured trace* of code that already exists;
 here you *drive a live module* for code that doesn't yet. The module is the artifact under
 construction, not an instrumented copy of something shipped.
 

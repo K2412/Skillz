@@ -222,7 +222,7 @@ The skill itself bundles these (used by Steps 2 onward):
 - `scripts/apply_chunks.py` — validates LLM-returned line ranges and slices the source file at those lines. Used in Step 2a.
 - `scripts/index_repo.py` — clones (or accepts a local path to) a companion repo and emits a filtered, head-previewed index for the matchmaker. Used in Step 2.5.
 - `scripts/scaffold_course.py` — turns a combined JSON of lessons into the on-disk course tree. When a lesson includes `animation`, it fills `assets/stepper.html` into `<lesson>/animation.html`.
-- `assets/stepper.html` — shared step-through player (same file as `explain-diff/assets/stepper.html`). Agent fills JSON; the scaffolder substitutes `__TITLE__`, `__LEDE__`, `__ANIMATION_JSON__`.
+- `assets/stepper.html` — shared step-through player (same file as `code-review/assets/stepper.html`). Agent fills JSON; the scaffolder substitutes `__TITLE__`, `__LEDE__`, `__ANIMATION_JSON__`.
 - `assets/*.template.md` — markdown templates the scaffolder fills in.
 
 ## Design principles to preserve when editing
@@ -232,4 +232,4 @@ The skill itself bundles these (used by Steps 2 onward):
 - **Real test execution.** Teach mode actually runs the tests with the local runtime, so feedback is grounded in real failures rather than Claude's read-only opinion. If the runtime is missing, say so and fall back to a code review.
 - **Spaced review, not pass-and-forget.** Passing an exercise builds fluency; only scheduled re-recall builds durable retention. Teach mode maintains `review-queue.md` and runs due reviews at session open, before new lessons. This is the shared learning-science principle (`references/pedagogy/`) — don't quietly drop it back to a one-shot pass tracker.
 - **One language per course.** Mixed-language courses muddy file extensions and test commands. If the user wants two languages, generate two courses.
-- **Walks only when seeing beats telling.** A step-through is for runtime behaviour a static sample cannot carry. Fill the shared player with JSON; do not invent a new HTML/JS animation per lesson. The canonical schema lives in `explain-diff/references/step-through.md`.
+- **Walks only when seeing beats telling.** A step-through is for runtime behaviour a static sample cannot carry. Fill the shared player with JSON; do not invent a new HTML/JS animation per lesson. The canonical schema lives in `code-review/references/step-through.md`.

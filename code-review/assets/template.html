@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5c5c5c;
+    --rule: #e5e2dc;
+    --bg: #fbfaf7;
+    --card: #ffffff;
+    --accent: #b5651d;      /* warm ochre — links, emphasis */
+    --add-bg: #e6f4ea; --add-ink: #1a7f37;
+    --del-bg: #fbe9e9; --del-ink: #b62324;
+    --callout-bg: #f4f1ea;
+    --code-bg: #f6f4ef;
+    --ok: #1a7f37; --no: #b62324;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 18px/1.65 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 4rem 1.25rem 6rem; }
+  header.doc { margin-bottom: 2.5rem; }
+  header.doc .kicker { font: 600 13px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 .75rem; }
+  h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 .5rem; font-weight: 700; }
+  header.doc .meta { color: var(--muted); font: 400 15px/1.5 ui-sans-serif, system-ui, sans-serif; }
+  h2 { font-size: 1.5rem; margin: 3rem 0 1rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); font-weight: 700; }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-size: 1.2rem; margin: 2rem 0 .6rem; font-weight: 700; }
+  p, li { color: #262626; }
+  a { color: var(--accent); }
+  strong { font-weight: 700; }
+  .lede { font-size: 1.15rem; color: #333; }
+
+  /* Callout — used for "intuition" and key ideas */
+  .callout {
+    background: var(--callout-bg); border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0;
+  }
+  .callout .label { font: 600 12px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: .5rem; }
+
+  /* Collapsible "skip if you know this" background */
+  details.bg { border: 1px solid var(--rule); border-radius: 8px; padding: .5rem 1.25rem; margin: 1.5rem 0; background: var(--card); }
+  details.bg > summary { cursor: pointer; font: 600 15px/1.4 ui-sans-serif, system-ui, sans-serif; padding: .5rem 0; list-style: none; }
+  details.bg > summary::-webkit-details-marker { display: none; }
+  details.bg > summary::before { content: "▸ "; color: var(--muted); }
+  details.bg[open] > summary::before { content: "▾ "; }
+
+  /* Code + literate diff */
+  pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 1rem 1.1rem; overflow-x: auto; font: 14px/1.55 ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92em; background: var(--code-bg); padding: .1em .35em; border-radius: 4px; }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  .diff .add { display: block; background: var(--add-bg); color: var(--add-ink); }
+  .diff .del { display: block; background: var(--del-bg); color: var(--del-ink); }
+  .diff .ctx { display: block; color: var(--muted); }
+  .filehdr { font: 600 14px/1.4 ui-monospace, Menlo, monospace; background: #2b2b2b; color: #f5f5f5; padding: .5rem .9rem; border-radius: 8px 8px 0 0; margin-top: 2rem; }
+  .filehdr + pre { border-radius: 0 0 8px 8px; border-top: none; margin-top: 0; }
+
+  figure { margin: 2rem 0; text-align: center; }
+  figure svg, figure canvas { max-width: 100%; height: auto; }
+  figcaption { color: var(--muted); font: 400 14px/1.5 ui-sans-serif, system-ui, sans-serif; margin-top: .6rem; }
+
+  /* ---- Quiz: the speed regulator ---- */
+  .quiz { margin-top: 2rem; }
+  .quiz .q { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 1.25rem 1.35rem; margin: 1rem 0; }
+  .quiz .q .stem { font-weight: 700; margin-bottom: .85rem; }
+  .quiz .opt { display: block; width: 100%; text-align: left; background: #fff; border: 1px solid var(--rule); border-radius: 8px; padding: .7rem .9rem; margin: .5rem 0; cursor: pointer; font: inherit; color: inherit; transition: background .12s, border-color .12s; }
+  .quiz .opt:hover { border-color: var(--accent); }
+  .quiz .opt.correct { border-color: var(--ok); background: var(--add-bg); }
+  .quiz .opt.wrong { border-color: var(--no); background: var(--del-bg); }
+  .quiz .opt:disabled { cursor: default; }
+  .quiz .why { display: none; margin-top: .6rem; padding: .7rem .9rem; border-radius: 8px; background: var(--callout-bg); font-size: .95rem; }
+  .quiz .why.show { display: block; }
+  .quiz .why .verdict { font-weight: 700; }
+  .quiz .why .verdict.ok { color: var(--ok); }
+  .quiz .why .verdict.no { color: var(--no); }
+  .scorebar { position: sticky; bottom: 1rem; margin-top: 2rem; background: #2b2b2b; color: #fff; border-radius: 10px; padding: .85rem 1.2rem; font: 600 15px/1.4 ui-sans-serif, system-ui, sans-serif; display: flex; justify-content: space-between; align-items: center; }
+  .scorebar .verdict { font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="doc">
+    <p class="kicker">Code change explainer</p>
+    <h1>__TITLE__</h1>
+    <p class="meta">__META__</p>
+  </header>
+
+  <!--
+    ============================================================
+    FILL IN THE SECTIONS BELOW. Keep this order — it is teaching
+    order, not diff order. Delete any section that genuinely does
+    not apply, and delete these comments before saving.
+
+    1. BACKGROUND   how the existing system works (collapsible)
+    2. INTUITION    the essence + a concrete example, before code
+    3. FIGURE       optional, only if the change is spatial/stateful
+    4. THE CODE     literate diff — prose before each file, in the
+                    order that teaches best (not `git diff` order)
+    5. QUIZ         edit the QUIZ array in the script at the bottom
+    ============================================================
+  -->
+
+  <h2>Background</h2>
+  <details class="bg" open>
+    <summary>How this part of the system works today (skip if you know it)</summary>
+    <!-- Teach the reader the concepts the change assumes. -->
+  </details>
+
+  <h2>The idea</h2>
+  <p class="lede"><!-- One or two sentences: what this change is really trying to do. --></p>
+  <div class="callout">
+    <span class="label">Intuition</span>
+    <!-- A concrete example / analogy that gives the feel before any code. -->
+  </div>
+
+  <!-- Optional figure, or a link to the step-through walk. Prefer the walk
+       when the change is runtime behaviour (see references/step-through.md).
+  <p><a href="explain-__SLUG__-walk.html">Step through the change →</a></p>
+  <figure>
+    <svg viewBox="0 0 400 200"> ... </svg>
+    <figcaption>...</figcaption>
+  </figure>
+  -->
+
+  <h2>The code</h2>
+  <!--
+    For each file, in teaching order:
+      <div class="filehdr">path/to/file.ts</div>
+      <p>Why this file changes and what to notice.</p>
+      <pre class="diff"><span class="ctx"> unchanged</span><span class="del">-removed</span><span class="add">+added</span></pre>
+  -->
+
+  <h2>Quiz</h2>
+  <p>Five questions on what actually changed. Answer them before you consider yourself in the loop.</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="scorebar"><span id="score">0 / 0 answered</span><span class="verdict" id="verdict"></span></div>
+
+</div>
+
+<script>
+  // Edit this array. For each question, mark exactly one option correct:true.
+  // Option order here does NOT matter — options are shuffled at render, which
+  // removes the "correct answer is always the long one / the second one" tell.
+  const QUIZ = [
+    {
+      stem: "Replace with a real question about the change.",
+      options: [
+        { text: "A plausible-but-wrong answer.", correct: false, why: "Why it's wrong." },
+        { text: "The right answer.", correct: true, why: "Why it's right." },
+        { text: "Another distractor.", correct: false, why: "Why it's wrong." },
+        { text: "Another distractor.", correct: false, why: "Why it's wrong." }
+      ]
+    }
+  ];
+
+  const PASS = 4; // out of 5 — the bar for "I understand this".
+  const quizEl = document.getElementById("quiz");
+  const scoreEl = document.getElementById("score");
+  const verdictEl = document.getElementById("verdict");
+  let answered = 0, correct = 0;
+
+  // Deterministic per-question shuffle so layout is stable across reloads.
+  function shuffle(arr, seed) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      const j = seed % (i + 1);
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  QUIZ.forEach((q, qi) => {
+    const card = document.createElement("div");
+    card.className = "q";
+    const stem = document.createElement("div");
+    stem.className = "stem";
+    stem.textContent = (qi + 1) + ". " + q.stem;
+    card.appendChild(stem);
+
+    const why = document.createElement("div");
+    why.className = "why";
+
+    shuffle(q.options, qi + 7).forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className = "opt";
+      btn.textContent = opt.text;
+      btn.onclick = () => {
+        if (card.dataset.done) return;
+        card.dataset.done = "1";
+        answered++;
+        if (opt.correct) correct++;
+        Array.from(card.querySelectorAll(".opt")).forEach(b => b.disabled = true);
+        btn.classList.add(opt.correct ? "correct" : "wrong");
+        if (!opt.correct) {
+          const right = Array.from(card.querySelectorAll(".opt")).find(b => b.textContent === q.options.find(o => o.correct).text);
+          if (right) right.classList.add("correct");
+        }
+        why.innerHTML = '<span class="verdict ' + (opt.correct ? "ok" : "no") + '">' +
+          (opt.correct ? "Correct. " : "Not quite. ") + '</span>' + opt.why;
+        why.classList.add("show");
+        update();
+      };
+      card.appendChild(btn);
+    });
+
+    card.appendChild(why);
+    quizEl.appendChild(card);
+  });
+
+  function update() {
+    scoreEl.textContent = correct + " / " + QUIZ.length + " correct (" + answered + " answered)";
+    if (answered === QUIZ.length) {
+      const pass = correct >= PASS;
+      verdictEl.textContent = pass ? "✓ You're in the loop" : "Re-read the sections you missed";
+      verdictEl.style.color = pass ? "#7CFC9E" : "#ffb3b3";
+    }
+  }
+  update();
+</script>
+</body>
+</html>

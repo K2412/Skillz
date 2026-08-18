@@ -10,7 +10,7 @@ and loop-backs between them. Each stage is a standalone skill; `pair` invokes it
 and moves on. The detail lives in each skill, not here.
 
 ```
-[research] → [sketch] → grill → [prototype] → spec → plan-review → implement → review-change → taste-review → polish
+[research] → [sketch] → grill → [prototype] → spec → plan-review → implement → code-review → taste-review → polish
 ```
 
 Bracketed stages are optional and fire only when they earn their place. Run each stage by invoking
@@ -21,7 +21,7 @@ If whether to build (or what) is still open, settle that *before* `pair`, not as
 `pair` doesn't reopen the question of whether to build:
 
 ```
-(should we? / what?)  →  /pair { [research] → [sketch] → grill → [prototype] → spec → plan-review → implement → review-change → taste-review → polish }
+(should we? / what?)  →  /pair { [research] → [sketch] → grill → [prototype] → spec → plan-review → implement → code-review → taste-review → polish }
 ```
 
 When the *planning itself* is too big for one session — foggy, dependent decisions, work you'd want to
@@ -61,7 +61,7 @@ options:
 ```
 
 If yes, run [`sketch-change`](../sketch-change/SKILL.md) — it writes a plain-English, bright-intern
-HTML sketch (analogies over abstraction, like `explain-diff`) and opens it. You mark it up; the
+HTML sketch (analogies over abstraction, like `code-review`) and opens it. You mark it up; the
 transition into the grill depends on what's left open:
 
 - **Sketch settled it** → approach agreed, guesses answered. Offer to **shorten or skip the grill**.
@@ -102,7 +102,7 @@ Run [`spec`](../spec/SKILL.md) to synthesise the grill decision log (and any pro
 a spec and a GitHub epic issue with atomic child task sub-issues (in the code repo). It hands back the
 epic number. `spec` is also where the epic gets its `stack:*` labels (e.g. `stack:react`,
 `stack:dagster`) — those labels are what later route `best-practices` guidance into `implement` and
-`review-change`.
+`code-review`.
 
 ## Stage 3 — Plan Review
 
@@ -120,15 +120,15 @@ reason and wait for approval. When the epic is stack-labelled (`stack:react` / `
 `implement` reads those labels and applies the matching `best-practices` guidance as it builds — this
 isn't a separate stage; the wiring lives inside `implement`.
 
-## Stage 5 — Review Change
+## Stage 5 — Code Review
 
-Run [`review-change`](../review-change/SKILL.md) — two-axis Standards + Spec review of the diff
-against the epic. When the epic is stack-labelled (`stack:react` / `stack:dagster`), `review-change`
+Run [`code-review`](../code-review/SKILL.md) — two-axis Standards + Spec review of the diff
+against the epic. When the epic is stack-labelled (`stack:react` / `stack:dagster`), `code-review`
 reads those labels and folds the matching `best-practices` guidance into the Standards axis — again not
-a separate stage, the wiring lives inside `review-change`. On acceptance it closes the epic and shows
+a separate stage, the wiring lives inside `code-review`. On acceptance it closes the epic and shows
 the final summary.
 
-**Intent trace (if a Stage 0.5 sketch exists).** Hand the sketch from `docs/sketches/` to `review-change`
+**Intent trace (if a Stage 0.5 sketch exists).** Hand the sketch from `docs/sketches/` to `code-review`
 as *intent-origin context* — where we started and why. The reviewer contrasts the intended end-state
 against what shipped and tells that story: which contested design decisions landed, and where the
 direction changed. Divergence from the sketch is **not** a defect — the sketch is coarse and pre-grill,
@@ -139,7 +139,7 @@ grill decision or a spec choice. The **spec/epic stays the acceptance bar**, not
 ## Stage 6 — Taste Review
 
 Run [`taste-review`](../taste-review/SKILL.md) — a dedicated taste pass over the ambiguous
-decisions `review-change` doesn't adjudicate: UI, prose, and naming choices where more than one
+decisions `code-review` doesn't adjudicate: UI, prose, and naming choices where more than one
 option is defensible and the question is which one *reads* right. It's grounded in the target repo's
 `design-patterns/patterns.md`, which is the codebase's own record of settled taste — if that file is
 missing, warn the user and pause rather than inventing taste from nowhere, since without it the pass
@@ -149,7 +149,7 @@ on.
 ## Stage 7 — Polish
 
 Run [`polish`](../polish/SKILL.md) on the accepted diff as the final pass before it leaves the
-session for a team PR. `review-change` and `taste-review` are internal gates; polish is what makes the
+session for a team PR. `code-review` and `taste-review` are internal gates; polish is what makes the
 change read as team-written rather than agent-driven — and it does two jobs at once. It **de-noises**:
 stripping bead ids and bead-speak, ticket references, local-artifact mentions (`PLAN.md`, `NOTES.md`),
 agent-to-user chatter, and comments the code already says, keeping only the load-bearing WHY. And it

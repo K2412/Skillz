@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: Build a throwaway, interactive prototype that answers a design question BEFORE you commit to implementing — so you can engage with real running logic or UI, feel how it behaves, and decide whether it's the outcome you actually want. Use whenever "how should this look?" or "how should this behave?" or "does this state model feel right?" is the open question and prose can't settle it: "prototype this", "spike this", "mock this up", "let me see it working first", "I'm not sure how this should work until I try it", "throwaway version", "help me decide between a few layouts", or when a grilling/spec discussion hits a decision only a running artifact can resolve. This is the forward bookend of the explain-diff understanding loop — reach for it at design time, before the build, not after. Do NOT use it to build production code, ship a feature, or fix a real bug — a prototype is deliberately throwaway.
+description: Build a throwaway, interactive prototype that answers a design question BEFORE you commit to implementing — so you can engage with real running logic or UI, feel how it behaves, and decide whether it's the outcome you actually want. Use whenever "how should this look?" or "how should this behave?" or "does this state model feel right?" is the open question and prose can't settle it: "prototype this", "spike this", "mock this up", "let me see it working first", "I'm not sure how this should work until I try it", "throwaway version", "help me decide between a few layouts", or when a grilling/spec discussion hits a decision only a running artifact can resolve. This is the forward bookend of the code-review understanding loop — reach for it at design time, before the build, not after. Do NOT use it to build production code, ship a feature, or fix a real bug — a prototype is deliberately throwaway.
 ---
 
 # Prototype
@@ -10,7 +10,7 @@ running artifact — press its buttons, watch its state, flip between its varian
 **understand** the design well enough to **decide** whether it's what you actually want, before
 committing a single line of production code to it.
 
-It is the **forward bookend of the understanding loop**. [`explain-diff`](../explain-diff/SKILL.md)
+It is the **forward bookend of the understanding loop**. [`code-review`](../code-review/SKILL.md)
 runs *after* a change to help you understand code that already exists; `prototype` runs *before*,
 to understand a design that doesn't yet. Both fight the same enemy — cognitive debt — at opposite
 ends of the build. The leap from a spec straight to production is large and error-prone; the leap
@@ -75,7 +75,7 @@ is settled:
    Plus a lightweight **understanding test**: state the one thing you now understand that you
    couldn't have gotten from prose ("delete-then-undo re-emits the event", "variant C's sidebar
    only works above 900px"). If you can't state it, the prototype hasn't finished its job — keep
-   driving it. This mirrors the explain-diff quiz: don't leave the prototype until you can explain
+   driving it. This mirrors the code-review quiz: don't leave the prototype until you can explain
    what it taught.
 4. **Record it where the decision lives** — the spec, an ADR, or the commit message that implements
    it. Since the artifact is never committed, the write-up is the only durable trace, so it has to

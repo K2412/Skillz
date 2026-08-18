@@ -1,11 +1,11 @@
 ---
 name: sketch-change
-description: Generate a coarse, forward-looking HTML sketch of how you INTEND to build something — the data flow, the key state, pseudo-code for the load-bearing parts, the design decisions you made and why, and the places you're still guessing — so the engineer can react to a concrete strawman and impart counter-thinking BEFORE any code (or even any grilling) is written. The forward twin of explain-diff: explain-diff explains a change that already exists; sketch-change explains one that doesn't yet, and asks to be argued with. Use whenever the user wants to see your plan of attack before you build: "sketch how you'd approach this", "show me your plan of attack first", "walk me through your approach before you code", "how are you thinking about building X", "give me a design sketch", "pre-flight this before we dig in", "let me see your reasoning before you touch the code" — or as the opening stage of /pair, to give the grill something concrete to shoot at. Stays coarse on enumeration (not every field or signature — that's spec/plan-review's job) but rich and explicit on reasoning, so its design choices are contestable. Produces a self-contained HTML file and opens it.
+description: Generate a coarse, forward-looking HTML sketch of how you INTEND to build something — the data flow, the key state, pseudo-code for the load-bearing parts, the design decisions you made and why, and the places you're still guessing — so the engineer can react to a concrete strawman and impart counter-thinking BEFORE any code (or even any grilling) is written. The forward twin of code-review: code-review explains a change that already exists; sketch-change explains one that doesn't yet, and asks to be argued with. Use whenever the user wants to see your plan of attack before you build: "sketch how you'd approach this", "show me your plan of attack first", "walk me through your approach before you code", "how are you thinking about building X", "give me a design sketch", "pre-flight this before we dig in", "let me see your reasoning before you touch the code" — or as the opening stage of /pair, to give the grill something concrete to shoot at. Stays coarse on enumeration (not every field or signature — that's spec/plan-review's job) but rich and explicit on reasoning, so its design choices are contestable. Produces a self-contained HTML file and opens it.
 ---
 
 # sketch-change — a design you argue with, before the code exists
 
-`explain-diff` explains a change *after* it's written. `sketch-change` is its mirror: it explains a
+`code-review` explains a change *after* it's written. `sketch-change` is its mirror: it explains a
 change *before* it's written — a concrete strawman of how the agent intends to build the thing, put in
 front of the engineer to be **contested**, not admired.
 
@@ -17,7 +17,7 @@ paragraph instead of a rewrite. That's the Toyota line made concrete: **you teac
 sketch too vague to argue with fails at its one job.
 
 Where it sits: this is the forward bookend of the understanding loop — `sketch-change` at design time,
-`explain-diff` after the build. As the front of `/pair` it gives the grill a target: instead of the
+`code-review` after the build. As the front of `/pair` it gives the grill a target: instead of the
 agent cold-opening with abstract questions, you react to a concrete proposal, and the grill collapses
 to just the gaps the sketch exposed.
 

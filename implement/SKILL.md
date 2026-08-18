@@ -110,4 +110,4 @@ Spawn via the Agent tool with `subagent_type: "claude"`. Wait for the subagent t
 
 If the subagent hits a human gate, surface the gate reason to the user and wait for explicit approval before continuing.
 
-When the subagent returns, the changes are ready for [`review-change`](../review-change/SKILL.md).
+When the subagent returns, the changes are ready for [`code-review`](../code-review/SKILL.md).

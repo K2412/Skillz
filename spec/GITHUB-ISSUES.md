@@ -1,6 +1,6 @@
 # GitHub-issues plan — planning-repo cookbook
 
-The implementation pipeline (`spec` → `plan-review` → `implement` → `review-change`) tracks work as
+The implementation pipeline (`spec` → `plan-review` → `implement` → `code-review`) tracks work as
 **GitHub issues in `K2412/planning`** (private, issues-only) — the same home
 [`wayfinder`](../wayfinder/SKILL.md) uses for its maps, so a map and the spec built from it sit
 together, branch-independent and out of any shared code repo. All commands use `gh`; none touch

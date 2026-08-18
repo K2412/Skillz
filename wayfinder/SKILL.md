@@ -161,7 +161,7 @@ When no open tickets remain, the way to the destination is clear. Hand off by de
 - **A spec** (the common case) → run [`spec`](../spec/SKILL.md) *against the map*: it reads the closed
   decision tickets and their resolutions into a dense spec that **links back to each ticket as primary
   source** — so the implementer can read what was actually decided, not a lossy summary. Then `/pair`
-  from spec onward (plan-review → implement → review-change → taste-review → polish) — `pair` ends in the
+  from spec onward (plan-review → implement → code-review → taste-review → polish) — `pair` ends in the
   polish, so a spec handoff needs no separate one.
 - **A decision** locked for later → the map itself is the record; nothing more to produce.
 - **A change made in place** → the tickets drove it; **polish** the change ([`polish`](../polish/SKILL.md))

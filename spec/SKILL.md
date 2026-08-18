@@ -111,7 +111,7 @@ Follow [GITHUB-ISSUES.md](GITHUB-ISSUES.md) for the exact `gh` commands. In orde
      hold both stacks and this work may exercise only one.
 
    Apply `stack:react` and/or `stack:dagster` to the epic accordingly; detecting neither means no stack
-   label. These labels are what makes `implement` and `review-change` run their stack-specific
+   label. These labels are what makes `implement` and `code-review` run their stack-specific
    `best-practices` step conditionally — an unlabelled epic skips it, so a wrong label sends the wrong
    guidance downstream. Add them with `gh issue edit -R $R $EPIC_N --add-label "stack:react"`.
 4. **Create one task sub-issue per atomic, independently-shippable TDD slice** derived from the spec's
