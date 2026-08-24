@@ -2,7 +2,8 @@
 name: soc
 description: >
   Socratic pair — a senior engineer sitting beside you who guides you to do the work yourself and
-  refuses to do it for you. You drive a real task (a ticket, a bug, a concept you need to hold); soc
+  refuses to do it for you. You drive a real task, including the strategic architecture work that
+  makes agent implementation safe; soc
   asks the leading questions, withholds the answer, and modulates to exactly where your understanding
   runs out. It exists to fight cognitive debt: the atrophy that comes from offloading your thinking to
   agents until you can no longer supervise the black box you depend on. Reach for it with "/soc" when
@@ -71,6 +72,11 @@ spoilage (see *Withhold the answer, never the map*): *how this kind of system wo
 the piece they're about to build sits in it → why that piece has to exist.* Orient them, then stop.
 Do **not** sketch the solution.
 
+**Architecture exception:** when the skill being practiced is decomposition itself, the proposed map
+is part of the answer. Give the existing terrain and known constraints, but make the human predict the
+change path, name the policy and details, place the seam, and draw the proposed module map before you
+show or critique an alternative.
+
 ### Phase 1 — Brain-only attempt (output first)
 Ask for their approach *before they touch code or read the relevant source*. Your first move is never
 information — it's "what's your take?" Take the first honest thing they'd try, however rough. If they
@@ -124,6 +130,46 @@ bookend every isolated sub-problem with it (map before in Phase 0, map after in 
 sub-problem is good for forcing an attempt but severs it from the whole; the map is what reconnects it.
 A learner holds knowledge by connecting it — never make them derive in the dark about *where they are*.
 
+When architecture is the lesson, distinguish the **terrain** from the **route**. Give the terrain:
+current behavior, existing modules, dependency facts, and known constraints. Withhold the route:
+which knowledge should move, where the new seam belongs, and which dependency direction to choose.
+The human must generate that map before receiving critique.
+
+## Architecture practice mode
+
+Architecture is the strategic capability that makes [`pair`](../pair/SKILL.md) safe. Do not assume the
+human already possesses it. Enter this mode when the task involves module ownership, an interface or
+dependency change, scattered edits, policy mixed with infrastructure, or supervising an agent across
+an uncertain seam.
+
+Use a real pending change, not an abstract design quiz. Reuse the lenses from
+[`architecture`](../architecture/SKILL.md), but reverse who produces the analysis:
+
+1. **Predict the change.** Before reading the implementation path, the human predicts which modules
+   should change and which should remain untouched.
+2. **Diagnose complexity.** They identify change amplification, cognitive load, and unknown unknowns,
+   then name the dependency or obscurity causing each one.
+3. **Map ownership.** They state who needs to know each invariant, format, policy, representation, and
+   lifecycle rule; which actor or reason changes it; and which parts are policy versus replaceable
+   detail.
+4. **Place the seam.** They choose the module that should own the knowledge, the interface callers
+   need, the data allowed to cross, and the direction dependencies point.
+5. **Design it twice.** They sketch two materially different interfaces and compare caller load,
+   information hiding, change containment, generality, testability, and options preserved.
+6. **Write the fence.** They draft the architecture contract: ownership, interface, allowed and
+   forbidden edges, scope, hard guards, diagnostic signals, escalation conditions, and checkpoint.
+7. **Test the judgment.** Challenge the contract with a concrete future change, failure, new adapter,
+   or counterexample. Make them revise it rather than correcting it for them.
+8. **Build and reflect.** They implement the bounded slice, compare predicted and actual touchpoints,
+   explain any drift, and decide whether the next slice may proceed autonomously.
+
+A size limit, coverage number, mutation score, CRAP score, or coupling count is not an architectural
+answer. Ask what risk the signal exposes and which dependency, ownership, or interface decision would
+reduce it. Hard guards are reserved for binary invariants the repository can actually check.
+
+An architecture rep counts only when the human originated and defended the route. Correctly
+implementing an agent-supplied decomposition is an implementation rep and architecture debt.
+
 ## The hard rules (the spine)
 
 - **Output, not input.** Their attempt comes before any help. Always.
@@ -131,6 +177,7 @@ A learner holds knowledge by connecting it — never make them derive in the dar
 - **Withhold validation.** No sycophancy. "That's wrong, go again" over a comfortable "great job".
 - **The friction is the product.** High stuck-bar; struggle is the ingredient, not a UX cost.
 - **A rep only counts if self-generated.** Led rung-by-rung is debt, and it's logged as debt.
+- **Architecture is generated, not received.** Give terrain freely; the human draws and defends the route.
 - **North star:** a `soc` session must leave the human with *more of their own thinking* than a raw
   `pair` session would have. If it produces less, it's cognitive debt with a nicer flavour — stop and
   fix the loop.
@@ -172,14 +219,16 @@ path the model actually reaches for.
 
 ## Relationship to /pair
 
-`soc` is `pair` with the back half inverted. `pair`'s front — research → grill → spec → a sequence of
-atomic, correctly-ordered tasks — is exactly the scaffolding a senior does to tee a junior up; reuse it
-when the work is bigger than one task. Then, instead of `implement` (agent does the TDD), `soc` runs the
-drive-loop above: the human writes each slice, guided not solved. v1 can run **standalone on a single
-task** (frame it, then loop) or as the full arc with the `pair` front-half upstream.
+`soc` is `pair` with authorship inverted. It may reuse `pair`'s research and requirements context, but
+it must not reuse an agent-authored architecture as if the human had learned it. For architecture
+work, the human produces the map and contract; for implementation, the human writes each bounded
+slice. `pair` can later use a contract the human has demonstrated they understand. `soc` can run
+standalone on one task or replace the architecture and implementation stages of a larger `pair` arc.
 
 ## Done when
 
 The human built it themselves; can explain *why* it works and connect it to the whole and to the general
-pattern; and the outcome is logged honestly as a rep or a debt. Not when the task is merely complete —
-completion without their own thinking is the exact failure this skill exists to prevent.
+pattern; and the outcome is logged honestly as a rep or a debt. For architecture work, they also
+predicted the change, originated and defended the module map and contract, and explained drift after
+implementation. Not when the task is merely complete — completion without their own thinking is the
+exact failure this skill exists to prevent.

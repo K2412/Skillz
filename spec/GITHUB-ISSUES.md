@@ -18,9 +18,10 @@ The **epic** is one issue; each **task** is a sub-issue of it.
 ```bash
 R=K2412/planning
 gh label create -R $R "spec:epic"    --color 5319e7 --description "Accepted plan — the epic" --force
-gh label create -R $R "spec:task"    --color 1d76db --description "Atomic TDD slice under an epic" --force
+gh label create -R $R "spec:task"    --color 1d76db --description "Bounded behavioral slice under an epic" --force
 gh label create -R $R "blocked"      --color b60205 --description "Has an open blocker — not on the frontier" --force
 gh label create -R $R "needs-human"  --color d93f0b --description "Human approval required before proceeding" --force
+gh label create -R $R "architecture:checkpoint" --color fbca04 --description "Architecture gate required before the next batch" --force
 ```
 
 ## Create the epic
@@ -41,7 +42,7 @@ the **code repo and branch** the work targets, or a later reader can't tell what
 
 ```bash
 R=K2412/planning
-# 1. create the task with its body (scope + acceptance criteria as a checklist + the confirmed seam)
+# 1. create the task with its behavior, acceptance examples, seam, and architecture fence
 TASK_URL=$(gh issue create -R $R --label "spec:task" \
   --title "<task title>" \
   --body "$(cat <<'MD'
@@ -51,9 +52,30 @@ TASK_URL=$(gh issue create -R $R --label "spec:task" \
 ## Test seam
 <the confirmed seam>
 
-## Acceptance criteria
-- [ ] <criterion tied to a user story>
-- [ ] <criterion>
+## Acceptance examples
+- [ ] <human-approved example tied to a user story>
+- [ ] <independently sourced expected result>
+
+## Architecture contract
+**Contract:** <named architectural neighborhood>
+**Module:** <module or established seam>
+**Knowledge owned:** <decisions localized here>
+**Allowed dependencies:** <edges>
+**Forbidden dependencies:** <edges>
+**Boundary data:** <allowed inward-facing values and forbidden outer types>
+**Allowed neighborhood:** <modules or interfaces the agent may change without escalation>
+**Predicted touchpoints:** <likely files or modules; differences require explanation>
+
+## Verification
+**Hard guards:** <commands or binary checks>
+**Diagnostic signals:** <evidence to report, not unconfigured thresholds>
+
+## Escalate when
+- <strategic decision the implementation agent must return to the human>
+
+## Checkpoint
+**Cadence:** <after this task | after N related tasks | before crossing named seam>
+**Reassess:** <architectural uncertainty implementation should resolve>
 MD
 )")
 TN=${TASK_URL##*/}
@@ -66,8 +88,17 @@ gh api --method POST repos/$R/issues/$EPIC_N/sub_issues -F sub_issue_id=$(gh api
 ```bash
 # task blocked by another → label + record in body's "Blocked by" line
 gh issue edit -R $R <TN> --add-label "blocked"          # (edit body to list "Blocked by #<BLOCKER_N>")
+# once every named blocker is closed → move the task onto the frontier
+gh issue edit -R $R <TN> --remove-label "blocked"
 # irreversible op (migration, schema change, external write) → gate it
 gh issue edit -R $R <TN> --add-label "needs-human"      # implement will stop and ask before this one
+# after explicit approval → persist the decision, then clear the gate for fresh workers
+gh issue comment -R $R <TN> --body "## Human gate approved
+**Decision:** <approved operation and constraints>
+**Date:** <ISO date>"
+gh issue edit -R $R <TN> --remove-label "needs-human"
+# uncertain seam or contract cadence → inspect before starting the next batch
+gh issue edit -R $R <TN> --add-label "architecture:checkpoint"
 ```
 
 ## Read the plan
@@ -90,10 +121,17 @@ The prototype itself is never committed and never branched (see
 [`../prototype/SKILL.md`](../prototype/SKILL.md) capture step 2), so this comment and the spec are the
 only durable trace — carry the numbers here rather than pointing at something runnable.
 
+## Record an architecture checkpoint
+
+After the human accepts `/architecture`'s gate, comment on the checkpoint task with the exact batch
+range or patch digest, gate, guard results, drift, decision, and any approved contract revision. Append
+approved contract revisions to the epic as `## Architecture Contract revision <N>` so fresh agents can
+recover the current fence. Close a checkpoint task only when its accepted gate is `Continue`.
+
 ## Complete a task / close the epic
 
 ```bash
-gh issue close -R $R <TN>       # a finished task
+gh issue close -R $R <TN>       # a finished task; checkpoint tasks close only after Continue
 gh issue close -R $R <EPIC_N>   # the epic, when review passes
 ```
 

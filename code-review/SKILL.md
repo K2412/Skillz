@@ -1,19 +1,14 @@
 ---
 name: code-review
 description: >
-  Review a code change and give one clear answer — ship it, or here's what to fix — in a short,
-  plain-English report a tired reviewer can act on in two minutes. Resolves a PR, a branch, or the
-  working diff; reads the goal from Linear + the PR + any planning epic; runs a Standards and a Spec
-  review in parallel; then reports a merge verdict, a four-beat orientation (the goal → what it
-  touches → how the author attempted it → the issues that surfaced), only the findings worth blocking
-  on (blockers + should-fixes, never nits), each explained to a bright intern with a ready-to-paste
-  PR comment in your own voice. Use whenever the user wants a change reviewed or a merge call:
-  "review this PR", "review my changes", "should I merge this", "review PR #214", "review this branch",
-  "did the build match the plan", "code review", or as the review stage of /pair. It also holds the
-  explainer: if the review doesn't land, or the user asks to "explain this diff / help me understand
-  this change / walk me through this PR", it builds the full teaching artifact (background → intuition
-  → literate diff → quiz) — the same HTML that /to-pr distils into a PR body. Prefer this skill over a
-  raw `git diff` any time the user wants to understand or judge a change.
+  Review a PR, branch, or working diff and give one clear merge call in a short plain-English report.
+  Read the goal and architecture contract from the PR, tickets, and planning epic; run Standards and
+  Spec reviews in parallel; orient the reader; and surface only blockers and should-fixes with
+  ready-to-paste comments. Use for "review this PR", "review my changes", "should I merge this",
+  "review this branch", "did the build match the plan", "code review", or as /pair's review stage.
+  Also use when the user asks to understand a change: "explain this diff", "walk me through this PR",
+  or "help me understand this change"; in that case build the full HTML teaching artifact and quiz.
+  Prefer this skill over a raw diff whenever the user wants to judge or understand a change.
 ---
 
 # Code Review — one answer: ship it, or here's what to fix
@@ -84,7 +79,10 @@ the first orientation beat, so collect it once:
   what appears there is the user's to write.
 - **A linked planning epic.** If the change references a `K2412/planning` epic, pull its acceptance
   criteria: `gh issue view -R K2412/planning <n> --json title,body,labels`. This is the approved
-  spec when it exists.
+  spec when it exists. Preserve its Architecture Contract as part of the acceptance bar, including
+  any human-approved revision returned by an architecture checkpoint. Fetch epic comments and the
+  comments on every `architecture:checkpoint` task; the newest approved contract revision and recorded
+  checkpoint ranges are authoritative. Conversation memory is not.
 
 If there are **no** acceptance criteria anywhere, the Spec axis runs in reduced mode against the PR's
 *stated intent* only — say so plainly rather than inventing a spec.
@@ -117,8 +115,10 @@ Review the diff below against (a) this repo's documented standards and (b) the F
 <paste: git log <base>..HEAD --oneline>
 
 ## Repo standards
-Check pyproject.toml / ruff.toml (or the repo's linter config) for configured thresholds. If none:
-- File length: 300 lines · Function length: 50 lines · Cyclomatic complexity: 10 · Arguments: 5
+Check pyproject.toml / ruff.toml (or the repo's linter config) for intentionally configured thresholds.
+Enforce configured rules. If none exist, use size, coverage, complexity, mutation, CRAP, coupling, and
+interface counts only as diagnostic evidence; do not invent universal thresholds or call a metric alone
+a violation. A large deep module can impose less cognitive load than many shallow wrappers.
 For Reflex projects (files touching rx.State subclasses): State holds UI state, exposes event
 handlers, delegates work — no inline business logic; transformations live in service modules;
 computed vars are simple derivations. Check docs/Arch/reflex-patterns.md if present.
@@ -174,6 +174,12 @@ Review the diff below against the goal it was meant to satisfy.
 <paste: PR description + linked Linear ticket(s) + planning-epic acceptance criteria — whichever exist.
 If none exist, say so and review against the PR's stated intent only.>
 
+## Architecture contract (when present in the approved spec)
+Check that the diff preserves knowledge ownership, protected policy, interface guarantees, dependency
+direction, boundary-data rules, scope, and hard guards. Report unexplained drift; do not treat an
+approved checkpoint revision as a defect. Diagnostic metrics are evidence, not contract failures,
+unless the repository owns an explicit threshold.
+
 ## Brief
 Report: (a) acceptance criteria (or stated intent) that are missing or only partially implemented —
 quote the criterion; (b) behaviour in the diff that nothing asked for (scope creep); (c) criteria
@@ -222,11 +228,25 @@ This is the "here's what they did" beat, in words, not a diff dump.>
 
 ### 🔴 Blocker · `path/file.py:42`   (or  ### 🟡 Should fix · `path/file.py:88`)
 <Plain English, intern-level: what's wrong, no unglossed jargon — 1 sentence.>
+```<lang>
+<the offending lines, verbatim, line-numbered — see below>
+```
 Why it matters: <the concrete consequence, in real terms — what actually goes wrong for a user or the
 next engineer — 1 sentence.>
 ```
 <the ready-to-paste PR comment, in the user's voice — see below>
 ```
+
+## Review it yourself
+<1 sentence naming the spine of the order and why it's that order.>
+
+1. **`path/file.py`** (N lines) — <the one thing this file settles> · **ask:** <the question to hold
+   while reading it>
+<…one stop per file or per group-read-together, every changed file present…>
+
+**Where I'm least sure:** <1–2 sentences: the spots the lanes could not settle, where a human pass
+pays best.>
+<N> files, all <N> above — matches `git diff --name-only <base>...HEAD | wc -l`.
 
 ## What I left out
 <n> nit(s) and wording note(s), not shown — say the word if you want them. <If the experts lane
@@ -237,16 +257,85 @@ If any of the above didn't land, say "explain it" and I'll build the full walkth
 intuition → literate diff → a short quiz — the same explainer /to-pr distils into a PR body.
 ````
 
+**The review plan — order by when the author's reasoning becomes legible, not by the diff.** The user
+runs their own pass after reading yours, hoping to catch what you missed, so this section is a reading
+route rather than a file list. Alphabetical order, `git diff` order and "biggest file first" are all
+worthless here.
+
+- **The default spine**, adapted to the change: (1) the vocabulary — the type, model or key everything
+  else refers to; (2) the write path, in the order data is created; (3) the read path, in the order it
+  is consumed; (4) the orchestration — when it runs and how often; (5) config and admin — how it gets
+  switched on; (6) at most one or two test files, and only where the test states the intent better
+  than the module does.
+- **Lead with the most opinionated short file**, not the longest one. The file holding the contested
+  design decision teaches the change; a 250-line mechanical module teaches the codebase.
+- **Cover every changed file. There is no skip list.** The user's aim is to digest the whole diff and
+  find what you missed, so a file you judged uninteresting is exactly where your judgement is the
+  thing under test. Enumerate `git diff --name-only <base>...HEAD`, place every path in a stop, and
+  close the section with a count that matches — the reader must be able to see nothing was dropped.
+- **Group by what is read together, not to save space.** A stop can hold several files when they are
+  one idea (a module and its test, a model plus its serializer and migration, a fixture plus the
+  parser that consumes it). Give each file its own line and line count inside the stop. Order the
+  stops so understanding accumulates; low-decision files land last, but they land.
+- **A cheap file gets a cheap line, not a cut line.** One clause on what it does and one question is
+  enough for a one-line wiring change — "does the export list need it, or is the import enough?" —
+  but it still appears.
+- **Every stop carries one question**, and the question must be answerable only by reading that file.
+  "Does the key survive a reworded label?" earns its stop; "is this correct?" does not. A stop you
+  cannot write a question for is a stop to cut.
+- **Give the line count** so the reader can budget, and flag when docstrings inflate it.
+- **"Where I'm least sure" is the point of the section.** Name the places both lanes went quiet, the
+  judgement calls you took a side on, and anything you could not run. Sending the human at your own
+  blind spots is worth more than sending them at your findings.
+
+**The snippet — the finding must be legible without opening the file.** A file:line link is a promise
+to go and look; the reader is in a terminal and should not have to. So quote the code. Read the actual
+file (not just the diff hunk) so the numbers and the surrounding lines are right.
+
+- **The fewest lines that make the problem visible** — usually 3–8, never more than ~12. A signature
+  and the one bad line beats the whole function.
+- **Verbatim, with line numbers.** Copy the real characters. Never retype from memory, never reformat,
+  never "clean up" the author's spacing. Tag the fence with the language.
+- **Elide with `…`** rather than paraphrasing, and keep the numbers honest across the gap:
+  ```python
+  110  def write_pool(
+  111      root: Path,
+  112      *,
+  …
+  118      candidates: Iterable[BusinessCandidate],
+  119  ) -> Path:
+  ```
+- **A divergence needs both sides**, labelled, in one block or two adjacent ones — that comparison *is*
+  the finding, and prose alone cannot carry it.
+- **Point at the line, don't annotate it.** No `# <-- BUG HERE` markers injected into the author's
+  code; the sentence above the block already said what's wrong.
+- When the problem is an *absence* (a check nobody wrote, a key nothing sets), quote the place it
+  should have been and say so in the sentence — an empty block is not a finding.
+- The same rule serves the "What I left out" nits if the user asks to see them.
+
 **The paste comment — write it in the user's voice, not the report's.** The finding's prose above is
 teaching (for the reader's understanding); the fenced comment is what they drop onto the PR for the
 author. The house default, drawn from how this user actually comments:
 
-- One line. No headers, no bold, no severity label, no before/after snippet, no praise padding.
+- **Open with the wondering, not the diagnosis.** Never lead with a clause restating what the code
+  does. The author wrote it, and the comment is already anchored to the line, so a "`X` rebuilds
+  unconditionally — should …" opener spends the reader's first breath on what they already know. Cut
+  everything before the question and start there.
+- One line, one question. No headers, no bold, no severity label, no before/after snippet, no
+  restatement of the diff, no praise padding.
 - Lowercase start, symbols in backticks, a space before the closing ` ?`.
-- Phrased as a **question that invites the author to check**, not a directive — "is it possible to
-  reuse `X` ?", "can you double check the per-tenant isolation if this errors ?", "do you think this
-  breaks on a daylight-savings switch ?". The author usually knows something you don't; the question
-  leaves them room to say so.
+- Reach for one of the three openings this user actually uses:
+  - **curious / wondering** — "curious to know does this mean an empty `list_stores` gets tagged `ok`
+    rather than `not_found` ?"
+  - **should / is it possible to / can you double check** — "is it possible to reuse `_GO_TO_LOGIN` ?",
+    "can you double check the per-tenant isolation in the event of an error ?"
+  - **what do you think of / about** — "what do you think about pulling the recipients / body /
+    confirm dialog out into their own helpers ?"
+- A hypothetical carries a risk finding better than an assertion does: state the condition, ask what
+  happens, let the author answer — "if a user leaves the field empty and saves does this error fire ?",
+  "do you think this can pose an issue on daylight savings time ?".
+- Never "this is wrong", "change this", "you should have". The author usually knows something you
+  don't; every one of these openings leaves them room to say so.
 
 If you're reviewing in a repo whose owner comments differently, read their last few and match them:
 `gh api repos/<owner>/<repo>/pulls/<n>/comments --jq '.[] | select(.user.login=="<them>")'`.
@@ -284,12 +373,18 @@ over from that role:
   Deliberate course-corrections are the story, not a fault; only flag drift with **no** trace to a
   grill decision or spec choice. The epic stays the acceptance bar, not the sketch.
 - **Stack labels** route `best-practices` into the Standards lane (Step 1/2), not as a separate stage.
+- **Architecture trace.** When the epic contains an Architecture Contract, include it in the Spec lane.
+  A contract violation or unexplained cross-seam change is a should-fix unless it breaks behavior or
+  security, in which case classify by that concrete consequence. If `/architecture` already returned
+  Continue on the same diff, use its evidence but still verify that subsequent changes did not drift.
 
 ## Done when
 
 The verdict is the first line and it's unambiguous (ship / fix first / don't merge). The four beats
 orient a newcomer to the change before any finding. Every surfaced finding is a blocker or should-fix,
-written so a bright intern gets it without asking, and carries a one-line paste comment in the user's
-voice. The nits are counted, not shown. A lane that had nothing to say says so — a silent lane must
+written so a bright intern gets it without asking, quotes the offending lines so the reader never has
+to open the file, and carries a one-line paste comment in the user's voice. The review plan gives the
+user their own route through the change, accounts for every changed file with none skipped, and says
+where your own pass is weakest. The nits are counted, not shown. A lane that had nothing to say says so — a silent lane must
 never read as a clean bill of health. The report ends with the offer to go deeper, so understanding is
 always one word away.

@@ -1,6 +1,11 @@
 ---
 name: plan-review
-description: Review a GitHub plan (an epic issue and its child task sub-issues) with a senior-engineer eye before any code is written — checking for DRY violations, non-atomic or over-large tasks, missing dependency edges, and structural problems in the approach. Use when the user wants a plan sanity-checked: "review this plan", "review these issues/tickets", "is this breakdown atomic?", "poke holes in this plan before we build", or as the stage after /spec in /pair. Reviews the plan, not code. Do NOT write or execute anything — this stage only surfaces findings and gates.
+description: >
+  Review a GitHub epic and its child tasks with a senior-engineer eye before code is written. Check
+  for duplication, over-large or incomplete behavioral slices, missing dependency edges, architecture
+  contract gaps, misplaced checkpoints, and structural problems. Use for "review this plan", "review
+  these issues", "is this breakdown atomic?", "poke holes in this plan", or after /spec in /pair.
+  Reviews the plan rather than writing or executing code.
 ---
 
 # Plan Review — senior-engineer review of a GitHub plan
@@ -11,9 +16,16 @@ Review the plan with a senior-engineer eye **before any code is written**. Fetch
 
 ```bash
 gh api repos/K2412/planning/issues/<epic-n>/sub_issues --jq '.[] | "#\(.number) [\(.state)] \(.title) | \((.labels|map(.name))|join(","))"'
+gh issue view -R K2412/planning <task-n> --json title,body,labels   # run for every child task
 ```
 
-Evaluate for: DRY violations in the plan, over-stuffed tasks that aren't atomic, missing dependency edges, tasks too large for a single TDD slice, structural issues in the proposed approach.
+Evaluate for: DRY violations in the plan, over-stuffed tasks that are not independently shippable,
+missing dependency edges, slices too large for one coherent behavioral outcome, and structural issues
+in the proposed approach. When the epic includes an architecture contract, also verify that every task
+stays inside its architectural neighborhood, carries the relevant hard guards and escalation
+conditions, and places checkpoints before uncertain seams. Reject plans that convert diagnostic
+metrics such as coverage, CRAP, mutation score, complexity, or size into universal hard gates without
+an existing repository policy.
 
 For each finding use this structure:
 ```

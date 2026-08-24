@@ -21,6 +21,20 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # install then copies shared/<module>/ into that skill's references/<module>/, so the
 # canonical copy lives in one place here but every installed skill stays self-contained.
 SHARED_DIR="$SCRIPT_DIR/shared"
+MEMORY_SOURCE="${AGENT_MEMORY_SOURCE:-$(dirname "$SCRIPT_DIR")/agent-memory}"
+
+if [ -f "$MEMORY_SOURCE/pyproject.toml" ]; then
+  if ! command -v uv >/dev/null 2>&1; then
+    echo "ERROR: uv is required to install agent-memory" >&2
+    exit 1
+  fi
+  uv tool install --editable "$MEMORY_SOURCE"
+  agent-memory-init
+  agent-memory-setup
+  echo "Agent memory: installed and registered"
+else
+  echo "Agent memory: skipped (set AGENT_MEMORY_SOURCE to its checkout)"
+fi
 
 # Pull the `description:` out of a SKILL.md frontmatter block. Handles plain
 # scalars, quoted scalars, and folded/literal blocks (`description: >`), which

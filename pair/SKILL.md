@@ -1,6 +1,6 @@
 ---
 name: pair
-description: Full spec-to-ship pipeline that orchestrates the individual engineering skills in sequence with a human gate between each — optional research, then grill, optional prototype, spec, plan review, TDD implementation, two-axis review, a taste pass, and a final polish. Use when the user says /pair, "pair with me", "pair on this", "let's build this together", "walk me through building", or wants to go from idea to reviewed code in one guided session. Also trigger when the user describes a feature or fix they want to implement end-to-end with quality gates. Each stage is its own skill you can also run alone; pair chains them, pauses at every boundary for approval, and can loop back if reviews fail.
+description: Full spec-to-ship pipeline that orchestrates the individual engineering skills with human strategic gates and bounded agent autonomy — optional research and design sketch, grill, optional prototype and architecture contract, spec, plan review, test-backed implementation in fenced slices, architecture checkpoints, code review, taste, and polish. Use when the user says /pair, "pair with me", "pair on this", "let's build this together", "walk me through building", or wants to take a feature or fix end-to-end without surrendering architectural judgment to agents. Each stage remains usable alone; pair sequences them and loops when evidence changes the design.
 ---
 
 # /pair — Spec-to-Ship Pipeline (orchestrator)
@@ -10,7 +10,8 @@ and loop-backs between them. Each stage is a standalone skill; `pair` invokes it
 and moves on. The detail lives in each skill, not here.
 
 ```
-[research] → [sketch] → grill → [prototype] → spec → plan-review → implement → code-review → taste-review → polish
+[research] → [sketch] → grill → [prototype] → [architecture] → spec → plan-review
+    → { implement → [architecture checkpoint] } → code-review → taste-review → polish
 ```
 
 Bracketed stages are optional and fire only when they earn their place. Run each stage by invoking
@@ -21,7 +22,7 @@ If whether to build (or what) is still open, settle that *before* `pair`, not as
 `pair` doesn't reopen the question of whether to build:
 
 ```
-(should we? / what?)  →  /pair { [research] → [sketch] → grill → [prototype] → spec → plan-review → implement → code-review → taste-review → polish }
+(should we? / what?)  →  /pair { understand → fence → build in bounded slices → verify }
 ```
 
 When the *planning itself* is too big for one session — foggy, dependent decisions, work you'd want to
@@ -96,10 +97,29 @@ logic module into place) without ever branching or committing the throwaway arti
 plus the knob settings it depends on — joins the decision log and rides into the spec, so `implement`
 builds against a settled design.
 
+## Stage 1.75 — Architecture fence (conditional)
+
+Do not run an architecture ceremony for every feature. First ask whether the behavior stays behind an
+established interface and obeys an established dependency direction.
+
+Run [`architecture`](../architecture/SKILL.md) in review mode when any of these are true:
+
+- ownership of the behavior is unclear or recent changes scatter across unrelated areas;
+- the work creates or changes a public interface, module seam, dependency direction, or boundary data;
+- the feature crosses policy and infrastructure or requires a new adapter;
+- the implementation agent would otherwise need authority to decide where the behavior belongs.
+
+If the seam is settled, carry the existing module rules and guards forward and skip this stage. If it
+is not, architecture diagnoses the change pressure, the human selects between alternative designs,
+and the resulting **architecture contract** joins the decision log. A contract is a fence, not a large
+up-front plan: it governs one coherent architectural neighborhood, authorizes current behavior, states
+what decisions remain human, and says when to inspect the result.
+
 ## Stage 2 — Spec
 
-Run [`spec`](../spec/SKILL.md) to synthesise the grill decision log (and any prototype verdict) into
-a spec and a GitHub epic issue with atomic child task sub-issues (in the code repo). It hands back the
+Run [`spec`](../spec/SKILL.md) to synthesise the grill decision log, any prototype verdict, and any
+architecture contract into a spec and GitHub epic with atomic child task sub-issues in
+`K2412/planning`. It hands back the
 epic number. `spec` is also where the epic gets its `stack:*` labels (e.g. `stack:react`,
 `stack:dagster`) — those labels are what later route `best-practices` guidance into `implement` and
 `code-review`.
@@ -114,16 +134,32 @@ Run [`plan-review`](../plan-review/SKILL.md) on the epic. Transition on its gate
 
 ## Stage 4 — Implement
 
-Run [`implement`](../implement/SKILL.md) — it spawns a fresh TDD subagent from the issue data (and the
-prototype branch if present). Wait for it to return. If it hits a `needs-human` task, surface the
-reason and wait for approval. When the epic is stack-labelled (`stack:react` / `stack:dagster`),
+Run [`implement`](../implement/SKILL.md) — it spawns a fresh subagent from issue data and grants it
+autonomy only inside the approved architecture contract. One batch is normally one complete behavioral
+slice; several related tasks may share a batch only when they stay behind the same settled interface.
+Wait for it to return. If it hits `needs-human` or a contract escalation condition, surface the reason
+and wait for approval. When the epic is stack-labelled (`stack:react` / `stack:dagster`),
 `implement` reads those labels and applies the matching `best-practices` guidance as it builds — this
 isn't a separate stage; the wiring lives inside `implement`.
 
+When the contract requires a checkpoint, run [`architecture`](../architecture/SKILL.md) in checkpoint
+mode against the exact isolated batch patch or commit range returned by `implement`, not the cumulative
+working diff, before starting the next batch:
+
+- **Continue** → persist the accepted checkpoint, close its task, and authorize the next related slice.
+- **Reorganize first** → persist it, create or revise the bounded cleanup task, execute it, and
+  checkpoint the combined isolated patches before closing either task.
+- **Human decision** → persist the open decision and stop; revise and record the contract with the user
+  before implementation resumes.
+
+This is supervised strategically, not tactically: the implementation agent runs without a human
+watching each edit, while executable guards and architecture checkpoints keep autonomy bounded.
+
 ## Stage 5 — Code Review
 
-Run [`code-review`](../code-review/SKILL.md) — two-axis Standards + Spec review of the diff
-against the epic. When the epic is stack-labelled (`stack:react` / `stack:dagster`), `code-review`
+Run [`code-review`](../code-review/SKILL.md) — Standards + Spec review of the diff against the epic,
+including the architecture contract and any approved checkpoint revisions. When the epic is
+stack-labelled (`stack:react` / `stack:dagster`), `code-review`
 reads those labels and folds the matching `best-practices` guidance into the Standards axis — again not
 a separate stage, the wiring lives inside `code-review`. On acceptance it closes the epic and shows
 the final summary.
