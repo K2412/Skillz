@@ -26,6 +26,29 @@ It has two modes:
 Use **review** by default. Use **checkpoint** when the caller provides a contract plus a diff or completed
 slice. This skill designs and judges; [`implement`](../implement/SKILL.md) writes code.
 
+## Workflow memory lifecycle (automatic)
+
+The shared protocol at [`references/memory/workflow-memory.md`](references/memory/workflow-memory.md)
+is active for every ordinary architecture run. Memory remains advisory and fail-open under that
+protocol.
+
+In standalone review mode, first orient from the user instruction and the repository records named
+below, including applicable contracts and decision records. Only then open one outer workflow-memory
+session through the shared protocol. In checkpoint mode, first load the supplied planning task,
+approved contract and revisions, isolated patch or commit range, and repository evidence, then open
+the session. A nested architecture run inherits `pair`'s active session and does not recall or flush.
+
+Recalled context is advisory. It cannot replace repository evidence, select an interface for the
+human, approve or revise a contract, alter the supplied checkpoint batch, or decide or approve a
+checkpoint gate. Filter every conflict in favor of those authorities so the architecture result is
+reproducible without memory.
+
+After an accepted durable architectural decision, correction, constraint, or reusable lesson is
+persisted in its authoritative repository or planning record, apply the shared capture procedure.
+Persistence must succeed before capture; do not store contract bodies, patches, gates, task state,
+unaccepted candidates, or unaccepted interface designs as generic memory. Close a standalone session
+through the shared protocol on completion, explicit pause or stop, or handoff out of architecture.
+
 ## Review mode
 
 ### 1. Scope from change pressure

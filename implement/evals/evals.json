@@ -1,0 +1,90 @@
+{
+  "skill_name": "implement",
+  "evals": [
+    {
+      "id": 0,
+      "name": "memory-issue-first-worker-isolation",
+      "prompt": "Run standalone implement in the explicit workflow-memory shadow evaluation through the implementation-dispatch seam. Load fake repository guidance, epic, all task and dependency bodies, labels, approved contract, and approved checkpoint comments before using fake version-one MCP tools. Recall returns five cited memories, including task scope, an acceptance criterion, a dependency, an architecture choice, and a stable operating preference. Each task-memory claim conflicts with or is absent from authority. Dispatch one fresh worker and return the ordered authority reads, memory calls, exact worker prompt sources, frontier, outcome, and allowed diagnostics.",
+      "expected_output": "All implementation authorities and the frontier are resolved before exactly one quiet recall with limit 5. The stable non-conflicting preference may orient the outer workflow, but recalled task intent adds nothing to scope, acceptance, dependencies, architecture, approval, frontier, or the worker prompt. The worker prompt identifies issue and repository sources and implement dispatch proceeds unchanged.",
+      "files": [],
+      "assertions": [
+        "Loads epic, tasks, dependencies, labels, repository guidance, and approved contract before recall",
+        "Calls recall exactly once with limit 5 after resolving the frontier",
+        "Excludes uncorroborated recalled task intent from the fresh worker prompt",
+        "Prevents memory from adding scope, acceptance criteria, dependencies, architecture, approval, or task state",
+        "Keeps successful memory operation quiet"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "memory-nested-pair-session",
+      "prompt": "Run implementation dispatch as a nested stage of pair in an explicit workflow-memory shadow evaluation. Pair supplies an active session that has already recalled. Use fake version-one MCP tools, dispatch a fresh worker from issue and repository fixtures, observe one qualified implement event, then return to pair. Return ordered calls, the worker prompt sources, workflow outcome, and allowed diagnostics.",
+      "expected_output": "Implement inherits pair's session, performs no recall or flush, and starts no warning budget. It may capture the qualified event through the inherited session. The worker remains issue/repository-driven and pair retains outer close ownership.",
+      "files": [],
+      "assertions": [
+        "Inherits the active pair session",
+        "Suppresses nested recall and flush",
+        "Allows immediate qualified capture without persistent session state",
+        "Keeps the fresh worker prompt issue and repository driven"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "memory-persisted-capture-and-correction",
+      "prompt": "Run standalone implementation dispatch in the explicit workflow-memory shadow evaluation with fake version-one MCP tools. Recall includes known memory mem-7. Observe, in order: user approval before its planning comment exists; the same approval after its durable planning comment exists; speculative worker output; a passing worker claim before guards; a reusable lesson after behavior proof and all guards pass; task status; and a persisted human-gate correction targeting mem-7. Scope is ambiguous for every qualified candidate. Return ordered planning writes, memory calls, dispatch state, and allowed diagnostics.",
+      "expected_output": "Nothing is captured before the gate is persisted. The persisted accepted gate and verified reusable lesson are captured immediately with minimal evidence and project scope. Speculation, pre-verification output, and task status cause no write. The known contradiction calls correct for mem-7 rather than remember. Planning remains authoritative.",
+      "files": [],
+      "assertions": [
+        "Captures a human gate only after it is persisted",
+        "Captures a reusable outcome only after behavior proof and guards pass",
+        "Rejects speculative output, unverified outcomes, and task status",
+        "Defaults ambiguous qualified candidates to project scope",
+        "Uses correct for a known recalled contradiction"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "memory-fail-open-warning-and-frontier",
+      "prompt": "Run standalone implementation dispatch in the explicit workflow-memory shadow evaluation after authoritative plan loading. With fake version-one fixtures, exercise missing tools, an incompatible recall/v2 declaration, recall failure, capture failure, and flush failure in one session. Failures contain private provider details and recalled content claims an open blocker is closed. Return visible messages, chosen frontier, dispatch result, calls, and allowed diagnostics.",
+      "expected_output": "Implement uses issue dependencies for the frontier, dispatches normally, and preserves every issue/repository decision through all memory failures. It emits at most one generic non-secret warning, exposes no private failure detail, performs no mutating fallback, and reports only allowed diagnostics.",
+      "files": [],
+      "assertions": [
+        "Fails open for absent, incompatible, and failing tools",
+        "Keeps the issue-derived frontier unchanged",
+        "Emits at most one non-secret warning per outer session",
+        "Does not expose provider, claim, evidence, identity, or configuration detail",
+        "Does not mutate planning or repository state as a fallback"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "memory-standalone-close-boundaries",
+      "prompt": "Run standalone implementation dispatch in the explicit workflow-memory shadow evaluation four times with fake version-one MCP tools, ending respectively in normal completion, explicit pause, explicit stop, and handoff out of implement. Return ordered calls, issue state, dispatch outcome, and allowed diagnostics for each run.",
+      "expected_output": "Each standalone run recalls once after authority loading and flushes once at its named outer close boundary. Flush outcomes never alter issue state, labels, worker results, or handoff behavior.",
+      "files": [],
+      "assertions": [
+        "Flushes once on completion, pause, stop, and handoff",
+        "Does not flush before the outer close boundary",
+        "Keeps flush outcomes from changing issue state or dispatch"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "memory-release-active",
+      "prompt": "Run ordinary installed implementation dispatch with compatible version-one memory tools. Return the ordered authority reads, memory tool call log, worker prompt sources, frontier, and normal dispatch behavior.",
+      "expected_output": "Implement automatically opens one outer memory session after resolving issue authority and the frontier, keeps the fresh worker issue/repository-driven, and flushes once without changing dispatch state.",
+      "files": [],
+      "assertions": [
+        "Uses automatic memory in ordinary implementation runs",
+        "Preserves issue-driven worker dispatch and frontier selection"
+      ]
+    }
+  ],
+  "assertions": [
+    "Uses only memory.recall/v1, memory.remember/v1, memory.correct/v1, memory.forget/v1, and memory.flush/v1 MCP operations",
+    "Never lets generic memory add implementation authority or uncorroborated worker intent",
+    "Never calls memory service internals or persists nested-session state",
+    "Captures only persisted gates and verified reusable outcomes through the shared strict-capture policy",
+    "Reports only recalled count and bytes, filtered conflicts, candidate outcomes, duplicate count, warning count, and flush outcome"
+  ]
+}

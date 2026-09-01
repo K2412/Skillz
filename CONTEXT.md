@@ -28,6 +28,10 @@ _Avoid_: Directory name
 A durable observation that triggers automatic extraction during work. A final flush at a skill checkpoint or session end processes relevant context not captured by earlier events.
 _Avoid_: Every message
 
+**Workflow memory hook**:
+An automatic, non-blocking recall or capture attempt at a named skill lifecycle boundary. The outermost workflow quietly recalls at most five cited results and owns final flush; nested memory-aware skills inherit that session and only capture their own qualified events. The session reports unavailability at most once and never blocks the workflow.
+_Avoid_: Always-on authority, per-message memory
+
 **Evidence span**:
 The smallest exact, privacy-filtered excerpt that supports an inferred memory, stored with its source agent, session, observation time, and extractor version.
 _Avoid_: Transcript, rationale
@@ -41,20 +45,20 @@ A correction that makes an older memory inactive while preserving both memories 
 _Avoid_: Overwrite
 
 **Erasure**:
-An explicit request to remove memory content from live tables, vectors, outboxes, and projections. A content-free deletion marker may remain, and provider recovery copies may persist until Turso's published retention window expires.
+An explicit request to remove memory content from live tables, vectors, and outboxes. A content-free deletion marker may remain, and filesystem snapshots or backups created outside the service are not erased.
 _Avoid_: Retraction, tombstone
 
 **Memory outbox**:
-An encrypted local retry queue used only when a validated remote write cannot complete. Entries leave the outbox after Turso confirms the write; it is not an alternative memory store.
+An encrypted local retry queue used only when a validated canonical write cannot complete. Entries leave the outbox after encrypted SQLite confirms the write; it is not an alternative memory store.
 _Avoid_: Local memory
 
 **Memory service**:
 The separately versioned local Model Context Protocol server that owns extraction validation, persistence, retrieval, correction, erasure, and retry policy for every supported agent.
 _Avoid_: Memory skill, Turso client
 
-**Temporary local memory**:
-The encrypted local `pyturso` database that temporarily owns canonical memories until the approved Turso cutover. Its key lives in the operating-system keychain, and the cutover must preserve every stable identifier and lifecycle record before remote storage becomes authoritative.
-_Avoid_: Cache, outbox
+**Canonical memory database**:
+The encrypted local SQLite database solely owned by the shared memory daemon. Its key lives in the operating-system keychain; it is both the canonical and retrieval store.
+_Avoid_: Temporary local memory, cache, Turso authority
 
 **Learning record**:
 Evidence in `Learning/ledger` of demonstrated understanding, practice, or debt. It remains authoritative in the ledger and is not a generic memory.

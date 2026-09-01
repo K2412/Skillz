@@ -9,6 +9,25 @@ description: Full spec-to-ship pipeline that orchestrates the individual enginee
 and loop-backs between them. Each stage is a standalone skill; `pair` invokes it, waits for the gate,
 and moves on. The detail lives in each skill, not here.
 
+## Workflow memory lifecycle (automatic)
+
+The shared protocol at [`references/memory/workflow-memory.md`](references/memory/workflow-memory.md)
+is active for every ordinary `pair` run. Memory remains advisory and fail-open under that protocol.
+
+Before entering the first selected stage, resolve the current user instruction, normalized project
+identity, repository guidance, any existing planning issue state, and any applicable architecture
+contract or decision record. Then open one outer workflow-memory session through the shared protocol.
+Do not let recalled context choose a stage, approve a gate, revise a plan, or alter those authorities.
+
+Pass the active session to every memory-aware stage invoked by `pair`. Those stages inherit it: they
+may capture their own qualified durable events but do not open or close memory again. After a durable
+event in the pair pipeline, apply the shared capture procedure immediately; user acceptance is
+required before a decision qualifies.
+
+Close the outer session through the shared protocol when `pair` completes, explicitly pauses or
+stops, or hands work out of the workflow. A transition between stages inside the same pair run is not
+a handoff. Memory outcomes never change pair's gates, state, or next transition.
+
 ```
 [research] → [sketch] → grill → [prototype] → [architecture] → spec → plan-review
     → { implement → [architecture checkpoint] } → code-review → taste-review → polish

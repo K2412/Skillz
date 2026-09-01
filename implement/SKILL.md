@@ -14,6 +14,41 @@ description: >
 Execute a pre-approved plan as small, semantically complete, test-backed batches. The human owns intent
 and architecture; the subagent owns tactical implementation inside the approved fence.
 
+## Workflow memory lifecycle (automatic)
+
+The shared protocol at [`references/memory/workflow-memory.md`](references/memory/workflow-memory.md)
+is active for every ordinary `implement` run. Memory remains advisory and fail-open under that
+protocol.
+
+When `implement` is invoked by `pair`, inherit pair's active workflow-memory session. Nested
+implement may capture its own qualified events through the shared protocol, but it does not recall,
+flush, or start another warning budget.
+
+For standalone implement, first load the current user instruction, normalized project identity,
+repository guidance, epic, every task and dependency, labels, approved architecture contract, and
+approved contract revisions or checkpoints. Resolve the task frontier and all gates from those
+authorities. Only then open one quiet outer session through the shared protocol, with recall limited
+to five cited results. Recalled context is advisory operating context only: it cannot add or change
+scope, acceptance criteria, dependencies, architecture decisions, human approval, task state, or the
+frontier.
+
+Build every fresh worker's task intent from issue and repository data. Never copy or paraphrase
+recalled task intent into a worker prompt unless the same intent is corroborated by those authorities;
+in that case, use the authoritative source rather than the recalled wording. Memory outcomes cannot
+change whether a worker starts, stops, or passes a gate.
+
+Apply the shared capture procedure only after implement has persisted a human gate in the planning
+issue, or after a worker outcome has passed its behavior proof and every required guard and supplies a
+reusable lesson beyond the current task. The persisted issue or verified repository result remains
+authoritative. Do not capture speculative worker output, task or workflow status, patches, contract
+bodies, summaries, or an unpersisted approval. Use the shared project-default scope and known-target
+correction rules without adding implement-specific memory policy.
+
+Standalone implement closes its outer session through the shared protocol on normal completion,
+explicit pause or stop, and handoff out of the workflow. Continue dispatch and preserve issue and
+repository state through missing, incompatible, or failing memory; show at most the shared one
+non-secret warning. Memory outcomes never close tasks or alter labels.
+
 **Do not execute in the orchestrator's context.** Planning stages consume significant context —
 spawn a subagent with a fresh window so execution starts clean.
 
@@ -27,8 +62,8 @@ options:
   - "Pause here — I'll resume later"
 ```
 
-If spawning, build the subagent prompt from issue data only — not from conversation history (see
-[../spec/GITHUB-ISSUES.md](../spec/GITHUB-ISSUES.md)):
+If spawning, build task intent in the subagent prompt from issue and repository data only — not from
+conversation history or workflow memory (see [../spec/GITHUB-ISSUES.md](../spec/GITHUB-ISSUES.md)):
 
 ```bash
 gh issue view -R K2412/planning <epic-n> --json title,body                                   # the spec

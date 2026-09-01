@@ -1,0 +1,344 @@
+{
+  "activation": {
+    "active": true,
+    "workflows": [
+      "pair",
+      "architecture",
+      "implement",
+      "teach"
+    ]
+  },
+  "outcome": "pass",
+  "retrieval": {
+    "fixture": {
+      "schema_version": "workflow-memory-retrieval/v1",
+      "seed_revision": "2026-08-24.1",
+      "seed_sha256": "d059b500503e1ef9feedaaaf80f20141a25fb5bfd06ec0e73e70c62a5a52130e"
+    },
+    "latency_ms": {
+      "count": 6,
+      "maximum": 8.173750000423752,
+      "mean": 6.616534664014277,
+      "minimum": 5.919708994042594
+    },
+    "lifecycle_smoke": {
+      "capture": true,
+      "close": true,
+      "correct": true,
+      "open": true
+    },
+    "queries": [
+      {
+        "query_id": "q-authority",
+        "ranks": [
+          {
+            "position": 1,
+            "seed": "authority-first"
+          },
+          {
+            "position": 2,
+            "seed": "mem_02_global_bootstrap"
+          },
+          {
+            "position": 3,
+            "seed": "nested-session"
+          },
+          {
+            "position": 4,
+            "seed": "worker-authority"
+          },
+          {
+            "position": 5,
+            "seed": "concise-updates"
+          }
+        ]
+      },
+      {
+        "query_id": "q-nesting",
+        "ranks": [
+          {
+            "position": 1,
+            "seed": "nested-session"
+          },
+          {
+            "position": 2,
+            "seed": "authority-first"
+          },
+          {
+            "position": 3,
+            "seed": "close-boundaries"
+          },
+          {
+            "position": 4,
+            "seed": "mem_02_global_bootstrap"
+          },
+          {
+            "position": 5,
+            "seed": "concise-updates"
+          }
+        ]
+      },
+      {
+        "query_id": "q-worker",
+        "ranks": [
+          {
+            "position": 1,
+            "seed": "worker-authority"
+          },
+          {
+            "position": 2,
+            "seed": "concise-updates"
+          },
+          {
+            "position": 3,
+            "seed": "authority-first"
+          },
+          {
+            "position": 4,
+            "seed": "nested-session"
+          },
+          {
+            "position": 5,
+            "seed": "mem_02_global_bootstrap"
+          }
+        ]
+      },
+      {
+        "query_id": "q-teach",
+        "ranks": [
+          {
+            "position": 1,
+            "seed": "teaching-authority"
+          },
+          {
+            "position": 2,
+            "seed": "mem_02_global_bootstrap"
+          },
+          {
+            "position": 3,
+            "seed": "worker-authority"
+          },
+          {
+            "position": 4,
+            "seed": "concise-updates"
+          },
+          {
+            "position": 5,
+            "seed": "authority-first"
+          }
+        ]
+      },
+      {
+        "query_id": "q-updates",
+        "ranks": [
+          {
+            "position": 1,
+            "seed": "concise-updates"
+          },
+          {
+            "position": 2,
+            "seed": "worker-authority"
+          },
+          {
+            "position": 3,
+            "seed": "authority-first"
+          },
+          {
+            "position": 4,
+            "seed": "nested-session"
+          },
+          {
+            "position": 5,
+            "seed": "close-boundaries"
+          }
+        ]
+      },
+      {
+        "query_id": "q-close",
+        "ranks": [
+          {
+            "position": 1,
+            "seed": "nested-session"
+          },
+          {
+            "position": 2,
+            "seed": "close-boundaries"
+          },
+          {
+            "position": 3,
+            "seed": "authority-first"
+          },
+          {
+            "position": 4,
+            "seed": "concise-updates"
+          },
+          {
+            "position": 5,
+            "seed": "mem_01_skillz_bootstrap"
+          }
+        ]
+      }
+    ],
+    "reproducibility": {
+      "contract_versions": {
+        "correct": "memory.correct/v1",
+        "flush": "memory.flush/v1",
+        "forget": "memory.forget/v1",
+        "recall": "memory.recall/v1",
+        "remember": "memory.remember/v1"
+      },
+      "dimensions": 384,
+      "embedding_model": "BAAI/bge-small-en-v1.5",
+      "packages": {
+        "agent-memory": "0.1.0",
+        "fastembed": "0.8.0",
+        "mcp": "2.0.0",
+        "pyturso": "0.8.0rc7"
+      },
+      "ranking": {
+        "eligible_lifecycle": [
+          "active"
+        ],
+        "eligible_scopes": [
+          "current-project",
+          "global"
+        ],
+        "limit": 5,
+        "method": "dense-cosine",
+        "tie_break": "memory-id"
+      },
+      "report_schema_version": "workflow-memory-release-report/v1"
+    },
+    "score": {
+      "inactive_leaks": 0,
+      "passed": true,
+      "project_leaks": 0,
+      "recall_at_five": 1.0,
+      "relevant_recalled_at_five": 6,
+      "relevant_total": 6
+    }
+  },
+  "schema_version": "workflow-memory-release-report/v1",
+  "task": 1052,
+  "workflow_suites": {
+    "artifacts": {
+      "protocol_sha256": "1d9e5ce4d994ab32a869e630edf4a55083de5b6b26c6e62cc5aed79624ad9484",
+      "skill_sha256": {
+        "architecture": "42089c107e7d852f4a7f640feaadaad3cb3731522e192608c49ab558482e1a65",
+        "implement": "536164262a034d8365ee46240f8d19e3fcc12e8494b2273f6575ea5b68b6e24b",
+        "pair": "34c51dd1b93487deab06b7d599ce1edb7b3bc0e778a002748f01073096ba35b8",
+        "teach": "a9d59a2853f4a546c9ef4a5dd66ba580045ad189c5eeedd8f0476ff9281dfde5"
+      }
+    },
+    "fixture": {
+      "schema_version": "workflow-memory-scenarios/v1",
+      "sha256": "cb27f435d1de2274c08c332983d638aa4ea64e9969c71f41a3274ededc88dc8c"
+    },
+    "runner": {
+      "attempts": {
+        "architecture": 1,
+        "implement": 1,
+        "pair": 1,
+        "teach": 1
+      },
+      "cache_hits": [],
+      "duration_ms": {
+        "architecture": 130685,
+        "implement": 100819,
+        "pair": 99991,
+        "teach": 102389
+      },
+      "harness_sha256": {
+        "evaluator": "2ee924f444590d9ed3aeae7e4bae70604358f0fd1596e13258595aeb6a03e88e",
+        "fake_server": "2d9c2493d7106635acca21c9e6f9cc4d8e7f9e3c89acba663c740d6a7254955b"
+      },
+      "instruction_mutation": {
+        "duration_ms": 88816,
+        "name": "nested-session-recall-and-flush",
+        "observed_nested_calls": [
+          "recall",
+          "remember",
+          "flush"
+        ],
+        "rejected": true
+      },
+      "model": "haiku",
+      "name": "claude-code-print",
+      "version": "2.1.197 (Claude Code)"
+    },
+    "workflows": {
+      "architecture": {
+        "checks": {
+          "authority": true,
+          "correction": true,
+          "fail_open": true,
+          "flush": true,
+          "lifecycle": true,
+          "nesting": true,
+          "one_warning": true,
+          "scope": true,
+          "strict_capture": true,
+          "top_five": true
+        },
+        "filtered_conflicts": 1,
+        "observed_memory_calls": 9,
+        "rejected_candidates": 6,
+        "warning_count": 1
+      },
+      "implement": {
+        "checks": {
+          "authority": true,
+          "correction": true,
+          "fail_open": true,
+          "flush": true,
+          "lifecycle": true,
+          "nesting": true,
+          "one_warning": true,
+          "scope": true,
+          "strict_capture": true,
+          "top_five": true
+        },
+        "filtered_conflicts": 1,
+        "observed_memory_calls": 9,
+        "rejected_candidates": 5,
+        "warning_count": 1
+      },
+      "pair": {
+        "checks": {
+          "authority": true,
+          "correction": true,
+          "fail_open": true,
+          "flush": true,
+          "lifecycle": true,
+          "nesting": true,
+          "one_warning": true,
+          "scope": true,
+          "strict_capture": true,
+          "top_five": true
+        },
+        "filtered_conflicts": 1,
+        "observed_memory_calls": 14,
+        "rejected_candidates": 6,
+        "warning_count": 1
+      },
+      "teach": {
+        "checks": {
+          "authority": true,
+          "correction": true,
+          "fail_open": true,
+          "flush": true,
+          "lifecycle": true,
+          "nesting": true,
+          "one_warning": true,
+          "scope": true,
+          "strict_capture": true,
+          "top_five": true
+        },
+        "filtered_conflicts": 1,
+        "observed_memory_calls": 5,
+        "rejected_candidates": 7,
+        "warning_count": 1
+      }
+    }
+  }
+}

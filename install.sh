@@ -14,7 +14,6 @@ AGENTS_HOME_DIR="${AGENTS_HOME:-$HOME/.agents}"
 AGENTS_DIR="$AGENTS_HOME_DIR/skills"
 PI_INSTRUCTIONS_DIR="${PI_HOME:-$HOME/.pi/agent}/instructions"
 PI_EXTENSIONS_DIR="${PI_HOME:-$HOME/.pi/agent}/extensions"
-mkdir -p "$AGENTS_DIR" "$PI_INSTRUCTIONS_DIR" "$PI_EXTENSIONS_DIR"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # Repo-root home of shared, cross-skill reference modules (pedagogy, etc.). A skill
 # opts into a module by listing its name in the skill's own references/.shared file;
@@ -23,6 +22,32 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SHARED_DIR="$SCRIPT_DIR/shared"
 MEMORY_SOURCE="${AGENT_MEMORY_SOURCE:-$(dirname "$SCRIPT_DIR")/agent-memory}"
 
+# Refuse before mutating any installation unless the automatic-memory release has matching evidence.
+python3 - "$SCRIPT_DIR" <<'PY'
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+release_path = root / "shared/memory/release.json"
+protocol_path = root / "shared/memory/workflow-memory.md"
+active_marker = "Workflow memory lifecycle (automatic)"
+memory_artifacts = release_path.exists() or protocol_path.exists() or any(
+    active_marker in (root / workflow / "SKILL.md").read_text()
+    for workflow in ("pair", "architecture", "implement", "teach")
+    if (root / workflow / "SKILL.md").exists()
+)
+if memory_artifacts:
+    sys.path.insert(0, str(root))
+    from workflow_memory_release.evaluate import GateRefused, validate_install_evidence
+
+    try:
+        validate_install_evidence(root)
+    except (GateRefused, KeyError, TypeError, ValueError) as error:
+        raise SystemExit(f"ERROR: {error}") from error
+PY
+
+mkdir -p "$AGENTS_DIR" "$PI_INSTRUCTIONS_DIR" "$PI_EXTENSIONS_DIR"
+
 if [ -f "$MEMORY_SOURCE/pyproject.toml" ]; then
   if ! command -v uv >/dev/null 2>&1; then
     echo "ERROR: uv is required to install agent-memory" >&2
@@ -30,6 +55,7 @@ if [ -f "$MEMORY_SOURCE/pyproject.toml" ]; then
   fi
   uv tool install --editable "$MEMORY_SOURCE"
   agent-memory-init
+  agent-memory-service install
   agent-memory-setup
   echo "Agent memory: installed and registered"
 else

@@ -11,6 +11,33 @@ The user wants to learn something, and you are going to teach them — not answe
 
 This skill is **self-propelled**: the learner gives you a *goal*, and you go find the material yourself. (If they instead hand you a book, transcript, or docs to turn into a course, that's a different job — `/Learn-course`.)
 
+## Workflow memory lifecycle (automatic)
+
+The shared protocol at [`references/memory/workflow-memory.md`](references/memory/workflow-memory.md)
+is active for every ordinary `teach` run. Memory remains advisory and fail-open under that protocol.
+
+The teaching workspace remains the authority. Generic memory cannot complete a lesson, alter the
+review queue, count as demonstrated learning, or change mission state. Goals, constraints, notes,
+glossary terms, lessons, records, review items, reps, debts, misconceptions, and outcomes belong only
+in the mission workspace and are never submitted to generic memory.
+
+For a standalone teaching session, first resolve the `teach-memory` repository and mission directory,
+then read `MISSION.md`, the latest `learning-records/`, `NOTES.md`, and `review-queue.md` as described
+below. Only then open one session through the shared protocol. Recall once with `limit: 5`, using
+`teach-memory` as the project identity, and consider results only as advisory teaching preferences.
+When `teach` is nested under an active workflow-memory session, inherit it without recall, flush, or a
+separate warning budget.
+
+Teach may capture only a stable preference about how the learner wants to be taught that applies
+across missions. Always use `teach-memory` project scope, never global or a mission-specific scope.
+Do not duplicate a preference already recorded in mission files. Apply the shared correction procedure
+when a known recalled preference is contradicted; otherwise do not create a competing claim.
+
+At completion, pause, stop, or handoff, persist and commit every teaching-workspace change first. The
+standalone owner then closes through the shared protocol; a nested session does not flush. Missing,
+incompatible, or failing memory may produce at most one non-secret warning for the inherited or
+standalone session and never blocks teaching, workspace persistence, or its commit.
+
 ## Find the workspace before you scaffold it
 
 Teaching is stateful, so **where** the workspace lives decides whether the learning survives
