@@ -6,3 +6,6 @@ __pycache__/
 
 # explain-diff skill (kept local, not committed)
 explain-diff/
+
+# Throwaway pre-build design sketches
+docs/sketches/
