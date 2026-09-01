@@ -47,12 +47,36 @@ _Add your build and test commands here_
 
 ## Architecture Overview
 
-_Add a brief overview of your project architecture_
+Cross-skill policy lives under `shared/` and is injected into opted-in skills through each
+`references/.shared` manifest during `install.sh`. Skills own their workflow-specific lifecycle and
+authoritative state; shared modules own only policy that must remain identical across callers.
 
 ## Conventions & Patterns
 
-_Add your project-specific conventions here_
+- Generic workflow memory is advisory and non-blocking. Planning issues, repository records,
+  architecture contracts, and teaching mission and learning records remain authoritative.
+- Memory-aware nested skills inherit the outermost workflow memory session. They may capture their
+  own qualified events but must not repeat startup recall or final flush.
+- Skills may depend on versioned MCP memory tools through the shared memory reference. They must not
+  call SQLite, FastEmbed, the outbox, client configuration, or daemon internals.
+- Escalate if memory needs to override or duplicate an authority, requires mission-specific generic
+  scope, or requires a new service operation.
 
+
+## Writing Style
+
+- **Never use the "corrective reframe" tic.** Do not write the "not X — it's Y" (or "isn't X, it's Y")
+  construction that demotes a modest framing and then overwrites it with a grander one for rhetorical
+  punch. Banned shapes include: "That's not a tuning detail — it's the two things the system sells",
+  "This isn't a rename, it's the whole public API", "Call it X if you want, but it's really Y", and
+  "X? No. Y." The em-dash pivot, the comma pivot, and the question-then-answer pivot are all the same
+  move and all banned.
+  - **Instead, just state the claim directly.** Say what the thing *is* and why it matters, without
+    first knocking down a smaller reading. "These are the two things the system sells" beats "That's
+    not a tuning detail — it's the two things the system sells." Drop the setup; keep the substance.
+  - **Allowed:** a plain factual correction where a contrast is literally the point ("This isn't the
+    prod config, it's the staging one"). What's banned is the contrast used as *emphasis* — inventing
+    a weak frame just to dramatically overrule it.
 
 <!-- skillz:available-skills -->
 ## Available Skills
