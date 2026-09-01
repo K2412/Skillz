@@ -191,6 +191,21 @@ AGENTS_MD="$AGENTS_HOME_DIR/AGENTS.md"
 - **Prototypes are throwaway**: never branch and never commit one. The artifact goes to a gitignored
   directory in the repo; only the verdict, its numbers, and the settings it depends on carry forward.
 
+## Writing Style
+
+- **Never use the "corrective reframe" tic.** Do not write the "not X — it's Y" (or "isn't X, it's Y")
+  construction that demotes a modest framing and then overwrites it with a grander one for rhetorical
+  punch. Banned shapes include: "That's not a tuning detail — it's the two things the system sells",
+  "This isn't a rename, it's the whole public API", "Call it X if you want, but it's really Y", and
+  "X? No. Y." The em-dash pivot, the comma pivot, and the question-then-answer pivot are all the same
+  move and all banned.
+  - **Instead, just state the claim directly.** Say what the thing *is* and why it matters, without
+    first knocking down a smaller reading. "These are the two things the system sells" beats "That's
+    not a tuning detail — it's the two things the system sells." Drop the setup; keep the substance.
+  - **Allowed:** a plain factual correction where a contrast is literally the point ("This isn't the
+    prod config, it's the staging one"). What's banned is the contrast used as *emphasis* — inventing
+    a weak frame just to dramatically overrule it.
+
 ## Available Skills
 
 Skills load automatically from `~/.agents/skills/`. Use `/skill-name` or describe what you need.
