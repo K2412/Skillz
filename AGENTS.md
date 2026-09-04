@@ -83,7 +83,6 @@ authoritative state; shared modules own only policy that must remain identical a
 
 Skills load automatically from `~/.agents/skills/` (shared across Claude Code, Codex, and OpenCode). Invoke with `/skill-name` or just describe what you need:
 
-- **`/Learn-course`** — Convert a markdown source (textbook, lecture transcript, open-source library docs) into a directory-based learning course with chapters, lessons, and…
 - **`/architecture`** — Diagnose and improve a codebase's architecture so humans and coding agents can change it safely.
 - **`/automate`** — Use this skill to create Codex Automations.
 - **`/autopilot`** — Keep a PR merge-ready by triaging comments, resolving clear conflicts, and fixing CI in a loop.
@@ -96,7 +95,9 @@ Skills load automatically from `~/.agents/skills/` (shared across Claude Code, C
 - **`/create-subagent`** — Create custom subagents for specialized AI tasks.
 - **`/data-viz-selection`** — Pick the right chart for a dataset and message, then design it well.
 - **`/experts`** — Reach the `experts` MCP gateway from any message — a local server holding 11 domain corpora (software_engineer, python, laravel, ai_engineer,…
+- **`/explain-this-like-I-am-an-intern`** — User-invoked way to get clarity on anything — a subject you want to finally understand, or a message of mine that just didn't land.
 - **`/find-flexible-oneworld-awards`** — Find and validate live oneworld business- or first-class award availability across flexible dates, trip lengths, origins, destinations, and booking…
+- **`/gh-stack`** — Manages stacked PRs and splits multi-part work into reviewable branches with gh-stack.
 - **`/goal`** — Set a goal that Codex will pursue to completion.
 - **`/grill`** — Interview the user relentlessly about an idea until you reach shared understanding, while actively maintaining the project's domain model (glossary +…
 - **`/implement`** — Execute a pre-approved GitHub plan with bounded agent autonomy.
@@ -119,17 +120,14 @@ Skills load automatically from `~/.agents/skills/` (shared across Claude Code, C
 - **`/shell`** — Runs the rest of a /shell request as a literal shell command.
 - **`/sketch-change`** — Generate a coarse, forward-looking HTML sketch of how you INTEND to build something — the data flow, the key state, pseudo-code for the load-bearing…
 - **`/skill-creator`** — Create new skills, modify and improve existing skills, and measure skill performance.
-- **`/soc`** — Socratic pair — a senior engineer sitting beside you who guides you to do the work yourself and refuses to do it for you.
 - **`/spec`** — Synthesise a discussion, grill log, architecture contract, rough idea, or resolved wayfinder map into a written spec, then commit it to GitHub as an…
 - **`/split-to-prs`** — Split current work into small reviewable PRs.
 - **`/standup`** — Generate a standup update from recent activity.
 - **`/statusline`** — Configure a custom status line in the CLI.
 - **`/taste-review`** — Make a taste call — an independent judgment call on something ambiguous where you'd otherwise guess: UI polish, prose phrasing, naming, formatting,…
-- **`/teach`** — Be the user's personal tutor for the long haul.
 - **`/to-pr`** — Open a draft pull request for the current branch, with a Markdown body distilled from a code-review explainer.
 - **`/update-cli-config`** — View and modify Codex CLI configuration settings in ~/.cursor/cli-config.json.
 - **`/update-cursor-settings`** — Modify Codex/VSCode user settings in settings.json.
-- **`/wait-what`** — User-invoked corrective for when a message didn't land — you type it the moment you notice you're skimming, lost in invented jargon, or reading a…
 - **`/wayfinder`** — Plan a chunk of work too big for one session — wrapped in fog, where the way from here to the destination isn't visible yet — as a shared map of…
 - **`/worktree`** — Spin up a local git worktree for a branch in one step, then drop into it ready to work.
 

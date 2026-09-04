@@ -210,13 +210,13 @@ class WorkflowMemoryReleaseTest(unittest.TestCase):
     def test_checked_release_report_is_current_and_passing(self):
         self.assertEqual(
             validate_install_evidence()["workflows"],
-            ["pair", "architecture", "implement", "teach"],
+            ["pair", "architecture", "implement"],
         )
 
-    def test_activation_is_exactly_all_four_or_refused(self):
+    def test_activation_is_exactly_all_three_or_refused(self):
         self.assertEqual(
             validate_release_tree()["workflows"],
-            ["pair", "architecture", "implement", "teach"],
+            ["pair", "architecture", "implement"],
         )
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -225,24 +225,22 @@ class WorkflowMemoryReleaseTest(unittest.TestCase):
                 "pair/references",
                 "architecture/references",
                 "implement/references",
-                "teach/references",
                 "grill",
                 "code-review",
-                "soc",
             ):
                 (root / path).mkdir(parents=True, exist_ok=True)
             release = json.loads((ROOT / "shared/memory/release.json").read_text())
-            release["workflows"].remove("teach")
+            release["workflows"].remove("implement")
             (root / "shared/memory/release.json").write_text(json.dumps(release))
             (root / "shared/memory/workflow-memory.md").write_text("ordinary runs are active")
-            for workflow in ("pair", "architecture", "implement", "teach"):
+            for workflow in ("pair", "architecture", "implement"):
                 (root / workflow / "references/.shared").write_text("memory\n")
                 (root / workflow / "SKILL.md").write_text(
                     "Workflow memory lifecycle (automatic)"
                 )
-            for workflow in ("grill", "code-review", "soc"):
+            for workflow in ("grill", "code-review"):
                 (root / workflow / "SKILL.md").write_text("")
-            with self.assertRaisesRegex(GateRefused, "exactly all four"):
+            with self.assertRaisesRegex(GateRefused, "exactly all three"):
                 validate_release_tree(root)
 
     def test_retrieval_guard_uses_only_explicit_thresholds(self):

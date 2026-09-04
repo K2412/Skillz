@@ -1,45 +1,98 @@
 {
   "schema_version": "workflow-memory-scenarios/v1",
   "workflows": {
-    "pair": {
-      "authority": ["user instruction", "repository guidance", "planning state", "architecture contract"],
-      "capture_kinds": ["preference", "constraint", "decision", "lesson"],
-      "global_kinds": ["preference"],
-      "nested_capture_kind": "lesson",
-      "nested_markers": true,
-      "rejected_kinds": ["task_chatter", "suggestion", "summary", "task_state", "contract", "patch"],
-      "project_id": "K2412/Skillz",
-      "close_boundaries": ["completion", "pause", "stop", "handoff"]
-    },
     "architecture": {
-      "authority": ["user instruction", "repository evidence", "planning task", "approved contract", "isolated patch"],
-      "capture_kinds": ["constraint", "decision", "lesson"],
+      "authority": [
+        "user instruction",
+        "repository evidence",
+        "planning task",
+        "approved contract",
+        "isolated patch"
+      ],
+      "capture_kinds": [
+        "constraint",
+        "decision",
+        "lesson"
+      ],
+      "close_boundaries": [
+        "completion",
+        "handoff"
+      ],
       "global_kinds": [],
       "nested_capture_kind": "lesson",
       "nested_markers": true,
-      "rejected_kinds": ["candidate", "interface", "contract", "patch", "checkpoint_gate", "task_state"],
       "project_id": "K2412/Skillz",
-      "close_boundaries": ["completion", "handoff"]
+      "rejected_kinds": [
+        "candidate",
+        "interface",
+        "contract",
+        "patch",
+        "checkpoint_gate",
+        "task_state"
+      ]
     },
     "implement": {
-      "authority": ["user instruction", "repository guidance", "epic", "tasks", "dependencies", "approved contract"],
-      "capture_kinds": ["decision", "lesson"],
+      "authority": [
+        "user instruction",
+        "repository guidance",
+        "epic",
+        "tasks",
+        "dependencies",
+        "approved contract"
+      ],
+      "capture_kinds": [
+        "decision",
+        "lesson"
+      ],
+      "close_boundaries": [
+        "completion",
+        "handoff"
+      ],
       "global_kinds": [],
       "nested_capture_kind": "lesson",
       "nested_markers": true,
-      "rejected_kinds": ["worker_speculation", "unverified_result", "task_state", "patch", "summary"],
       "project_id": "K2412/Skillz",
-      "close_boundaries": ["completion", "handoff"]
+      "rejected_kinds": [
+        "worker_speculation",
+        "unverified_result",
+        "task_state",
+        "patch",
+        "summary"
+      ]
     },
-    "teach": {
-      "authority": ["MISSION.md", "latest learning record", "NOTES.md", "review-queue.md"],
-      "capture_kinds": ["preference"],
-      "global_kinds": [],
-      "nested_capture_kind": null,
-      "nested_markers": false,
-      "rejected_kinds": ["mission_preference", "progress", "mastery", "rep", "debt", "misconception", "learning_outcome"],
-      "project_id": "teach-memory",
-      "close_boundaries": ["completion"]
+    "pair": {
+      "authority": [
+        "user instruction",
+        "repository guidance",
+        "planning state",
+        "architecture contract"
+      ],
+      "capture_kinds": [
+        "preference",
+        "constraint",
+        "decision",
+        "lesson"
+      ],
+      "close_boundaries": [
+        "completion",
+        "pause",
+        "stop",
+        "handoff"
+      ],
+      "global_kinds": [
+        "preference"
+      ],
+      "nested_capture_kind": "lesson",
+      "nested_markers": true,
+      "project_id": "K2412/Skillz",
+      "rejected_kinds": [
+        "task_chatter",
+        "suggestion",
+        "summary",
+        "task_state",
+        "contract",
+        "patch"
+      ]
     }
   }
 }

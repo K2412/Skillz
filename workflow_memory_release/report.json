@@ -4,8 +4,7 @@
     "workflows": [
       "pair",
       "architecture",
-      "implement",
-      "teach"
+      "implement"
     ]
   },
   "outcome": "pass",
@@ -222,34 +221,31 @@
   "task": 1052,
   "workflow_suites": {
     "artifacts": {
-      "protocol_sha256": "1d9e5ce4d994ab32a869e630edf4a55083de5b6b26c6e62cc5aed79624ad9484",
+      "protocol_sha256": "dc197a2b8ad6cb3cb0d3539238b5a3b0b746232cf69c4cff7428a8c3cd38d362",
       "skill_sha256": {
         "architecture": "42089c107e7d852f4a7f640feaadaad3cb3731522e192608c49ab558482e1a65",
         "implement": "536164262a034d8365ee46240f8d19e3fcc12e8494b2273f6575ea5b68b6e24b",
-        "pair": "34c51dd1b93487deab06b7d599ce1edb7b3bc0e778a002748f01073096ba35b8",
-        "teach": "a9d59a2853f4a546c9ef4a5dd66ba580045ad189c5eeedd8f0476ff9281dfde5"
+        "pair": "34c51dd1b93487deab06b7d599ce1edb7b3bc0e778a002748f01073096ba35b8"
       }
     },
     "fixture": {
       "schema_version": "workflow-memory-scenarios/v1",
-      "sha256": "cb27f435d1de2274c08c332983d638aa4ea64e9969c71f41a3274ededc88dc8c"
+      "sha256": "3e2a2467e361af9363c5f0bc7d21da8e1bde6f111ef649028125d731fd9ff4f2"
     },
     "runner": {
       "attempts": {
         "architecture": 1,
         "implement": 1,
-        "pair": 1,
-        "teach": 1
+        "pair": 1
       },
       "cache_hits": [],
       "duration_ms": {
         "architecture": 130685,
         "implement": 100819,
-        "pair": 99991,
-        "teach": 102389
+        "pair": 99991
       },
       "harness_sha256": {
-        "evaluator": "2ee924f444590d9ed3aeae7e4bae70604358f0fd1596e13258595aeb6a03e88e",
+        "evaluator": "8210bdd3ec05b77b56308c1c16b36f0b08001dc3cbdab2dce6d7b54e95ea56cc",
         "fake_server": "2d9c2493d7106635acca21c9e6f9cc4d8e7f9e3c89acba663c740d6a7254955b"
       },
       "instruction_mutation": {
@@ -319,24 +315,6 @@
         "filtered_conflicts": 1,
         "observed_memory_calls": 14,
         "rejected_candidates": 6,
-        "warning_count": 1
-      },
-      "teach": {
-        "checks": {
-          "authority": true,
-          "correction": true,
-          "fail_open": true,
-          "flush": true,
-          "lifecycle": true,
-          "nesting": true,
-          "one_warning": true,
-          "scope": true,
-          "strict_capture": true,
-          "top_five": true
-        },
-        "filtered_conflicts": 1,
-        "observed_memory_calls": 5,
-        "rejected_candidates": 7,
         "warning_count": 1
       }
     }
