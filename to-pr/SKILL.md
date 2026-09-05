@@ -1,33 +1,37 @@
 ---
 name: to-pr
 description: >
-  Open a draft pull request for the current branch, with a Markdown body distilled from a
-  code-review explainer. If no explainer exists yet, first generate one for the whole branch
-  (via code-review in explain mode), then distil it into the PR description. Use whenever the user wants to ship
-  the current branch as a PR — "/to-pr", "make a draft PR for this branch", "open a PR for my
-  current branch", "make a draft PR from this explainer", "turn <explainer>.html into a PR
-  description", "open a PR using this explainer", "convert my explainer to a PR body", or references
-  a code-review HTML explainer file (usually under explanations/ or docs/) together with wanting a PR.
-  Trigger even if they don't say "to-pr" explicitly, as long as they point at a branch or an
-  explainer file and want it become a PR. Default base branch is `dev` and PRs are always opened
-  as drafts.
+  Open a draft pull request for the current branch from work that's already done. Read the finished
+  change — the diff, the commits, and any artifacts already in the branch (a code-review explainer,
+  a design sketch) — and distil a concise Markdown PR body from them. Does NOT review the code and
+  does NOT generate an explainer: reviewing happens before /to-pr, not inside it. Use whenever the
+  user wants to ship the current branch as a PR — "/to-pr", "make a draft PR for this branch", "open
+  a PR for my current branch", "make a draft PR from this explainer", "turn <explainer>.html into a
+  PR description", "open a PR using this explainer", "convert my explainer to a PR body", or points
+  at a branch and wants it turned into a PR. Trigger even if they don't say "to-pr" explicitly, as
+  long as they point at a branch (or an explainer file) and want it to become a PR. Default base
+  branch is `dev` and PRs are always opened as drafts.
 ---
 
 # to-pr
 
 Open a **draft** PR for the current branch, with a clean, **concise** Markdown body distilled from
-a `code-review` explainer (a self-contained HTML learning artifact). If no explainer exists yet,
-this skill **generates one for the whole branch first** — running `code-review` in explain mode
-(follow `../code-review/references/explainer.md`) against
-`<base>...HEAD` — then distils that into the PR description. The explainer does double duty: it's the
-author-mode understanding pass (*don't send code for review until you can pass its own quiz*) and the
-source the PR body is distilled from.
+the work that's already finished. `to-pr` does not review the code and does not build a review
+artifact — **that happens before you call it**. Its only job is to turn a done change into a
+scannable PR description and open the draft.
 
-The explainer is written to *teach*: it carries CSS styling, background, a color-coded literate
-diff, illustrative figures, and an interactive quiz. A PR description has a different job — a
-reviewer skims it to get oriented, then reads the real code in GitHub's own diff view. So this
-skill **distils** the explainer; it does not transcribe it. Keep the summary, the "why", and any
-figure that teaches — drop the scaffolding a teammate doesn't need.
+It distils from whatever source best describes the change:
+
+- **If a `code-review` explainer already exists** for this branch (a self-contained HTML learning
+  artifact under `explanations/` or `docs/`, produced by a prior review pass), use it as the richest
+  source — it already carries the summary, the "why", and any figures.
+- **Otherwise, work straight from the branch** — the diff over `<base>...HEAD` and the commit
+  messages. Do not generate an explainer and do not run `code-review`; just read what shipped and
+  describe it.
+
+Whichever the source, a PR description has one job: a reviewer skims it to get oriented, then reads
+the real code in GitHub's own diff view. So this skill **distils**; it never transcribes. Keep the
+summary, the "why", and any figure that teaches — drop the scaffolding a teammate doesn't need.
 
 **Keep it proportional.** A good PR body is *shorter* than the change it describes. If the
 description is longer than the diff, cut. GitHub already renders the code and the diff — the body
@@ -36,35 +40,45 @@ earns trust by being scannable, not exhaustive.
 ## Inputs
 
 Parse these from the user's invocation. Nothing here is required — with a bare `/to-pr` on a branch,
-generate the explainer yourself (Step 1).
+build the body from the diff and commits (Step 1).
 
-- **Explainer path** (optional) — an existing `.html` file to convert (e.g.
-  `explanations/explain-<slug>-<date>.html`). If omitted, generate one for the branch in Step 1.
-- **Base branch** (default `dev`) — both the PR target and the code-review explain-mode base. Honor an explicit
-  "base X" / "into X" / "against X".
+- **Explainer path** (optional) — an existing `.html` file to distil (e.g.
+  `explanations/explain-<slug>-<date>.html`). If omitted, look for one; if there's none, work from
+  the diff instead. Never generate one.
+- **Base branch** (default `dev`) — the PR target and the range the body describes (`<base>...HEAD`).
+  Honor an explicit "base X" / "into X" / "against X".
 - **Draft** (default true) — always open as a draft unless the user clearly asks for a ready PR.
-- **Title** (optional) — if the user gives one, use it; otherwise derive from the explainer's `<h1>`.
-- **Quiz** (default off) — leave the self-check quiz out unless the user asks to keep it.
+- **Title** (optional) — if the user gives one, use it; otherwise derive it from the explainer's
+  `<h1>` if there is one, else from the branch's commit history.
+- **Quiz** (default off) — only relevant when distilling an existing explainer; leave it out unless
+  the user asks to keep it.
 
 ## Steps
 
-1. **Obtain the explainer.**
-   - **If the user gave a path**, read that HTML file. If it isn't there, stop and tell the user.
-   - **If they didn't** (a bare `/to-pr`, "make a PR for this branch"), generate one for the *whole
-     branch* by running [`code-review`](../code-review/SKILL.md) in explain mode (follow
-     `../code-review/references/explainer.md`) against `<base>...HEAD` — the same
-     range this PR will contain. Follow that skill to completion; it writes
-     `explanations/explain-<slug>-<date>.html` and is the author-mode understanding pass before the
-     change goes up. Then read the file it produced and continue below. Author mode's rule stands:
-     if you can't pass the explainer's own quiz, the branch isn't ready for review — surface that
-     rather than opening the PR.
+1. **Gather the source material.** Reviewing the code is *not* part of this — assume it already
+   happened. Just collect what describes the finished change:
+   - **If the user gave an explainer path**, read that HTML file. If it isn't there, say so and fall
+     back to the diff rather than stopping.
+   - **If they didn't**, look for an existing branch explainer (e.g.
+     `explanations/explain-<slug>-<date>.html`). If one is there, distil from it.
+   - **If there's no explainer** (the common case for a bare `/to-pr`), work straight from the
+     branch: read the diff with `git diff <base>...HEAD`, the file list with
+     `git diff --name-only <base>...HEAD`, and the commit messages with
+     `git log <base>..HEAD`. Those are your raw material for the summary, the "why", and the change
+     bullets. Do **not** run `code-review` and do **not** write an explainer.
 
-2. **Extract the PR title.** Use the user-provided title if any; else the `<h1>` text. If the
-   explainer's `.meta` line or title carries a ticket id (e.g. `SIG-520`), keep it in the title so
-   the PR links back. Keep the title one line.
+2. **Decide the PR title.** Use the user-provided title if any; else the explainer's `<h1>` text if
+   there is one; else summarise the branch's commits into one line. If a ticket id (e.g. `SIG-520`)
+   appears in the explainer's `.meta`/title or in a commit message, keep it in the title so the PR
+   links back. Keep the title one line.
 
-3. **Convert the body to Markdown** — distilling, not transcribing. Work in the explainer's own
-   order, but drop anything that doesn't help a reviewer orient. Mapping:
+3. **Write the body in Markdown** — distilling, not transcribing.
+   - **Working from the diff (no explainer):** write the sections directly — a 1–3 sentence summary,
+     the "why", any figure worth drawing (as a `mermaid` block, per the figure rule below), and a
+     short bullet summary of the change grouped by file or concern. Skip straight to Step 4 for
+     assembly; the mappings below are only for when an explainer exists.
+   - **Distilling an explainer:** work in the explainer's own order, but drop anything that doesn't
+     help a reviewer orient. Mapping:
    - `<h2>` → `##`, `<h3>` → `###`.
    - Paragraphs / `.lede` → plain paragraphs. `<blockquote>` → `>` Markdown quote.
    - `.callout` blocks → a blockquote led by the bold label, e.g. `> **Intuition** — …`. Keep only
@@ -139,9 +153,9 @@ generate the explainer yourself (Step 1).
 
 ## Notes
 
-- **No explainer? Make one.** A bare `/to-pr` on a branch isn't an error — generate the branch
-  explainer with `code-review` in explain mode first (Step 1), which also forces the author-mode understanding pass
-  before the change ships. Only skip generation when the user points at an explainer that already exists.
+- **No explainer? Work from the diff.** A bare `/to-pr` on a branch is the common case — build the
+  body straight from `git diff <base>...HEAD` and the commit messages. Don't run `code-review` and
+  don't write an explainer; reviewing the change is a separate step the user does before `/to-pr`.
 - **Shorter than the diff.** The reviewer reads the code on GitHub; the body just orients them. Lead
   with the summary and the "why", keep any figure, and cut the rest. If the body is longer than the
   change, you've over-written it.

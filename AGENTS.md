@@ -83,7 +83,6 @@ authoritative state; shared modules own only policy that must remain identical a
 
 Skills load automatically from `~/.agents/skills/` (shared across Claude Code, Codex, and OpenCode). Invoke with `/skill-name` or just describe what you need:
 
-- **`/Learn-course`** — Convert a markdown source (textbook, lecture transcript, open-source library docs) into a directory-based learning course with chapters, lessons, and…
 - **`/architecture`** — Diagnose and improve a codebase's architecture so humans and coding agents can change it safely.
 - **`/automate`** — Use this skill to create Codex Automations.
 - **`/autopilot`** — Keep a PR merge-ready by triaging comments, resolving clear conflicts, and fixing CI in a loop.
@@ -96,10 +95,13 @@ Skills load automatically from `~/.agents/skills/` (shared across Claude Code, C
 - **`/create-subagent`** — Create custom subagents for specialized AI tasks.
 - **`/data-viz-selection`** — Pick the right chart for a dataset and message, then design it well.
 - **`/experts`** — Reach the `experts` MCP gateway from any message — a local server holding 11 domain corpora (software_engineer, python, laravel, ai_engineer,…
+- **`/explain-this-like-I-am-an-intern`** — User-invoked way to get clarity on anything — a subject you want to finally understand, or a message of mine that just didn't land.
 - **`/find-flexible-oneworld-awards`** — Find and validate live oneworld business- or first-class award availability across flexible dates, trip lengths, origins, destinations, and booking…
+- **`/gh-stack`** — Manages stacked PRs and splits multi-part work into reviewable branches with gh-stack.
 - **`/goal`** — Set a goal that Codex will pursue to completion.
 - **`/grill`** — Interview the user relentlessly about an idea until you reach shared understanding, while actively maintaining the project's domain model (glossary +…
 - **`/implement`** — Execute a pre-approved GitHub plan with bounded agent autonomy.
+- **`/Learn-course`** — Convert a markdown source (textbook, lecture transcript, open-source library docs) into a directory-based learning course with chapters, lessons, and…
 - **`/loop`** — Run a prompt or skill in this session on a recurring or variable interval (e.g.
 - **`/migrate-to-skills`** — Convert 'Applied intelligently' Codex rules (.cursor/rules/*.mdc) and slash commands (.cursor/commands/*.md) to Agent Skills format (.cursor/skills/).
 - **`/new-repo`** — Create a Codex-hosted repo for the current project and push it.
@@ -126,7 +128,7 @@ Skills load automatically from `~/.agents/skills/` (shared across Claude Code, C
 - **`/statusline`** — Configure a custom status line in the CLI.
 - **`/taste-review`** — Make a taste call — an independent judgment call on something ambiguous where you'd otherwise guess: UI polish, prose phrasing, naming, formatting,…
 - **`/teach`** — Be the user's personal tutor for the long haul.
-- **`/to-pr`** — Open a draft pull request for the current branch, with a Markdown body distilled from a code-review explainer.
+- **`/to-pr`** — Open a draft pull request for the current branch from work that's already done.
 - **`/update-cli-config`** — View and modify Codex CLI configuration settings in ~/.cursor/cli-config.json.
 - **`/update-cursor-settings`** — Modify Codex/VSCode user settings in settings.json.
 - **`/wait-what`** — User-invoked corrective for when a message didn't land — you type it the moment you notice you're skimming, lost in invented jargon, or reading a…
