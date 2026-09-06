@@ -210,35 +210,33 @@ class WorkflowMemoryReleaseTest(unittest.TestCase):
     def test_checked_release_report_is_current_and_passing(self):
         self.assertEqual(
             validate_install_evidence()["workflows"],
-            ["pair", "teach"],
+            ["pair"],
         )
 
     def test_activation_is_exactly_tracked_or_refused(self):
         self.assertEqual(
             validate_release_tree()["workflows"],
-            ["pair", "teach"],
+            ["pair"],
         )
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             for path in (
                 "shared/memory",
                 "pair/references",
-                "teach/references",
                 "grill",
                 "code-review",
-                "soc",
             ):
                 (root / path).mkdir(parents=True, exist_ok=True)
             release = json.loads((ROOT / "shared/memory/release.json").read_text())
-            release["workflows"].remove("teach")
+            release["workflows"].remove("pair")
             (root / "shared/memory/release.json").write_text(json.dumps(release))
             (root / "shared/memory/workflow-memory.md").write_text("ordinary runs are active")
-            for workflow in ("pair", "teach"):
+            for workflow in ("pair",):
                 (root / workflow / "references/.shared").write_text("memory\n")
                 (root / workflow / "SKILL.md").write_text(
                     "Workflow memory lifecycle (automatic)"
                 )
-            for workflow in ("grill", "code-review", "soc"):
+            for workflow in ("grill", "code-review"):
                 (root / workflow / "SKILL.md").write_text("")
             with self.assertRaisesRegex(GateRefused, "exactly the tracked"):
                 validate_release_tree(root)

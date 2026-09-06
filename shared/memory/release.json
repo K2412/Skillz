@@ -1,5 +1,5 @@
 {
   "schema_version": "workflow-memory-release/v1",
   "active": true,
-  "workflows": ["pair", "teach"]
+  "workflows": ["pair"]
 }

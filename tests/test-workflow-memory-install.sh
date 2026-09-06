@@ -23,7 +23,7 @@ PY
 cp -f "$repo_root/install.sh" "$fixture/install.sh"
 cp -rf "$repo_root/shared" "$fixture/shared"
 cp -rf "$repo_root/workflow_memory_release" "$fixture/workflow_memory_release"
-for skill in pair teach grill code-review soc; do
+for skill in pair grill code-review; do
   cp -rf "$repo_root/$skill" "$fixture/$skill"
 done
 mkdir -p "$fixture/home/.claude"
@@ -40,7 +40,7 @@ PI_HOME="$fixture/pi" \
 AGENT_MEMORY_SOURCE="$fixture/missing-agent-memory" \
 bash "$fixture/install.sh" >/dev/null
 
-for skill in pair teach; do
+for skill in pair; do
   installed="$fixture/agents/skills/$skill"
   test -f "$installed/references/memory/workflow-memory.md"
   cmp "$repo_root/shared/memory/workflow-memory.md" \
@@ -48,7 +48,7 @@ for skill in pair teach; do
   test ! -d "$repo_root/$skill/references/memory"
 done
 
-for skill in grill code-review soc; do
+for skill in grill code-review; do
   test ! -d "$fixture/agents/skills/$skill/references/memory"
 done
 
@@ -152,7 +152,7 @@ elif case == "inactive_leak":
 elif case == "partial":
     release_path = root / "shared/memory/release.json"
     release = json.loads(release_path.read_text())
-    release["workflows"].remove("teach")
+    release["workflows"].remove("pair")
     release_path.write_text(json.dumps(release))
 elif case == "stale_workflow":
     path = root / "workflow_memory_release/fixtures/workflows-v1.json"

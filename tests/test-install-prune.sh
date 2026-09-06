@@ -10,7 +10,7 @@ trap 'rm -rf "$fixture"' EXIT
 cp -f "$repo_root/install.sh" "$fixture/install.sh"
 cp -rf "$repo_root/shared" "$fixture/shared"
 cp -rf "$repo_root/workflow_memory_release" "$fixture/workflow_memory_release"
-for skill in pair teach grill code-review soc; do
+for skill in pair grill code-review; do
   cp -rf "$repo_root/$skill" "$fixture/$skill"
 done
 mkdir -p "$fixture/home/.claude" "$fixture/home/.codex/skills"

@@ -98,7 +98,6 @@ Skills load automatically from `~/.agents/skills/` (shared across Claude Code, C
 - **`/gh-stack`** — Manages stacked PRs and splits multi-part work into reviewable branches with gh-stack.
 - **`/goal`** — Set a goal that Codex will pursue to completion.
 - **`/grill`** — Interview the user relentlessly about an idea until you reach shared understanding, while actively maintaining the project's domain model (glossary +…
-- **`/Learn-course`** — Convert a markdown source (textbook, lecture transcript, open-source library docs) into a directory-based learning course with chapters, lessons, and…
 - **`/loop`** — Run a prompt or skill in this session on a recurring or variable interval (e.g.
 - **`/migrate-to-skills`** — Convert 'Applied intelligently' Codex rules (.cursor/rules/*.mdc) and slash commands (.cursor/commands/*.md) to Agent Skills format (.cursor/skills/).
 - **`/new-repo`** — Create a Codex-hosted repo for the current project and push it.
@@ -114,15 +113,12 @@ Skills load automatically from `~/.agents/skills/` (shared across Claude Code, C
 - **`/share`** — Save, back up, or share the current project on Codex — creates a repo (a saved, versioned copy that isn't public) even for users who have never used…
 - **`/shell`** — Runs the rest of a /shell request as a literal shell command.
 - **`/skill-creator`** — Create new skills, modify and improve existing skills, and measure skill performance.
-- **`/soc`** — Socratic pair — a senior engineer sitting beside you who guides you to do the work yourself and refuses to do it for you.
 - **`/split-to-prs`** — Split current work into small reviewable PRs.
 - **`/standup`** — Generate a standup update from recent activity.
 - **`/statusline`** — Configure a custom status line in the CLI.
-- **`/teach`** — Be the user's personal tutor for the long haul.
 - **`/to-pr`** — Open a draft pull request for the current branch from work that's already done.
 - **`/update-cli-config`** — View and modify Codex CLI configuration settings in ~/.cursor/cli-config.json.
 - **`/update-cursor-settings`** — Modify Codex/VSCode user settings in settings.json.
-- **`/wait-what`** — User-invoked corrective for when a message didn't land — you type it the moment you notice you're skimming, lost in invented jargon, or reading a…
 - **`/wayfinder`** — Plan a chunk of work too big for one session — wrapped in fog, where the way from here to the destination isn't visible yet — as a shared map of…
 - **`/worktree`** — Spin up a local git worktree for a branch in one step, then drop into it ready to work.
 

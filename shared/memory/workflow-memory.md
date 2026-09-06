@@ -1,7 +1,6 @@
 # Workflow Memory Protocol
 
-Automatic workflow-memory ordinary runs are active for `pair`, `architecture`, `implement`, and
-`teach`. Other skills do not use this protocol unless a later release explicitly adds them.
+Automatic workflow-memory ordinary runs are active for `pair`. Other skills do not use this protocol unless a later release explicitly adds them.
 
 Memory is advisory. User instructions and authoritative planning, repository, architecture, mission,
 and learning records always win. Memory cannot approve work, establish task state, or prove learning.

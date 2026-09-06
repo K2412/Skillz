@@ -20,7 +20,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = Path(__file__).with_name("fixtures")
-WORKFLOWS = ("pair", "teach")
+WORKFLOWS = ("pair",)
 CONTRACTS = {
     "recall": "memory.recall/v1",
     "remember": "memory.remember/v1",
@@ -73,7 +73,7 @@ def validate_release_tree(root: Path = ROOT) -> dict[str, Any]:
         skill = (root / workflow / "SKILL.md").read_text()
         if "Workflow memory lifecycle (automatic)" not in skill or "evaluation-only" in skill:
             raise GateRefused(f"{workflow} is not active")
-    for workflow in ("grill", "code-review", "soc"):
+    for workflow in ("grill", "code-review"):
         manifest = root / workflow / "references/.shared"
         if manifest.exists() and "memory" in manifest.read_text().splitlines():
             raise GateRefused(f"excluded workflow activated: {workflow}")
@@ -342,11 +342,7 @@ def _workflow_prompt(workflow: str, scenario: dict[str, Any], authority_path: Pa
     rejected = ", ".join(scenario["rejected_kinds"])
     global_kinds = ", ".join(scenario["global_kinds"]) or "none"
     claims = {
-        "preference": (
-            "Prefer worked examples before abstractions across teaching missions"
-            if workflow == "teach"
-            else "Prefer ASCII-only source edits across projects"
-        ),
+        "preference": "Prefer ASCII-only source edits across projects",
         "constraint": "Keep workflow evidence minimal",
         "decision": "Use the approved shared protocol",
         "lesson": "Manifest injection prevents policy copies",

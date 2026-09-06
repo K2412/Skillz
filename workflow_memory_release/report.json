@@ -2,8 +2,7 @@
   "activation": {
     "active": true,
     "workflows": [
-      "pair",
-      "teach"
+      "pair"
     ]
   },
   "outcome": "pass",
@@ -15,9 +14,9 @@
     },
     "latency_ms": {
       "count": 6,
-      "maximum": 10.420834005344659,
-      "mean": 7.806562333522986,
-      "minimum": 6.970332993660122
+      "maximum": 9.183375019347295,
+      "mean": 7.209395669633523,
+      "minimum": 6.553874991368502
     },
     "lifecycle_smoke": {
       "capture": true,
@@ -220,35 +219,29 @@
   "task": 1052,
   "workflow_suites": {
     "artifacts": {
-      "protocol_sha256": "1d9e5ce4d994ab32a869e630edf4a55083de5b6b26c6e62cc5aed79624ad9484",
+      "protocol_sha256": "d713f4d9e5a74c908bef4718fa7c6d2dc6ad5f8cb61ec73674114a02c47484d0",
       "skill_sha256": {
-        "pair": "73a354ae3972f7ab8855fae53406646ba60a6838200ac45c0747398f9ff2b291",
-        "teach": "a9d59a2853f4a546c9ef4a5dd66ba580045ad189c5eeedd8f0476ff9281dfde5"
+        "pair": "73a354ae3972f7ab8855fae53406646ba60a6838200ac45c0747398f9ff2b291"
       }
     },
     "fixture": {
       "schema_version": "workflow-memory-scenarios/v1",
-      "sha256": "b4d4a22714a552545a9b10e5998be2a91a7929e6656e74742b0829a9240d7dfe"
+      "sha256": "2b25bc3c87c5dee8b71fb6c7c50b7a8979ab116da8bcc7ae79f0e3605977cd87"
     },
     "runner": {
       "attempts": {
-        "pair": 1,
-        "teach": 1
+        "pair": 1
       },
-      "cache_hits": [
-        "pair",
-        "teach"
-      ],
+      "cache_hits": [],
       "duration_ms": {
-        "pair": 136003,
-        "teach": 113206
+        "pair": 164237
       },
       "harness_sha256": {
-        "evaluator": "086bdb606bea40d3d155195f2f74c1501318d6d63cebd68fef62e9ab69223c12",
+        "evaluator": "f6d2ea005fb8d985036985eaf9d3a49523ab68234d53bc2f73937daba1626753",
         "fake_server": "2d9c2493d7106635acca21c9e6f9cc4d8e7f9e3c89acba663c740d6a7254955b"
       },
       "instruction_mutation": {
-        "duration_ms": 93321,
+        "duration_ms": 104338,
         "name": "nested-session-recall-and-flush",
         "observed_nested_calls": [
           "recall",
@@ -278,24 +271,6 @@
         "filtered_conflicts": 1,
         "observed_memory_calls": 15,
         "rejected_candidates": 6,
-        "warning_count": 1
-      },
-      "teach": {
-        "checks": {
-          "authority": true,
-          "correction": true,
-          "fail_open": true,
-          "flush": true,
-          "lifecycle": true,
-          "nesting": true,
-          "one_warning": true,
-          "scope": true,
-          "strict_capture": true,
-          "top_five": true
-        },
-        "filtered_conflicts": 1,
-        "observed_memory_calls": 5,
-        "rejected_candidates": 7,
         "warning_count": 1
       }
     }

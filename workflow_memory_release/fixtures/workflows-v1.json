@@ -10,16 +10,6 @@
       "rejected_kinds": ["task_chatter", "suggestion", "summary", "task_state", "contract", "patch"],
       "project_id": "K2412/Skillz",
       "close_boundaries": ["completion", "pause", "stop", "handoff"]
-    },
-    "teach": {
-      "authority": ["MISSION.md", "latest learning record", "NOTES.md", "review-queue.md"],
-      "capture_kinds": ["preference"],
-      "global_kinds": [],
-      "nested_capture_kind": null,
-      "nested_markers": false,
-      "rejected_kinds": ["mission_preference", "progress", "mastery", "rep", "debt", "misconception", "learning_outcome"],
-      "project_id": "teach-memory",
-      "close_boundaries": ["completion"]
     }
   }
 }
