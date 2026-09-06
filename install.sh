@@ -124,11 +124,19 @@ TOOL_DIRS=(
   "$HOME/.codex/skills"
 )
 
+# Manifest of the skills THIS installer manages, so a later run can prune ones
+# that have since left the repo (e.g. folded into another skill) without ever
+# touching skills other tools install into the same shared ~/.agents/skills.
+MANIFEST="$AGENTS_DIR/.skillz-manifest"
+
 installed=0
 linked=0
+pruned=0
+current_skills=""
 for skill_dir in "$SCRIPT_DIR"/*/; do
   name=$(basename "$skill_dir")
   [[ -f "$skill_dir/SKILL.md" ]] || continue
+  current_skills="${current_skills}${name}"$'\n'
 
   # Replace any prior copy so removed files don't linger.
   if [ -e "$AGENTS_DIR/$name" ]; then
@@ -179,6 +187,33 @@ for skill_dir in "$SCRIPT_DIR"/*/; do
     linked=$((linked + 1))
   done
 done
+
+# Prune skills we installed on a previous run that no longer ship in the repo.
+# Only names recorded in our own manifest are eligible, so skills other tools
+# (Codex, etc.) place in the shared ~/.agents/skills are never removed.
+if [ -f "$MANIFEST" ]; then
+  while IFS= read -r prev || [ -n "$prev" ]; do
+    [ -z "$prev" ] && continue
+    # Still shipped by the repo this run? Then keep it.
+    printf '%s' "$current_skills" | grep -qxF "$prev" && continue
+    if [ -e "$AGENTS_DIR/$prev" ]; then
+      find "$AGENTS_DIR/$prev" -depth -delete
+      echo "Pruned: $prev (no longer in repo)"
+      pruned=$((pruned + 1))
+    fi
+    # Take down the symlinks we created for it in each tool dir.
+    for tool_dir in "${TOOL_DIRS[@]}"; do
+      [ -d "$tool_dir" ] || continue
+      if [ "$(cd "$tool_dir" && pwd -P)" = "$(cd "$AGENTS_DIR" && pwd -P)" ]; then
+        continue
+      fi
+      [ -L "$tool_dir/$prev" ] && rm -f "$tool_dir/$prev"
+    done
+  done < "$MANIFEST"
+fi
+
+# Record the skills we manage this run for the next run's prune pass.
+printf '%s' "$current_skills" | LC_ALL=C sort > "$MANIFEST"
 
 instruction_count=0
 if [ -d "$SCRIPT_DIR/instructions" ]; then
@@ -278,6 +313,9 @@ echo "Symlinked: $CLAUDE_MD -> $AGENTS_MD"
 
 echo ""
 echo "Done. $installed skill(s) installed to $AGENTS_DIR."
+if [ "$pruned" -gt 0 ]; then
+  echo "      $pruned stale skill(s) pruned."
+fi
 echo "      $instruction_count instruction module(s) installed to $PI_INSTRUCTIONS_DIR."
 echo "      $extension_count Pi extension(s) installed to $PI_EXTENSIONS_DIR."
 if [ "$linked" -gt 0 ]; then
