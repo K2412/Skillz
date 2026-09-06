@@ -4,7 +4,7 @@ description: Apply stack-specific engineering best-practices for a stack the cal
 ---
 
 Apply the best-practices for the stack(s) the **caller names**. The caller — usually
-[`implement`](../implement/SKILL.md) or [`code-review`](../code-review/SKILL.md), which read the
+[`implement`](../implement/SKILL.md) or [`code-review`](../../../code-review/SKILL.md), which read the
 epic's `stack:*` labels — tells you which stack applies. Do not go looking for "the current epic"
 yourself; if the stack is genuinely unclear, ask the caller which it is rather than guess.
 

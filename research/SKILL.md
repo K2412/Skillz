@@ -6,7 +6,7 @@ description: Investigate a question against high-trust primary sources, web sear
 Spin up a **background agent** to do the research, so you keep working while it reads.
 
 This is a utility other stages call, not just a standalone: [`grill`](../grill/SKILL.md) and
-[`spec`](../spec/SKILL.md) call it when *pinning requirements* needs an outside fact. It answers "is
+[`spec`](../pair/references/spec/SKILL.md) call it when *pinning requirements* needs an outside fact. It answers "is
 it true / what exists / what do others do" — facts with citations, not a recommendation.
 
 Its job:

@@ -107,4 +107,4 @@ Continue until the user signals completion ("ready", "ship it", "let's go", "do 
 - Any new/updated `CONTEXT.md` entries.
 - Any new ADR file paths.
 
-Whatever consumes this next — a spec, a prototype, or the user's own head — builds on those three. If a look/feel/behaviour question surfaced that only a running artifact can settle, say so and point at [`prototype`](../prototype/SKILL.md).
+Whatever consumes this next — a spec, a prototype, or the user's own head — builds on those three. If a look/feel/behaviour question surfaced that only a running artifact can settle, say so and point at [`prototype`](../pair/references/prototype/SKILL.md).

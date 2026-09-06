@@ -33,7 +33,7 @@ protocol_path = root / "shared/memory/workflow-memory.md"
 active_marker = "Workflow memory lifecycle (automatic)"
 memory_artifacts = release_path.exists() or protocol_path.exists() or any(
     active_marker in (root / workflow / "SKILL.md").read_text()
-    for workflow in ("pair", "architecture", "implement", "teach")
+    for workflow in ("pair", "teach")
     if (root / workflow / "SKILL.md").exists()
 )
 if memory_artifacts:

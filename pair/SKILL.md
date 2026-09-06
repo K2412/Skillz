@@ -5,9 +5,10 @@ description: Full spec-to-ship pipeline that orchestrates the individual enginee
 
 # /pair — Spec-to-Ship Pipeline (orchestrator)
 
-`pair` doesn't do the work itself — it **sequences the individual skills** and holds the human gates
-and loop-backs between them. Each stage is a standalone skill; `pair` invokes it, waits for the gate,
-and moves on. The detail lives in each skill, not here.
+`pair` doesn't do the work itself — it **sequences the stages** and holds the human gates and
+loop-backs between them. Most stages are reference modules under [`references/`](references/) that
+`pair` reads and follows in turn; a few — `grill`, `research`, `code-review` — remain standalone
+skills it calls. The detail lives in each stage's file, not here.
 
 ## Workflow memory lifecycle (automatic)
 
@@ -80,7 +81,7 @@ options:
   - "No, straight to grilling" → skip to Stage 1
 ```
 
-If yes, run [`sketch-change`](../sketch-change/SKILL.md) — it writes a plain-English, bright-intern
+If yes, run [`sketch-change`](references/sketch-change/SKILL.md) — it writes a plain-English, bright-intern
 HTML sketch (analogies over abstraction, like `code-review`) and opens it. You mark it up; the
 transition into the grill depends on what's left open:
 
@@ -111,7 +112,7 @@ options:
 
 If it's cheap to describe in words, skip it — the discussion already resolved it (Litt's fidelity
 ladder: pay for a prototype only where a running artifact tells you something prose can't). If yes,
-run [`prototype`](../prototype/SKILL.md); it captures the verdict durably (and lifts any validated
+run [`prototype`](references/prototype/SKILL.md); it captures the verdict durably (and lifts any validated
 logic module into place) without ever branching or committing the throwaway artifact. The verdict —
 plus the knob settings it depends on — joins the decision log and rides into the spec, so `implement`
 builds against a settled design.
@@ -121,7 +122,7 @@ builds against a settled design.
 Do not run an architecture ceremony for every feature. First ask whether the behavior stays behind an
 established interface and obeys an established dependency direction.
 
-Run [`architecture`](../architecture/SKILL.md) in review mode when any of these are true:
+Run [`architecture`](references/architecture/SKILL.md) in review mode when any of these are true:
 
 - ownership of the behavior is unclear or recent changes scatter across unrelated areas;
 - the work creates or changes a public interface, module seam, dependency direction, or boundary data;
@@ -136,7 +137,7 @@ what decisions remain human, and says when to inspect the result.
 
 ## Stage 2 — Spec
 
-Run [`spec`](../spec/SKILL.md) to synthesise the grill decision log, any prototype verdict, and any
+Run [`spec`](references/spec/SKILL.md) to synthesise the grill decision log, any prototype verdict, and any
 architecture contract into a spec and GitHub epic with atomic child task sub-issues in
 `K2412/planning`. It hands back the
 epic number. `spec` is also where the epic gets its `stack:*` labels (e.g. `stack:react`,
@@ -145,7 +146,7 @@ epic number. `spec` is also where the epic gets its `stack:*` labels (e.g. `stac
 
 ## Stage 3 — Plan Review
 
-Run [`plan-review`](../plan-review/SKILL.md) on the epic. Transition on its gate:
+Run [`plan-review`](references/plan-review/SKILL.md) on the epic. Transition on its gate:
 - **Looks good** → Stage 4.
 - **Loop back** → re-run `grill` with the findings as opening context, update the plan via `spec`,
   then re-run `plan-review`. Repeat until it passes or the user explicitly accepts.
@@ -153,7 +154,7 @@ Run [`plan-review`](../plan-review/SKILL.md) on the epic. Transition on its gate
 
 ## Stage 4 — Implement
 
-Run [`implement`](../implement/SKILL.md) — it spawns a fresh subagent from issue data and grants it
+Run [`implement`](references/implement/SKILL.md) — it spawns a fresh subagent from issue data and grants it
 autonomy only inside the approved architecture contract. One batch is normally one complete behavioral
 slice; several related tasks may share a batch only when they stay behind the same settled interface.
 Wait for it to return. If it hits `needs-human` or a contract escalation condition, surface the reason
@@ -161,7 +162,7 @@ and wait for approval. When the epic is stack-labelled (`stack:react` / `stack:d
 `implement` reads those labels and applies the matching `best-practices` guidance as it builds — this
 isn't a separate stage; the wiring lives inside `implement`.
 
-When the contract requires a checkpoint, run [`architecture`](../architecture/SKILL.md) in checkpoint
+When the contract requires a checkpoint, run [`architecture`](references/architecture/SKILL.md) in checkpoint
 mode against the exact isolated batch patch or commit range returned by `implement`, not the cumulative
 working diff, before starting the next batch:
 
@@ -193,7 +194,7 @@ grill decision or a spec choice. The **spec/epic stays the acceptance bar**, not
 
 ## Stage 6 — Taste Review
 
-Run [`taste-review`](../taste-review/SKILL.md) — a dedicated taste pass over the ambiguous
+Run [`taste-review`](references/taste-review/SKILL.md) — a dedicated taste pass over the ambiguous
 decisions `code-review` doesn't adjudicate: UI, prose, and naming choices where more than one
 option is defensible and the question is which one *reads* right. It's grounded in the target repo's
 `design-patterns/patterns.md`, which is the codebase's own record of settled taste — if that file is
@@ -203,7 +204,7 @@ on.
 
 ## Stage 7 — Polish
 
-Run [`polish`](../polish/SKILL.md) on the accepted diff as the final pass before it leaves the
+Run [`polish`](references/polish/SKILL.md) on the accepted diff as the final pass before it leaves the
 session for a team PR. `code-review` and `taste-review` are internal gates; polish is what makes the
 change read as team-written rather than agent-driven — and it does two jobs at once. It **de-noises**:
 stripping bead ids and bead-speak, ticket references, local-artifact mentions (`PLAN.md`, `NOTES.md`),

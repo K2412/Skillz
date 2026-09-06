@@ -20,7 +20,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = Path(__file__).with_name("fixtures")
-WORKFLOWS = ("pair", "architecture", "implement", "teach")
+WORKFLOWS = ("pair", "teach")
 CONTRACTS = {
     "recall": "memory.recall/v1",
     "remember": "memory.remember/v1",
@@ -61,7 +61,7 @@ def validate_release_tree(root: Path = ROOT) -> dict[str, Any]:
     if release.get("schema_version") != "workflow-memory-release/v1":
         raise GateRefused("unknown release schema")
     if release.get("active") is not True or enabled != WORKFLOWS:
-        raise GateRefused("automatic memory must activate for exactly all four workflows")
+        raise GateRefused("automatic memory must activate for exactly the tracked workflows")
     protocol = (root / "shared/memory/workflow-memory.md").read_text()
     if "ordinary runs are active" not in protocol or "evaluation-only" in protocol:
         raise GateRefused("shared protocol is not active")

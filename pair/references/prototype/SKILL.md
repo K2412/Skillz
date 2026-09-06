@@ -10,7 +10,7 @@ running artifact — press its buttons, watch its state, flip between its varian
 **understand** the design well enough to **decide** whether it's what you actually want, before
 committing a single line of production code to it.
 
-It is the **forward bookend of the understanding loop**. [`code-review`](../code-review/SKILL.md)
+It is the **forward bookend of the understanding loop**. [`code-review`](../../../code-review/SKILL.md)
 runs *after* a change to help you understand code that already exists; `prototype` runs *before*,
 to understand a design that doesn't yet. Both fight the same enemy — cognitive debt — at opposite
 ends of the build. The leap from a spec straight to production is large and error-prone; the leap

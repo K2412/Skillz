@@ -83,10 +83,8 @@ authoritative state; shared modules own only policy that must remain identical a
 
 Skills load automatically from `~/.agents/skills/` (shared across Claude Code, Codex, and OpenCode). Invoke with `/skill-name` or just describe what you need:
 
-- **`/architecture`** — Diagnose and improve a codebase's architecture so humans and coding agents can change it safely.
 - **`/automate`** — Use this skill to create Codex Automations.
 - **`/autopilot`** — Keep a PR merge-ready by triaging comments, resolving clear conflicts, and fixing CI in a loop.
-- **`/best-practices`** — Apply stack-specific engineering best-practices for a stack the caller names — Vercel's React/Next.js performance guidance for `react`, the…
 - **`/canvas`** — A Codex Canvas is a live React app that the user can open beside the chat.
 - **`/code-review`** — Review a PR, branch, or working diff and give one clear merge call in a short plain-English report.
 - **`/create-hook`** — Create Codex hooks.
@@ -100,7 +98,6 @@ Skills load automatically from `~/.agents/skills/` (shared across Claude Code, C
 - **`/gh-stack`** — Manages stacked PRs and splits multi-part work into reviewable branches with gh-stack.
 - **`/goal`** — Set a goal that Codex will pursue to completion.
 - **`/grill`** — Interview the user relentlessly about an idea until you reach shared understanding, while actively maintaining the project's domain model (glossary +…
-- **`/implement`** — Execute a pre-approved GitHub plan with bounded agent autonomy.
 - **`/Learn-course`** — Convert a markdown source (textbook, lecture transcript, open-source library docs) into a directory-based learning course with chapters, lessons, and…
 - **`/loop`** — Run a prompt or skill in this session on a recurring or variable interval (e.g.
 - **`/migrate-to-skills`** — Convert 'Applied intelligently' Codex rules (.cursor/rules/*.mdc) and slash commands (.cursor/commands/*.md) to Agent Skills format (.cursor/skills/).
@@ -108,9 +105,6 @@ Skills load automatically from `~/.agents/skills/` (shared across Claude Code, C
 - **`/onboard`** — Use /onboard for a focused Codex onboarding flow that learns basic preferences, picks a first goal, and routes the user to the right next action.
 - **`/origin`** — Install, sign in, update, or repair the origin CLI for repos hosted on Codex (origin.cursor.com).
 - **`/pair`** — Full spec-to-ship pipeline that orchestrates the individual engineering skills with human strategic gates and bounded agent autonomy — optional…
-- **`/plan-review`** — Review a GitHub epic and its child tasks with a senior-engineer eye before code is written.
-- **`/polish`** — Polish a change set clean and simple before it goes up for review — the final cleanup pass that makes a diff read like a careful teammate wrote it,…
-- **`/prototype`** — Build a throwaway, interactive prototype that answers a design question BEFORE you commit to implementing — so you can engage with real running logic…
 - **`/rename-chat`** — Rename the current chat to match its focus.
 - **`/research`** — Investigate a question against high-trust primary sources, web search, site scraping and crawling (Firecrawl), and Mobbin UI examples, then capture…
 - **`/review-bugbot`** — Review code changes with Bugbot subagent.
@@ -119,14 +113,11 @@ Skills load automatically from `~/.agents/skills/` (shared across Claude Code, C
 - **`/sdk`** — Guide users building apps, scripts, CI pipelines, or automations on top of the Codex SDK - TypeScript (`@cursor/sdk`) or Python (`cursor-sdk` /…
 - **`/share`** — Save, back up, or share the current project on Codex — creates a repo (a saved, versioned copy that isn't public) even for users who have never used…
 - **`/shell`** — Runs the rest of a /shell request as a literal shell command.
-- **`/sketch-change`** — Generate a coarse, forward-looking HTML sketch of how you INTEND to build something — the data flow, the key state, pseudo-code for the load-bearing…
 - **`/skill-creator`** — Create new skills, modify and improve existing skills, and measure skill performance.
 - **`/soc`** — Socratic pair — a senior engineer sitting beside you who guides you to do the work yourself and refuses to do it for you.
-- **`/spec`** — Synthesise a discussion, grill log, architecture contract, rough idea, or resolved wayfinder map into a written spec, then commit it to GitHub as an…
 - **`/split-to-prs`** — Split current work into small reviewable PRs.
 - **`/standup`** — Generate a standup update from recent activity.
 - **`/statusline`** — Configure a custom status line in the CLI.
-- **`/taste-review`** — Make a taste call — an independent judgment call on something ambiguous where you'd otherwise guess: UI polish, prose phrasing, naming, formatting,…
 - **`/teach`** — Be the user's personal tutor for the long haul.
 - **`/to-pr`** — Open a draft pull request for the current branch from work that's already done.
 - **`/update-cli-config`** — View and modify Codex CLI configuration settings in ~/.cursor/cli-config.json.

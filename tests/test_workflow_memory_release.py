@@ -23,17 +23,17 @@ class WorkflowMemoryReleaseTest(unittest.TestCase):
     def test_runner_preserves_authority_array_for_evaluator_bookkeeping(self):
         scenario = json.loads(
             (ROOT / "workflow_memory_release/fixtures/workflows-v1.json").read_text()
-        )["workflows"]["architecture"]
+        )["workflows"]["pair"]
         authority_path = Path("/fixture/authority.json")
         required = (
             "copy the JSON `authority` array exactly as read, preserving every item and its order"
         )
         normal_prompt = " ".join(
-            _workflow_prompt("architecture", scenario, authority_path).split()
+            _workflow_prompt("pair", scenario, authority_path).split()
         )
         incompatible_prompt = " ".join(
             _failure_prompt(
-                "architecture", scenario, authority_path, "incompatible"
+                "pair", scenario, authority_path, "incompatible"
             ).split()
         )
         self.assertIn(required, normal_prompt)
@@ -210,21 +210,19 @@ class WorkflowMemoryReleaseTest(unittest.TestCase):
     def test_checked_release_report_is_current_and_passing(self):
         self.assertEqual(
             validate_install_evidence()["workflows"],
-            ["pair", "architecture", "implement", "teach"],
+            ["pair", "teach"],
         )
 
-    def test_activation_is_exactly_all_four_or_refused(self):
+    def test_activation_is_exactly_tracked_or_refused(self):
         self.assertEqual(
             validate_release_tree()["workflows"],
-            ["pair", "architecture", "implement", "teach"],
+            ["pair", "teach"],
         )
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             for path in (
                 "shared/memory",
                 "pair/references",
-                "architecture/references",
-                "implement/references",
                 "teach/references",
                 "grill",
                 "code-review",
@@ -235,14 +233,14 @@ class WorkflowMemoryReleaseTest(unittest.TestCase):
             release["workflows"].remove("teach")
             (root / "shared/memory/release.json").write_text(json.dumps(release))
             (root / "shared/memory/workflow-memory.md").write_text("ordinary runs are active")
-            for workflow in ("pair", "architecture", "implement", "teach"):
+            for workflow in ("pair", "teach"):
                 (root / workflow / "references/.shared").write_text("memory\n")
                 (root / workflow / "SKILL.md").write_text(
                     "Workflow memory lifecycle (automatic)"
                 )
             for workflow in ("grill", "code-review", "soc"):
                 (root / workflow / "SKILL.md").write_text("")
-            with self.assertRaisesRegex(GateRefused, "exactly all four"):
+            with self.assertRaisesRegex(GateRefused, "exactly the tracked"):
                 validate_release_tree(root)
 
     def test_retrieval_guard_uses_only_explicit_thresholds(self):

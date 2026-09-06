@@ -13,7 +13,7 @@ description: >
 
 Turn shared understanding (a grill decision log, a discussion, or a rough idea the user hands you)
 into a written spec and an atomic plan of **GitHub issues in `K2412/planning`** (private). **Don't
-interview here** — that's [`grill`](../grill/SKILL.md). Synthesise from what's already decided plus
+interview here** — that's [`grill`](../../../grill/SKILL.md). Synthesise from what's already decided plus
 what you find in the code.
 
 ## Where the plan lives — always the personal planning repo
@@ -25,7 +25,7 @@ exactly the mistake this rule exists to prevent.
 
 Why: planning is branch-independent and shouldn't add noise to a shared code repo, and a shared
 tracker is the team's surface — what appears there is the user's to write, not an agent's. This is the
-same home [`wayfinder`](../wayfinder/SKILL.md) uses for its maps, so a map and the spec built from it
+same home [`wayfinder`](../../../wayfinder/SKILL.md) uses for its maps, so a map and the spec built from it
 sit in one place. When the work originated as a ticket elsewhere, reference that ticket's id in the
 epic body so the trail is followable, and leave the ticket itself untouched.
 
@@ -41,7 +41,7 @@ options:
 
 ## Step 0 — If the source is a wayfinder map
 
-If you're synthesising from a [`wayfinder`](../wayfinder/SKILL.md) map (a `K2412/planning` issue with
+If you're synthesising from a [`wayfinder`](../../../wayfinder/SKILL.md) map (a `K2412/planning` issue with
 closed decision tickets), pull every closed sub-issue's title, body, and **resolution comment** first —
 those resolutions are the decisions. Build the spec from them, and **link each spec section back to the
 ticket URL it came from** so the implementer can open the primary source instead of trusting a summary.

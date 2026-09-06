@@ -18,8 +18,8 @@ output. Because the public daemon owns the fixed loopback port, the harness reco
 LaunchAgent is running, stops it while the isolated daemon owns the port, and restores it in `finally`.
 
 The command refuses activation unless recall-at-five is at least 90 percent, project and inactive
-leaks are both zero, every workflow guard passes, and exactly the four released skills request the
-active byte-equivalent shared reference. Installation also refuses before its first mutation unless
-the checked-in passing report names exactly those workflows, meets the thresholds, and matches both
-fixture hashes. The report contains identifiers, ranks, versions, settings, counts, and latency only;
+leaks are both zero, every workflow guard passes, and exactly the released skills (`pair` and `teach`)
+request the active byte-equivalent shared reference. Installation also refuses before its first
+mutation unless the checked-in passing report names exactly those workflows, meets the thresholds, and
+matches both fixture hashes. The report contains identifiers, ranks, versions, settings, counts, and latency only;
 it contains no claim, evidence, prompt, or generated response content.

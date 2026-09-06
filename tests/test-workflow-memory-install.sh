@@ -23,7 +23,7 @@ PY
 cp -f "$repo_root/install.sh" "$fixture/install.sh"
 cp -rf "$repo_root/shared" "$fixture/shared"
 cp -rf "$repo_root/workflow_memory_release" "$fixture/workflow_memory_release"
-for skill in pair architecture implement teach grill code-review soc; do
+for skill in pair teach grill code-review soc; do
   cp -rf "$repo_root/$skill" "$fixture/$skill"
 done
 mkdir -p "$fixture/home/.claude"
@@ -40,7 +40,7 @@ PI_HOME="$fixture/pi" \
 AGENT_MEMORY_SOURCE="$fixture/missing-agent-memory" \
 bash "$fixture/install.sh" >/dev/null
 
-for skill in pair architecture implement teach; do
+for skill in pair teach; do
   installed="$fixture/agents/skills/$skill"
   test -f "$installed/references/memory/workflow-memory.md"
   cmp "$repo_root/shared/memory/workflow-memory.md" \

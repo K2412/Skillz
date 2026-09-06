@@ -92,7 +92,7 @@ answers its own questions) or **AFK** (agent alone).
 - **`wayfinder:research`** (AFK) — a fact a decision waits on. Resolved by a [`research`](../research/SKILL.md)
   background agent. Fire these immediately when charting; they run unattended and report back.
 - **`wayfinder:prototype`** (HITL) — raise fidelity with a cheap, concrete artifact to react to, via
-  [`prototype`](../prototype/SKILL.md). Use when "how should it look/behave?" is the question. Links the
+  [`prototype`](../pair/references/prototype/SKILL.md). Use when "how should it look/behave?" is the question. Links the
   prototype branch as the asset. Prototypes are how a big up-front plan stays out of waterfall — they
   give high-fidelity feedback on what you're actually building.
 - **`wayfinder:grilling`** (HITL) — a discussion to settle a decision, via [`grill`](../grill/SKILL.md)
@@ -158,13 +158,13 @@ ticket keeps each inside the smart zone of the context window.
 ## When the map is complete — hand off
 
 When no open tickets remain, the way to the destination is clear. Hand off by destination:
-- **A spec** (the common case) → run [`spec`](../spec/SKILL.md) *against the map*: it reads the closed
+- **A spec** (the common case) → run [`spec`](../pair/references/spec/SKILL.md) *against the map*: it reads the closed
   decision tickets and their resolutions into a dense spec that **links back to each ticket as primary
   source** — so the implementer can read what was actually decided, not a lossy summary. Then `/pair`
   from spec onward (plan-review → implement → code-review → taste-review → polish) — `pair` ends in the
   polish, so a spec handoff needs no separate one.
 - **A decision** locked for later → the map itself is the record; nothing more to produce.
-- **A change made in place** → the tickets drove it; **polish** the change ([`polish`](../polish/SKILL.md))
+- **A change made in place** → the tickets drove it; **polish** the change ([`polish`](../pair/references/polish/SKILL.md))
   so it reads as team-written — it both simplifies and de-noises, stripping bead/ticket refs, local-artifact
   mentions, and comment noise while simplifying naming and structure — then close the map. This is the last
   step whenever the map produced code directly rather than a spec.

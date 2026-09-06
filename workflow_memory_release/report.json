@@ -3,8 +3,6 @@
     "active": true,
     "workflows": [
       "pair",
-      "architecture",
-      "implement",
       "teach"
     ]
   },
@@ -17,9 +15,9 @@
     },
     "latency_ms": {
       "count": 6,
-      "maximum": 8.173750000423752,
-      "mean": 6.616534664014277,
-      "minimum": 5.919708994042594
+      "maximum": 10.420834005344659,
+      "mean": 7.806562333522986,
+      "minimum": 6.970332993660122
     },
     "lifecycle_smoke": {
       "capture": true,
@@ -224,36 +222,33 @@
     "artifacts": {
       "protocol_sha256": "1d9e5ce4d994ab32a869e630edf4a55083de5b6b26c6e62cc5aed79624ad9484",
       "skill_sha256": {
-        "architecture": "42089c107e7d852f4a7f640feaadaad3cb3731522e192608c49ab558482e1a65",
-        "implement": "536164262a034d8365ee46240f8d19e3fcc12e8494b2273f6575ea5b68b6e24b",
-        "pair": "34c51dd1b93487deab06b7d599ce1edb7b3bc0e778a002748f01073096ba35b8",
+        "pair": "73a354ae3972f7ab8855fae53406646ba60a6838200ac45c0747398f9ff2b291",
         "teach": "a9d59a2853f4a546c9ef4a5dd66ba580045ad189c5eeedd8f0476ff9281dfde5"
       }
     },
     "fixture": {
       "schema_version": "workflow-memory-scenarios/v1",
-      "sha256": "cb27f435d1de2274c08c332983d638aa4ea64e9969c71f41a3274ededc88dc8c"
+      "sha256": "b4d4a22714a552545a9b10e5998be2a91a7929e6656e74742b0829a9240d7dfe"
     },
     "runner": {
       "attempts": {
-        "architecture": 1,
-        "implement": 1,
         "pair": 1,
         "teach": 1
       },
-      "cache_hits": [],
+      "cache_hits": [
+        "pair",
+        "teach"
+      ],
       "duration_ms": {
-        "architecture": 130685,
-        "implement": 100819,
-        "pair": 99991,
-        "teach": 102389
+        "pair": 136003,
+        "teach": 113206
       },
       "harness_sha256": {
-        "evaluator": "2ee924f444590d9ed3aeae7e4bae70604358f0fd1596e13258595aeb6a03e88e",
+        "evaluator": "086bdb606bea40d3d155195f2f74c1501318d6d63cebd68fef62e9ab69223c12",
         "fake_server": "2d9c2493d7106635acca21c9e6f9cc4d8e7f9e3c89acba663c740d6a7254955b"
       },
       "instruction_mutation": {
-        "duration_ms": 88816,
+        "duration_ms": 93321,
         "name": "nested-session-recall-and-flush",
         "observed_nested_calls": [
           "recall",
@@ -267,42 +262,6 @@
       "version": "2.1.197 (Claude Code)"
     },
     "workflows": {
-      "architecture": {
-        "checks": {
-          "authority": true,
-          "correction": true,
-          "fail_open": true,
-          "flush": true,
-          "lifecycle": true,
-          "nesting": true,
-          "one_warning": true,
-          "scope": true,
-          "strict_capture": true,
-          "top_five": true
-        },
-        "filtered_conflicts": 1,
-        "observed_memory_calls": 9,
-        "rejected_candidates": 6,
-        "warning_count": 1
-      },
-      "implement": {
-        "checks": {
-          "authority": true,
-          "correction": true,
-          "fail_open": true,
-          "flush": true,
-          "lifecycle": true,
-          "nesting": true,
-          "one_warning": true,
-          "scope": true,
-          "strict_capture": true,
-          "top_five": true
-        },
-        "filtered_conflicts": 1,
-        "observed_memory_calls": 9,
-        "rejected_candidates": 5,
-        "warning_count": 1
-      },
       "pair": {
         "checks": {
           "authority": true,
@@ -317,7 +276,7 @@
           "top_five": true
         },
         "filtered_conflicts": 1,
-        "observed_memory_calls": 14,
+        "observed_memory_calls": 15,
         "rejected_candidates": 6,
         "warning_count": 1
       },

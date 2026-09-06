@@ -143,7 +143,7 @@ dependency change, scattered edits, policy mixed with infrastructure, or supervi
 an uncertain seam.
 
 Use a real pending change, not an abstract design quiz. Reuse the lenses from
-[`architecture`](../architecture/SKILL.md), but reverse who produces the analysis:
+[`architecture`](../pair/references/architecture/SKILL.md), but reverse who produces the analysis:
 
 1. **Predict the change.** Before reading the implementation path, the human predicts which modules
    should change and which should remain untouched.

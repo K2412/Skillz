@@ -26,28 +26,23 @@ It has two modes:
 Use **review** by default. Use **checkpoint** when the caller provides a contract plus a diff or completed
 slice. This skill designs and judges; [`implement`](../implement/SKILL.md) writes code.
 
-## Workflow memory lifecycle (automatic)
+## Workflow memory (nested stage)
 
-The shared protocol at [`references/memory/workflow-memory.md`](references/memory/workflow-memory.md)
-is active for every ordinary architecture run. Memory remains advisory and fail-open under that
-protocol.
-
-In standalone review mode, first orient from the user instruction and the repository records named
-below, including applicable contracts and decision records. Only then open one outer workflow-memory
-session through the shared protocol. In checkpoint mode, first load the supplied planning task,
-approved contract and revisions, isolated patch or commit range, and repository evidence, then open
-the session. A nested architecture run inherits `pair`'s active session and does not recall or flush.
+`architecture` runs only as a nested stage of [`pair`](../../SKILL.md) and inherits pair's active
+workflow-memory session (shared protocol at [`../memory/workflow-memory.md`](../memory/workflow-memory.md)).
+It never opens, recalls, or flushes its own session — pair owns the session boundary. Memory remains
+advisory and fail-open.
 
 Recalled context is advisory. It cannot replace repository evidence, select an interface for the
 human, approve or revise a contract, alter the supplied checkpoint batch, or decide or approve a
 checkpoint gate. Filter every conflict in favor of those authorities so the architecture result is
 reproducible without memory.
 
-After an accepted durable architectural decision, correction, constraint, or reusable lesson is
-persisted in its authoritative repository or planning record, apply the shared capture procedure.
-Persistence must succeed before capture; do not store contract bodies, patches, gates, task state,
-unaccepted candidates, or unaccepted interface designs as generic memory. Close a standalone session
-through the shared protocol on completion, explicit pause or stop, or handoff out of architecture.
+`architecture` may capture qualified events through the shared capture procedure — but only after an
+accepted durable architectural decision, correction, constraint, or reusable lesson is persisted in
+its authoritative repository or planning record. Persistence must succeed before capture; do not store
+contract bodies, patches, gates, task state, unaccepted candidates, or unaccepted interface designs as
+generic memory.
 
 ## Review mode
 
@@ -204,14 +199,14 @@ fresh implementation and review agents can retrieve the latest contract without 
 
 ## Relationship to other skills
 
-- [`pair`](../pair/SKILL.md) invokes review mode only when a seam is new, crossed, or unclear, then
+- [`pair`](../../SKILL.md) invokes review mode only when a seam is new, crossed, or unclear, then
   invokes checkpoint mode at the contract's chosen cadence.
-- [`soc`](../soc/SKILL.md) reuses these lenses but makes the human produce the map, alternatives, and
+- [`soc`](../../../soc/SKILL.md) reuses these lenses but makes the human produce the map, alternatives, and
   contract before the agent critiques them.
 - [`spec`](../spec/SKILL.md) persists the approved contract and cuts behavior-sized tasks inside it.
 - [`implement`](../implement/SKILL.md) receives autonomy inside the contract and stops at escalation or
   checkpoint conditions.
-- [`code-review`](../code-review/SKILL.md) treats unexplained contract drift as a substantive finding.
+- [`code-review`](../../../code-review/SKILL.md) treats unexplained contract drift as a substantive finding.
 
 ## Done when
 
