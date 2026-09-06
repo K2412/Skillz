@@ -9,3 +9,6 @@ explain-diff/
 
 # Throwaway pre-build design sketches
 docs/sketches/
+
+# Stray session-state artifact
+/:memory:.ses
