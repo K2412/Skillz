@@ -6,8 +6,8 @@ description: >
   origin, or not yet existing — and runs the right `git worktree add` for that case: attach to the
   local branch, create a tracking branch from origin, or cut a brand-new branch from a base (default
   origin/dev). The worktree lands in the directory the skill was launched from, named
-  <repo>-<branch>, the repo's gitignored .env files are copied in, and the agent cd's into it so
-  work can begin immediately. Use whenever the user wants a worktree for a branch — "make a worktree
+  <repo>-<branch>, the repo's gitignored .env and personal `.local.md` files (e.g. AGENTS.local.md)
+  are copied in, and the agent cd's into it so work can begin immediately. Use whenever the user wants a worktree for a branch — "make a worktree
   for feature-x", "spin up a worktree on my-branch", "check out that branch in a worktree", "give me
   a separate working copy of <branch>", "worktree this branch so I can work on it", "/worktree
   <branch>" — or when parallel work on another branch is needed without disturbing the current
@@ -30,9 +30,17 @@ A branch can be in one of three states, and each needs a different command:
    `git worktree add -b <branch> <launch-dir>/<repo>-<branch> origin/dev`
 
 The worktree always lands **inside the directory the skill was launched from**, in a folder named
-`<repo>-<branch>`. Then the repo's gitignored `.env` files are copied into the new tree (a worktree
-already carries every *tracked* file, so only the ignored, secret-bearing ones need copying —
-tracked templates like `.env.example` are already there).
+`<repo>-<branch>`. Then two kinds of gitignored file are copied into the new tree, because a worktree
+already carries every *tracked* file and needs only the ignored ones:
+
+- the repo's `.env` files (secret-bearing; tracked templates like `.env.example` are already there);
+- personal `.local.md` instruction files such as `AGENTS.local.md` or `CONTEXT.local.md` — one
+  developer's own agent instructions, which are gitignored and so don't come across with a fresh
+  worktree.
+
+Both copies are guarded by git's own ignore check, so only files the repo actually ignores are
+copied and nothing untracked leaks into the new tree. (The `.local.md` match is deliberately narrow;
+a broad `.local.*` would also drag in vendored `settings.local.json` files under `node_modules`.)
 
 `scripts/mkworktree.sh` does the state detection and all three cases so you don't have to branch by
 hand. **Your job is to run it, then `cd` into the worktree it created** — the script runs in a
@@ -74,7 +82,7 @@ subprocess and cannot change your shell's directory, so that last step is yours.
    Confirm you're in it (`pwd`), then you're ready — subsequent commands run inside the worktree.
 
 4. **Report** to the user in one line: which case fired (existing local branch / tracking branch from
-   origin / new branch from `<base>`), the worktree path, and which env files were copied.
+   origin / new branch from `<base>`), the worktree path, and which env and `.local.md` files were copied.
 
 ## Notes
 
