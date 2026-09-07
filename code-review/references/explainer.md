@@ -69,8 +69,14 @@ a layer deeper. The reader should grasp the essence here, before a single line o
 only restate the diff in words, you haven't found the intuition yet — dig until you can say *why* in
 plain language.
 
-**3. Figure, or a step-through walk.** A static SVG is enough when the change is spatial and doesn't
-move. When the change is *how the machine takes turns* — an event loop, a reducer, a scheduler,
+**3. Figure, or a step-through walk.** Reach for the *smallest* view that carries the shape, escalating
+only as the change demands. Most changes are made legible by a **compact text visual** — a shallow
+file tree for where code lives, a call tree for control flow, a component tree for UI structure, a
+Mermaid sequence/state diagram for interaction over time, or a shape-matched diff for what changed.
+These embed straight in the explainer, read at a glance, and are the default; the menu and taste rules
+are in [`show-me/visual-formats.md`](show-me/visual-formats.md). A static SVG is enough when the change
+is spatial and doesn't move. When the change is *how the machine takes turns* — an event loop, a
+reducer, a scheduler,
 blocking vs yielding, a migration unfolding — emit a **walk** instead: copy
 [`../assets/stepper.html`](../assets/stepper.html) to
 `explanations/explain-<slug>-<date>-walk.html`, fill it per

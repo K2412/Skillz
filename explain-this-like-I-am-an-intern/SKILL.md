@@ -50,6 +50,15 @@ answer to the wrong X.
   concrete — small real inputs they can hold in their head beat a correct abstract definition. For a
   genuinely abstract idea, give *two* varied examples, so they strip the idea from the surface of any
   one case.
+- **Show the shape when it's easier seen than said.** When the thing you're explaining *is* a
+  shape — how parts nest, how control flows, where code lives, what changed, how a sequence
+  unfolds — draw the smallest compact visual instead of narrating it: pseudocode, a call tree, a
+  component tree, a shallow file tree, a Mermaid sequence/state diagram, or a shape-matched diff. The
+  intern's eyes glaze at a dense paragraph; a five-node tree they read for free. Keep it tiny, put it
+  right next to the one line it supports, and don't overwhelm. The format menu is in
+  [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md). Stay stateless —
+  inline text visuals, no workspace; only write a separate HTML file if they explicitly ask to *see*
+  it.
 - **Name the trap.** Say the misconception a smart newcomer is *likely* to form here, and head it
   off — "you'd think X, but watch: …". The wrong guess they were about to make is the most useful
   thing to pre-empt.
