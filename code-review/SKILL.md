@@ -51,6 +51,13 @@ So the discipline is:
   no more.
 - **No walls of text.** Four short orientation beats, then the findings. If a beat needs a paragraph,
   it's too long — cut it to the load-bearing sentence.
+- **Show the shape, don't narrate it.** When an orientation beat is about a *shape* — which modules
+  the change reaches and the seam between them (**What it touches**), or the load-bearing move
+  (**The attempt**) — a tiny compact visual reads faster than prose: a shallow file tree, a call
+  tree, a Mermaid sequence/state diagram, or a shape-matched diff. Keep it small (a few nodes, not
+  the whole graph) and put it right under the beat's one sentence. The format menu is in
+  [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md). A plain sentence
+  that's already clear needs no diagram — don't add one for decoration.
 
 ## Step 1 — Resolve the target and gather the goal
 

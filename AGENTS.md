@@ -112,6 +112,7 @@ Skills load automatically from `~/.agents/skills/` (shared across Claude Code, C
 - **`/sdk`** — Guide users building apps, scripts, CI pipelines, or automations on top of the Codex SDK - TypeScript (`@cursor/sdk`) or Python (`cursor-sdk` /…
 - **`/share`** — Save, back up, or share the current project on Codex — creates a repo (a saved, versioned copy that isn't public) even for users who have never used…
 - **`/shell`** — Runs the rest of a /shell request as a literal shell command.
+- **`/show-me`** — Explain the current topic *visually* instead of in a wall of prose — a compact diagram, a code-shape sketch, or one focused HTML artifact.
 - **`/skill-creator`** — Create new skills, modify and improve existing skills, and measure skill performance.
 - **`/split-to-prs`** — Split current work into small reviewable PRs.
 - **`/standup`** — Generate a standup update from recent activity.

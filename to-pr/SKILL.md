@@ -96,10 +96,15 @@ build the body from the diff and commits (Step 1).
    - **Figures / diagrams → keep them; re-express as GitHub-native visuals.** The illustrative parts
      (a state machine, a flow, a before/after) are the most valuable thing to carry across — they
      convey what prose can't, and reviewers love them. GitHub strips inline `<svg>` and `<script>`,
-     so re-express the figure as a ` ```mermaid ``` ` block (`stateDiagram-v2`, `flowchart`,
-     `sequenceDiagram`) that renders natively. Read the figure's structure from the explainer's SVG
-     or widget markup and reconstruct it faithfully. If a figure is purely decorative or can't be
-     faithfully re-expressed, drop it rather than paste broken markup.
+     so re-express each figure as the smallest visual that renders natively — pick the shape that
+     fits: a fenced ` ```mermaid ``` ` block (`stateDiagram-v2`, `flowchart`, `sequenceDiagram`) for
+     flow and interaction; a fenced text **file tree** for where code moved; a **call tree** for
+     control flow; a **component tree** for UI structure; a ` ```diff ``` ` block shaped to match
+     (a diffed file tree for a layout change, a diffed component tree for a UI change). The menu is
+     in [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md). Read the
+     figure's structure from the explainer's SVG or widget markup and reconstruct it faithfully. If a
+     figure is purely decorative or can't be faithfully re-expressed, drop it rather than paste
+     broken markup.
    - **Diff walkthrough → a short summary, not a re-paste.** GitHub already shows the full diff in
      the Files Changed tab, so don't reproduce it. Summarize the change as a few bullets grouped by
      file or by concern — *what* changed and *why*. Quote a fenced ` ```diff ``` ` snippet only for
@@ -159,8 +164,10 @@ build the body from the diff and commits (Step 1).
 - **Shorter than the diff.** The reviewer reads the code on GitHub; the body just orients them. Lead
   with the summary and the "why", keep any figure, and cut the rest. If the body is longer than the
   change, you've over-written it.
-- **Keep the visuals.** Re-expressing a state machine or flow as a `mermaid` block is worth the
-  effort — it's the part reviewers most appreciate. Never paste raw `<svg>` (GitHub strips it).
+- **Keep the visuals.** Re-expressing the change's shape as a GitHub-native visual — a `mermaid`
+  block, a fenced file/call/component tree, or a shape-matched `diff` — is worth the effort; it's the
+  part reviewers most appreciate. Pick the smallest one that carries the point. Never paste raw
+  `<svg>` (GitHub strips it).
 - **Drafts by default.** This user always opens PRs as drafts and marks them ready manually — do
   not use `--web` or open a non-draft unless explicitly told.
 - **Don't paste the raw HTML.** It renders as broken, unstyled text. Always convert. Only
