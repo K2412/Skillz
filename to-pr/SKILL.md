@@ -15,6 +15,8 @@ description: >
 
 # to-pr
 
+> **Output discipline (hard rule).** Every output this skill produces obeys [`references/brevity/output-discipline.md`](references/brevity/output-discipline.md): **≤150 words of prose**, plain dumbed-down English, point first. Anything past 150 words becomes a **visual** — table, tree, diff, or code block (format menu: [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md)). Words inside a visual don't count. The cap covers the PR body itself — keep its prose under 150 words and put the change's shape in a diff or table.
+
 Open a **draft** PR for the current branch, with a clean, **concise** Markdown body distilled from
 the work that's already finished. `to-pr` does not review the code and does not build a review
 artifact — **that happens before you call it**. Its only job is to turn a done change into a

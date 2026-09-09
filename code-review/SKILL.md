@@ -13,6 +13,8 @@ description: >
 
 # Code Review — one answer: ship it, or here's what to fix
 
+> **Output discipline (hard rule).** Every output this skill produces obeys [`references/brevity/output-discipline.md`](references/brevity/output-discipline.md): **≤150 words of prose**, plain dumbed-down English, verdict first. Anything past 150 words becomes a **visual** — table, tree, diff, or code block (format menu: [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md)). Words inside a visual don't count. This governs the terminal report **and** the HTML explainer + quiz — keep their prose under the cap and let visuals carry the depth.
+
 This skill does one job well: look at a change and tell the user, in plain words, **whether it's safe
 to merge and what to fix if not**. The output is short on purpose. A reviewer at the end of the day
 should get the verdict in one line, understand the change in four short beats, and see only the

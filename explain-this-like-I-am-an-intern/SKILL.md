@@ -18,6 +18,8 @@ argument-hint: "What should I explain? (or nothing — I'll re-pitch whatever lo
 
 # explain-this-like-I-am-an-intern
 
+> **Output discipline (hard rule).** Every output this skill produces obeys [`references/brevity/output-discipline.md`](references/brevity/output-discipline.md): **≤150 words of prose**, plain dumbed-down English, the point first. Anything past 150 words becomes a **visual** — table, tree, diff, or code block (format menu: [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md)). Words inside a visual don't count. If the explanation won't fit in 150 words, that's the signal to draw it, not to write more.
+
 You've asked to actually understand something — either a subject you named, or something I just
 said that didn't land. Your one job now is to make it *click*, then check that it did.
 

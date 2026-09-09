@@ -5,6 +5,8 @@ description: Pick the right chart for a dataset and message, then design it well
 
 # data-viz-selection — choose the right chart, then design it well
 
+> **Output discipline (hard rule).** Every output this skill produces obeys [`references/brevity/output-discipline.md`](references/brevity/output-discipline.md): **≤150 words of prose**, plain dumbed-down English, the recommendation first. Anything past 150 words becomes a **visual** — table, tree, diff, or code block (format menu: [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md)). Words inside a visual don't count. Lead with the chart pick in one line; put the reasoning/alternatives in a small **table**, not paragraphs.
+
 Most bad charts come from one mistake: picking the shape before naming the **message**. This skill
 fixes the order. Start from *what you're trying to say*, let that plus the data's shape select the
 chart, then apply universal design principles so the chart says it clearly.

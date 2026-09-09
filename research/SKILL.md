@@ -3,6 +3,8 @@ name: research
 description: Investigate a question against high-trust primary sources, web search, site scraping and crawling (Firecrawl), and Mobbin UI examples, then capture findings as a Markdown file in the repo. Use when the user wants a topic researched, docs or API facts gathered, a whole doc site read, UI patterns explored, or reading legwork delegated to a background agent.
 ---
 
+> **Output discipline (hard rule).** Every output this skill produces obeys [`references/brevity/output-discipline.md`](references/brevity/output-discipline.md): **≤150 words of prose**, plain dumbed-down English, the answer first. Anything past 150 words becomes a **visual** — table, tree, diff, or code block (format menu: [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md)). Words inside a visual don't count. This covers the findings file the background agent writes **and** your summary of it: put the findings in a **table with citations**, keep the surrounding prose under 150 words.
+
 Spin up a **background agent** to do the research, so you keep working while it reads.
 
 This is a utility other stages call, not just a standalone: [`grill`](../grill/SKILL.md) and

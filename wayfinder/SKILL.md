@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Wayfinder
 
+> **Output discipline (hard rule).** Every output this skill produces obeys [`references/brevity/output-discipline.md`](references/brevity/output-discipline.md): **≤150 words of prose**, plain dumbed-down English, point first. Anything past 150 words becomes a **visual** — table, tree, diff, or code block (format menu: [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md)). Words inside a visual don't count. Show the map as a **tree or table of decision tickets**, not prose; keep the surrounding text under the cap.
+
 A loose, ambitious idea has arrived — too big for one agent session, and wrapped in **fog**: the way
 from here to the **destination** isn't visible yet. Wayfinding is about finding that way, not charging
 at the destination. This skill charts the way as a **shared map** of **decision tickets** — questions

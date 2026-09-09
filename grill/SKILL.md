@@ -5,6 +5,8 @@ description: Interview the user relentlessly about an idea until you reach share
 
 # Grill — interview to shared understanding, with active domain modelling
 
+> **Output discipline (hard rule).** Every output this skill produces obeys [`references/brevity/output-discipline.md`](references/brevity/output-discipline.md): **≤150 words of prose**, plain dumbed-down English, point first. Anything past 150 words becomes a **visual** — table, tree, diff, or code block (format menu: [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md)). Words inside a visual don't count. Ask **few questions at a time** and keep each turn under the cap; a decision log or glossary belongs in a table, not a paragraph.
+
 Interview the user relentlessly about every aspect of the idea until reaching shared understanding.
 Walk down each branch of the design tree, resolving dependencies between decisions one at a time.
 **Alongside the interview, actively maintain the project's domain model** — challenge fuzzy terms,
