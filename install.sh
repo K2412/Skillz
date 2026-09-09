@@ -53,11 +53,19 @@ if [ -f "$MEMORY_SOURCE/pyproject.toml" ]; then
     echo "ERROR: uv is required to install agent-memory" >&2
     exit 1
   fi
-  uv tool install --editable "$MEMORY_SOURCE"
-  agent-memory-init
-  agent-memory-service install
-  agent-memory-setup
-  echo "Agent memory: installed and registered"
+  # Best-effort: memory install/registration is orthogonal to the skill sync
+  # below, which is install's primary job. A recoverable failure here — most
+  # often a conflicting agent-memory MCP registration in another client — must
+  # warn and continue, not abort the whole install under `set -e`.
+  if uv tool install --editable "$MEMORY_SOURCE" \
+    && agent-memory-init \
+    && agent-memory-service install \
+    && agent-memory-setup; then
+    echo "Agent memory: installed and registered"
+  else
+    echo "WARN: agent memory setup did not complete; skills still install." >&2
+    echo "      Re-run it alone once resolved: agent-memory-setup" >&2
+  fi
 else
   echo "Agent memory: skipped (set AGENT_MEMORY_SOURCE to its checkout)"
 fi
