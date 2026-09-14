@@ -30,12 +30,30 @@ stops, or hands work out of the workflow. A transition between stages inside the
 a handoff. Memory outcomes never change pair's gates, state, or next transition.
 
 ```
-[research] → [sketch] → grill → [prototype] → [architecture] → spec → plan-review
+worktree → [research] → [sketch] → grill → [prototype] → [architecture] → spec → plan-review
     → { implement → [architecture checkpoint] } → code-review → taste-review → polish
 ```
 
 Bracketed stages are optional and fire only when they earn their place. Run each stage by invoking
 its skill and following it to completion, then apply the transition below before the next.
+
+## Pre-flight — Worktree (automatic)
+
+`pair` runs against a **dedicated worktree for the feature branch**, so the build never disturbs the
+checkout you launched from and parallel work stays isolated. Before the first selected stage — and
+before opening the workflow-memory session above — settle the worktree:
+
+1. **Determine the feature branch.** Use the branch the user named; if they named none, derive it
+   from the work (e.g. the epic/ticket slug) and confirm it before creating anything.
+2. **Check whether a worktree already exists for it:** `git worktree list --porcelain` — a
+   `branch refs/heads/<branch>` line means one is already checked out; `cd` into that path and
+   continue.
+3. **If none exists, run [`worktree`](../worktree/SKILL.md)** for that branch (it cuts a new branch
+   from the base when the branch doesn't exist yet, or attaches to the local/origin branch when it
+   does) and `cd` into the worktree it reports before proceeding.
+
+Everything after this — grill, spec, implement, review — runs inside that worktree. If you're already
+standing in the right worktree for the branch, this is a no-op: note it and move on.
 
 `pair` presumes the decision to build is **already made** — it's the commitment end of a longer arc.
 If whether to build (or what) is still open, settle that *before* `pair`, not as a stage inside it —

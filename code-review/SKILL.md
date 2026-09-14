@@ -61,6 +61,21 @@ So the discipline is:
   [`references/show-me/visual-formats.md`](references/show-me/visual-formats.md). A plain sentence
   that's already clear needs no diagram — don't add one for decoration.
 
+## Step 0 — Ensure a worktree for the branch under review
+
+Before resolving the target, put yourself in a **dedicated worktree for the branch being reviewed**,
+so the review never disturbs your current checkout:
+
+- **Reviewing a branch or a GitHub PR** (a named head branch) → check `git worktree list --porcelain`
+  for a `branch refs/heads/<branch>` line. If one exists, `cd` into that path. If not, run
+  [`worktree`](../worktree/SKILL.md) for that branch and `cd` into the worktree it reports. Then
+  resolve the target and gather the goal there.
+- **Reviewing the working diff** ("my changes", "what I just did") → skip this step. The uncommitted
+  work lives in the current checkout; a worktree can't carry it, and moving would lose it.
+
+If you're already standing in the right worktree for the branch, this is a no-op — note it and go to
+Step 1.
+
 ## Step 1 — Resolve the target and gather the goal
 
 Work out what to review, in this order. Ask only if genuinely ambiguous.
